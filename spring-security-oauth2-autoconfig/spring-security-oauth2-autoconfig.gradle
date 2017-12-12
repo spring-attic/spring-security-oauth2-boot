@@ -1,0 +1,28 @@
+apply plugin: 'io.spring.convention.spring-module'
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot'
+	compile 'org.springframework.boot:spring-boot-autoconfigure'
+	compile 'org.springframework:spring-web'
+	compile 'org.springframework.security.oauth:spring-security-oauth2'
+	compile 'org.springframework.security:spring-security-jwt'
+	compile 'com.fasterxml.jackson.core:jackson-annotations'
+	compile 'com.fasterxml.jackson.core:jackson-databind'
+
+	optional 'org.springframework.social:spring-social-autoconfigure'
+	optional 'org.springframework.social:spring-social-config'
+	optional 'org.springframework.social:spring-social-core'
+	optional 'org.springframework.social:spring-social-facebook-autoconfigure'
+	optional 'org.springframework.social:spring-social-web'
+
+	provided 'javax.servlet:javax.servlet-api'
+
+	testCompile 'org.springframework.boot:spring-boot-test'
+	testCompile 'org.springframework.boot:spring-boot-test-support'
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'ch.qos.logback:logback-classic'
+	testCompile 'org.springframework:spring-test'
+	testCompile 'org.springframework.security:spring-security-test'
+	testCompile 'org.yaml:snakeyaml'
+	testCompile 'org.apache.tomcat.embed:tomcat-embed-jasper'
+}
