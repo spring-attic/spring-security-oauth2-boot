@@ -10,7 +10,6 @@ buildscript {
 apply plugin: 'io.spring.convention.root'
 
 group = 'org.springframework.security.oauth.boot'
-group = 'org.springframework.security.oauth.boot'
 description = 'Spring Security OAuth2 Auto Config'
 
 ext.snapshotBuild = version.contains("SNAPSHOT")
