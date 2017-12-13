@@ -16,7 +16,7 @@ support and Spring Boot 2.x.
 
 == Downloading
 
-Since `spring-security-oauth2` and Boot Autoconfig is externalized you will need to ensure to add it to your classpath.
+Since `spring-security-oauth2-autoconfigure` is externalized you will need to ensure to add it to your classpath.
 
 === Source
 
@@ -38,7 +38,7 @@ A minimal Maven set of dependencies typically looks like the following:
   </dependency>
   <dependency>
     <groupId>org.springframework.security.oauth.boot</groupId>
-    <artifactId>spring-security-oauth2-autoconfig</artifactId>
+    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
     <version>{version}</version>
   </dependency>
 </dependencies>
@@ -86,7 +86,7 @@ A minimal Spring Security Gradle set of dependencies typically looks like the fo
 ----
 dependencies {
   compile 'org.springframework.boot:spring-boot-starter-security'
-  compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfig:{version}'
+  compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:{version}'
 }
 ----
 
