@@ -1,4 +1,4 @@
 = Spring Security OAuth Boot 2 Autoconfig
 
 This project provides auto configuration for Spring Boot 2 and the old Spring Security OAuth project.
-For more details refer to the link:src/docs/asciidoc/[documentation].
+For more details refer to the link:docs/src/docs/asciidoc/[documentation].
