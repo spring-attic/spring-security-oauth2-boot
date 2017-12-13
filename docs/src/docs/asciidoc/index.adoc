@@ -18,6 +18,10 @@ support and Spring Boot 2.x.
 
 Since `spring-security-oauth2` and Boot Autoconfig is externalized you will need to ensure to add it to your classpath.
 
+=== Source
+
+You can get the source and log issues on https://github.com/spring-projects/spring-security-oauth2-boot[GitHub].
+
 === Maven
 
 A minimal Maven set of dependencies typically looks like the following:
