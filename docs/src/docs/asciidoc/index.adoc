@@ -40,9 +40,6 @@ A minimal Maven set of dependencies typically looks like the following:
 </dependencies>
 ----
 
-If you are using additional features like LDAP, OpenID, etc. you will need to also include the appropriate Section 2.4.3, “Project Modules”.
-
-Maven Repositories
 All GA releases (i.e. versions ending in .RELEASE) are deployed to Maven Central, so no additional Maven repositories need to be declared in your pom.
 
 If you are using a SNAPSHOT version, you will need to ensure you have the Spring Snapshot repository defined as shown below:
