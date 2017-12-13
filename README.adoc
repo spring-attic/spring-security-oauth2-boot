@@ -2,4 +2,4 @@ image::https://travis-ci.org/spring-projects/spring-security-oauth2-boot.svg?bra
 = Spring Security OAuth Boot 2 Autoconfig
 
 This project provides auto configuration for Spring Boot 2 and the old Spring Security OAuth project.
-For more details refer to the link:docs/src/docs/asciidoc/index.adoc[documentation].
+For more details refer to the https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/[documentation].
