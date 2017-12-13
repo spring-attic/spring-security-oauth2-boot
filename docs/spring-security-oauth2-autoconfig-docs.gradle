@@ -3,7 +3,7 @@ apply plugin: 'io.spring.convention.docs'
 asciidoctor {
 	def ghTag = snapshotBuild ? 'master' : project.version
 	def ghUrl = "https://github.com/spring-projects/spring-security-oauth2-autoconfig/tree/$ghTag"
-	attributes 'spring-security-version' : project.version,
+	attributes 'version' : project.version,
 			revnumber : project.version,
 			'gh-url': ghUrl,
 			'gh-samples-url': "$ghUrl/samples"

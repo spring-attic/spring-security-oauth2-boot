@@ -14,7 +14,110 @@ To ease migration, this project exists as a bridge between the old Spring Securi
 support and Spring Boot 2.x.
 ====
 
+== Downloading
 
+Since `spring-security-oauth2` and Boot Autoconfig is externalized you will need to ensure to add it to your classpath.
+
+=== Maven
+
+A minimal Maven set of dependencies typically looks like the following:
+
+.pom.xml
+[source,xml]
+[subs="verbatim,attributes"]
+----
+<dependencies>
+  <!-- ... other dependency elements ... -->
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>org.springframework.security.oauth.boot</groupId>
+    <artifactId>spring-security-oauth2-autoconfig</artifactId>
+    <version>{version}</version>
+  </dependency>
+</dependencies>
+----
+
+If you are using additional features like LDAP, OpenID, etc. you will need to also include the appropriate Section 2.4.3, “Project Modules”.
+
+Maven Repositories
+All GA releases (i.e. versions ending in .RELEASE) are deployed to Maven Central, so no additional Maven repositories need to be declared in your pom.
+
+If you are using a SNAPSHOT version, you will need to ensure you have the Spring Snapshot repository defined as shown below:
+
+.pom.xml.
+[source,xml]
+----
+<repositories>
+  <!-- ... possibly other repository elements ... -->
+  <repository>
+    <id>spring-snapshot</id>
+    <name>Spring Snapshot Repository</name>
+    <url>http://repo.spring.io/snapshot</url>
+  </repository>
+</repositories>
+----
+
+If you are using a milestone or release candidate version, you will need to ensure you have the Spring Milestone repository defined as shown below:
+
+.pom.xml.
+[source,xml]
+----
+<repositories>
+  <!-- ... possibly other repository elements ... -->
+  <repository>
+    <id>spring-milestone</id>
+      <name>Spring Milestone Repository</name>
+      <url>http://repo.spring.io/milestone</url>
+  </repository>
+</repositories>
+----
+
+=== Gradle
+
+A minimal Spring Security Gradle set of dependencies typically looks like the following:
+
+.build.gradle
+[source,groovy]
+[subs="verbatim,attributes"]
+----
+dependencies {
+  compile 'org.springframework.boot:spring-boot-starter-security'
+  compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfig:{version}'
+}
+----
+
+All GA releases (i.e. versions ending in .RELEASE) are deployed to Maven Central, so using the mavenCentral() repository is sufficient for GA releases.
+
+.build.gradle
+[source,groovy]
+----
+repositories {
+  mavenCentral()
+}
+----
+
+If you are using a SNAPSHOT version, you will need to ensure you have the Spring Snapshot repository defined as shown below:
+
+.build.gradle
+[source,groovy]
+----
+repositories {
+  maven { url 'https://repo.spring.io/snapshot' }
+}
+----
+
+If you are using a milestone or release candidate version, you will need to ensure you have the Spring Milestone repository defined as shown below:
+
+.build.gradle
+[source,groovy]
+----
+repositories {
+  maven { url 'https://repo.spring.io/milestone' }
+}
+----
 
 [[boot-features-security-oauth2-authorization-server]]
 == Authorization Server
