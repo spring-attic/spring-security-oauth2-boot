@@ -142,6 +142,32 @@ default in Spring Boot to "`user`" and a random password).
 To switch off the auto-configuration and configure the Authorization Server features
 yourself just add a `@Bean` of type `AuthorizationServerConfigurer`.
 
+If you use your own authorization server configuration to configure the list of
+valid clients through an instance of `ClientDetailsServiceConfigurer` as shown
+below, take note that the passwords you configure here are subject to
+https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#core-services-password-encoding[the modernized password storage] that came with
+Spring Security 5. That means you have to prefix your passwords with an Id if
+you use Spring Boot Securities defaults for password storage.
+
+[source,java,indent=0]
+----
+@Component
+public class CustomAuthorizationServerConfigurer extends
+    AuthorizationServerConfigurerAdapter {
+
+    @Override
+    public void configure(
+        ClientDetailsServiceConfigurer clients
+    ) throws Exception {
+        clients.inMemory()
+            .withClient("client")
+                .authorizedGrantTypes("password")
+                .secret("{noop}secret")
+                .scopes("all");
+    }
+}
+----
+
 
 
 [[boot-features-security-oauth2-resource-server]]
