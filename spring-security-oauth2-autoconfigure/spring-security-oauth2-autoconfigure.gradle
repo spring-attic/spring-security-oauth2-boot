@@ -9,7 +9,6 @@ dependencies {
 	compile 'com.fasterxml.jackson.core:jackson-annotations'
 	compile 'com.fasterxml.jackson.core:jackson-databind'
 
-	optional 'org.springframework.social:spring-social-autoconfigure'
 	optional 'org.springframework.social:spring-social-config'
 	optional 'org.springframework.social:spring-social-core'
 	optional 'org.springframework.social:spring-social-web'
