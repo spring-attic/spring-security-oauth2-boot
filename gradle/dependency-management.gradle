@@ -9,7 +9,7 @@ dependencyManagement {
 		dependency "org.springframework.social:spring-social-autoconfigure:2.0.0.BUILD-SNAPSHOT"
 		dependency "org.springframework.social:spring-social-config:2.0.0.BUILD-SNAPSHOT"
 		dependency "org.springframework.social:spring-social-core:2.0.0.BUILD-SNAPSHOT"
-		dependency "org.springframework.social:spring-social-facebook-autoconfigure:3.0.0.BUILD-SNAPSHOT"
+		dependency "org.springframework.social:spring-social-facebook:$springSocialVersion"
 		dependency "org.springframework.social:spring-social-web:2.0.0.BUILD-SNAPSHOT"
 	}
 }

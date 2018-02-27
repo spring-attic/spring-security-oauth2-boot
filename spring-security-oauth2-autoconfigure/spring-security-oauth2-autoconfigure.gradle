@@ -12,7 +12,6 @@ dependencies {
 	optional 'org.springframework.social:spring-social-autoconfigure'
 	optional 'org.springframework.social:spring-social-config'
 	optional 'org.springframework.social:spring-social-core'
-	optional 'org.springframework.social:spring-social-facebook-autoconfigure'
 	optional 'org.springframework.social:spring-social-web'
 
 	provided 'javax.servlet:javax.servlet-api'
@@ -22,6 +21,7 @@ dependencies {
 	testCompile 'ch.qos.logback:logback-classic'
 	testCompile 'org.springframework:spring-test'
 	testCompile 'org.springframework.security:spring-security-test'
+	testCompile 'org.springframework.social:spring-social-facebook'
 	testCompile 'org.yaml:snakeyaml'
 	testCompile 'org.apache.tomcat.embed:tomcat-embed-jasper'
 }
