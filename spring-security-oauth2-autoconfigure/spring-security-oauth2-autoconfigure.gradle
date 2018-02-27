@@ -18,7 +18,6 @@ dependencies {
 	provided 'javax.servlet:javax.servlet-api'
 
 	testCompile 'org.springframework.boot:spring-boot-test'
-	testCompile 'org.springframework.boot:spring-boot-test-support'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'ch.qos.logback:logback-classic'
 	testCompile 'org.springframework:spring-test'

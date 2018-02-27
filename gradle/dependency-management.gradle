@@ -4,7 +4,6 @@ dependencyManagement {
 	}
 	dependencies {
 		dependency "org.springframework.boot:spring-boot:$springBootVersion"
-		dependency "org.springframework.boot:spring-boot-test-support:2.0.0.BUILD-SNAPSHOT"
 		dependency 'org.springframework.security.oauth:spring-security-oauth2:2.2.0.RELEASE'
 		dependency 'org.springframework.security:spring-security-jwt:1.0.8.RELEASE'
 		dependency "org.springframework.social:spring-social-autoconfigure:2.0.0.BUILD-SNAPSHOT"
