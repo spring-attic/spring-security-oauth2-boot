@@ -1,6 +1,7 @@
 apply plugin: 'io.spring.convention.spring-module'
 
 dependencies {
+	compileOnly "org.springframework.boot:spring-boot-autoconfigure-processor"
 	compile 'org.springframework.boot:spring-boot'
 	compile 'org.springframework.boot:spring-boot-autoconfigure'
 	compile 'org.springframework:spring-web'
