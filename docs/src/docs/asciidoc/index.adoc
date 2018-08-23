@@ -379,6 +379,31 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 }
 ----
 
+Also note that since all endpoints are secure by default, this includes any default
+error handling endpoints, for example, the endpoint "/error". This means that if
+there is some problem during Single Sign On that requires the application to redirect 
+to the "/error" page, then this can cause an infinite redirect between the identity 
+provider and the receiving application.
+
+First, think carefully about making an endpoint insecure as you may find that the 
+behavior is simply evidence of a different problem. However, this behavior can be 
+addressed by configuring the application to permit "/error":
+
+[source,java,indent=0]
+----
+@Configuration
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .antMatchers("/error").permitAll()
+                .anyRequest().authenticated();
+    }
+} 
+----
+
 :numbered!:
 [appendix]
 [[common-application-properties]]
