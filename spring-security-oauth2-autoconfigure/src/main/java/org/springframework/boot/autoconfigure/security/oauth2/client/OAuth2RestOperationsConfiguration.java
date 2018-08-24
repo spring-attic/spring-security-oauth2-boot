@@ -43,6 +43,7 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.DefaultOAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
@@ -97,24 +98,6 @@ public class OAuth2RestOperationsConfiguration {
 			registration.setFilter(filter);
 			registration.setOrder(security.getFilter().getOrder() - 10);
 			return registration;
-		}
-
-		@Configuration
-		protected static class ClientContextConfiguration {
-
-			private final AccessTokenRequest accessTokenRequest;
-
-			public ClientContextConfiguration(
-					@Qualifier("accessTokenRequest") ObjectProvider<AccessTokenRequest> accessTokenRequest) {
-				this.accessTokenRequest = accessTokenRequest.getIfAvailable();
-			}
-
-			@Bean
-			@Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
-			public DefaultOAuth2ClientContext oauth2ClientContext() {
-				return new DefaultOAuth2ClientContext(this.accessTokenRequest);
-			}
-
 		}
 
 	}
