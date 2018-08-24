@@ -155,6 +155,15 @@ you use Spring Boot Securities defaults for password storage.
 public class CustomAuthorizationServerConfigurer extends
     AuthorizationServerConfigurerAdapter {
 
+    AuthenticationManager authenticationManager;
+
+    public CustomAuthorizationServerConfigurer(
+        AuthenticationConfiguration authenticationConfiguration
+    ) throws Exception {
+        this.authenticationManager =
+            authenticationConfiguration.getAuthenticationManager();
+    }
+
     @Override
     public void configure(
         ClientDetailsServiceConfigurer clients
@@ -165,10 +174,15 @@ public class CustomAuthorizationServerConfigurer extends
                 .secret("{noop}secret")
                 .scopes("all");
     }
+
+    @Override
+    public void configure(
+        AuthorizationServerEndpointsConfigurer endpoints
+    ) throws Exception {
+        endpoints.authenticationManager(authenticationManager);    
+    }
 }
 ----
-
-
 
 [[boot-features-security-oauth2-resource-server]]
 == Resource Server
