@@ -246,6 +246,26 @@ public class ResourceServerProperties implements BeanFactoryAware {
 		 */
 		private String keyUri;
 
+		/**
+		 * The location of the key store.
+		 */
+		private String keyStore;
+
+		/**
+		 * The key store's password
+		 */
+		private String keyStorePassword;
+
+		/**
+		 * The alias of the key from the key store
+		 */
+		private String keyAlias;
+
+		/**
+		 * The password of the key from the key store
+		 */
+		private String keyPassword;
+
 		public String getKeyValue() {
 			return this.keyValue;
 		}
@@ -262,6 +282,37 @@ public class ResourceServerProperties implements BeanFactoryAware {
 			return this.keyUri;
 		}
 
+		public String getKeyStore() {
+			return keyStore;
+		}
+
+		public void setKeyStore(String keyStore) {
+			this.keyStore = keyStore;
+		}
+
+		public String getKeyStorePassword() {
+			return keyStorePassword;
+		}
+
+		public void setKeyStorePassword(String keyStorePassword) {
+			this.keyStorePassword = keyStorePassword;
+		}
+
+		public String getKeyAlias() {
+			return keyAlias;
+		}
+
+		public void setKeyAlias(String keyAlias) {
+			this.keyAlias = keyAlias;
+		}
+
+		public String getKeyPassword() {
+			return keyPassword;
+		}
+
+		public void setKeyPassword(String keyPassword) {
+			this.keyPassword = keyPassword;
+		}
 	}
 
 	public class Jwk {

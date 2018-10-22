@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.WebApplicationType;
@@ -64,6 +65,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -318,6 +320,78 @@ public class ResourceServerTokenServicesConfigurationTests {
 		JwtAccessTokenConverter accessTokenConverter = this.context.getBean(JwtAccessTokenConverter.class);
 		accessTokenConverter.extractAuthentication(Collections.singletonMap("user_name", "tom"));
 		verify(service).loadUserByUsername(anyString());
+	}
+
+	@Test
+	public void configureWhenKeyStoreIsProvidedThenExposesJwtTokenStore() {
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:" +
+						"org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+				"security.oauth2.resource.jwt.key-store-password=changeme",
+				"security.oauth2.resource.jwt.key-alias=jwt")
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(TokenStore.class)).hasSize(1);
+		assertThat(this.context.getBean(TokenStore.class)).isInstanceOf(JwtTokenStore.class);
+	}
+
+	@Test
+	public void configureWhenKeyStoreIsProvidedThenExposesJwtAccessTokenConverter() {
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:" +
+						"org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+				"security.oauth2.resource.jwt.key-store-password=changeme",
+				"security.oauth2.resource.jwt.key-alias=jwt")
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
+				.environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
+	}
+
+	@Test
+	public void configureWhenKeyStoreIsProvidedWithKeyPasswordThenExposesJwtAccessTokenConverter() {
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:" +
+						"org/springframework/boot/autoconfigure/security/oauth2/resource/keyhaspassword.jks",
+				"security.oauth2.resource.jwt.key-store-password=changeme",
+				"security.oauth2.resource.jwt.key-alias=jwt",
+				"security.oauth2.resource.jwt.key-password=password")
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
+				.environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
+	}
+
+	@Test
+	public void configureWhenKeyStoreIsProvidedButNoAliasThenThrowsException() {
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:" +
+						"org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+				"security.oauth2.resource.jwt.key-store-password=changeme")
+				.applyTo(this.environment);
+
+		assertThatCode(() ->
+				new SpringApplicationBuilder(ResourceConfiguration.class)
+						.environment(this.environment)
+						.web(WebApplicationType.NONE).run())
+				.isInstanceOf(UnsatisfiedDependencyException.class);
+	}
+
+	@Test
+	public void configureWhenKeyStoreIsProvidedButNoPasswordThenThrowsException() {
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:" +
+						"org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+				"security.oauth2.resource.jwt.key-alias=jwt")
+				.applyTo(this.environment);
+
+		assertThatCode(() ->
+				new SpringApplicationBuilder(ResourceConfiguration.class)
+						.environment(this.environment)
+						.web(WebApplicationType.NONE).run());
 	}
 
 	@Configuration

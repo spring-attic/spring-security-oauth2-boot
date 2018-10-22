@@ -21,9 +21,11 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -40,6 +42,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.Resource;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -66,9 +69,11 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.oauth2.provider.token.store.jwk.JwkTokenStore;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -386,6 +391,59 @@ public class ResourceServerTokenServicesConfiguration {
 		}
 	}
 
+	@Configuration
+	@Conditional(JwtKeyStoreCondition.class)
+	protected class JwtKeyStoreConfiguration implements ApplicationContextAware {
+
+		private final ResourceServerProperties resource;
+		private ApplicationContext context;
+
+		@Autowired
+		public JwtKeyStoreConfiguration(ResourceServerProperties resource) {
+			this.resource = resource;
+		}
+
+		@Override
+		public void setApplicationContext(ApplicationContext context) throws BeansException {
+			this.context = context;
+		}
+
+		@Bean
+		@ConditionalOnMissingBean(ResourceServerTokenServices.class)
+		public DefaultTokenServices jwtTokenServices(TokenStore jwtTokenStore) {
+			DefaultTokenServices services = new DefaultTokenServices();
+			services.setTokenStore(jwtTokenStore);
+			return services;
+		}
+
+		@Bean
+		@ConditionalOnMissingBean(TokenStore.class)
+		public TokenStore tokenStore() {
+			return new JwtTokenStore(accessTokenConverter());
+		}
+
+		@Bean
+		public JwtAccessTokenConverter accessTokenConverter() {
+			Assert.notNull(this.resource.getJwt().getKeyStore(), "keyStore cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyAlias(), "keyAlias cannot be null");
+
+			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+
+			Resource keyStore = this.context.getResource(this.resource.getJwt().getKeyStore());
+			char[] keyStorePassword = this.resource.getJwt().getKeyStorePassword().toCharArray();
+			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, keyStorePassword);
+
+			String keyAlias = this.resource.getJwt().getKeyAlias();
+			char[] keyPassword = Optional.ofNullable(
+					this.resource.getJwt().getKeyPassword())
+					.map(String::toCharArray).orElse(keyStorePassword);
+			converter.setKeyPair(keyStoreKeyFactory.getKeyPair(keyAlias, keyPassword));
+
+			return converter;
+		}
+	}
+
 	private static class TokenInfoCondition extends SpringBootCondition {
 
 		@Override
@@ -461,6 +519,26 @@ public class ResourceServerTokenServicesConfiguration {
 
 	}
 
+	private static class JwtKeyStoreCondition extends SpringBootCondition {
+
+		@Override
+		public ConditionOutcome getMatchOutcome(ConditionContext context,
+												AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage
+					.forCondition("OAuth JWT KeyStore Condition");
+			Environment environment = context.getEnvironment();
+			String keyStore = environment
+					.getProperty("security.oauth2.resource.jwt.key-store");
+			if (StringUtils.hasText(keyStore)) {
+				return ConditionOutcome
+						.match(message.foundExactly("provided key store location"));
+			}
+			return ConditionOutcome
+					.noMatch(message.didNotFind("key store location not provided").atAll());
+		}
+
+	}
+
 	private static class NotTokenInfoCondition extends SpringBootCondition {
 
 		private TokenInfoCondition tokenInfoCondition = new TokenInfoCondition();
@@ -487,6 +565,11 @@ public class ResourceServerTokenServicesConfiguration {
 
 		@Conditional(JwkCondition.class)
 		static class HasJwkConfiguration {
+
+		}
+
+		@Conditional(JwtKeyStoreCondition.class)
+		static class HasKeyStoreConfiguration {
 
 		}
 	}
