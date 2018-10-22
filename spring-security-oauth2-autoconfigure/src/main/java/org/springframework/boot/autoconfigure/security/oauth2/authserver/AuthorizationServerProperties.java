@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,11 @@ public class AuthorizationServerProperties {
 	 */
 	private String realm;
 
+	/**
+	 * Jwt-specific configuration properties
+	 */
+	private Jwt jwt = new Jwt();
+
 	public String getCheckTokenAccess() {
 		return this.checkTokenAccess;
 	}
@@ -69,6 +74,76 @@ public class AuthorizationServerProperties {
 
 	public void setRealm(String realm) {
 		this.realm = realm;
+	}
+
+	public Jwt getJwt() {
+		return jwt;
+	}
+
+	public void setJwt(Jwt jwt) {
+		this.jwt = jwt;
+	}
+
+	/**
+	 * Configuration properties for Authorization Server Jwt configuration
+	 *
+	 * @author Harold Li
+	 * @author Josh Cummings
+	 * @since 2.1.0
+	 */
+	public class Jwt {
+
+		/**
+		 * The location of the key store.
+		 */
+		private String keyStore;
+
+		/**
+		 * The key store's password
+		 */
+		private String keyStorePassword;
+
+		/**
+		 * The alias of the key from the key store
+		 */
+		private String keyAlias;
+
+		/**
+		 * The password of the key from the key store
+		 */
+		private String keyPassword;
+
+		public String getKeyStore() {
+			return keyStore;
+		}
+
+		public void setKeyStore(String keyStore) {
+			this.keyStore = keyStore;
+		}
+
+		public String getKeyStorePassword() {
+			return keyStorePassword;
+		}
+
+		public void setKeyStorePassword(String keyStorePassword) {
+			this.keyStorePassword = keyStorePassword;
+		}
+
+		public String getKeyAlias() {
+			return keyAlias;
+		}
+
+		public void setKeyAlias(String keyAlias) {
+			this.keyAlias = keyAlias;
+		}
+
+		public String getKeyPassword() {
+			return keyPassword;
+		}
+
+		public void setKeyPassword(String keyPassword) {
+			this.keyPassword = keyPassword;
+		}
 	}
 
 }
