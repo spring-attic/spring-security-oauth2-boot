@@ -16,6 +16,10 @@
 
 package org.springframework.boot.autoconfigure.security.oauth2.authserver;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
+
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,6 +35,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -58,6 +63,21 @@ public class AuthorizationServerTokenServicesConfigurationTests {
 		if (this.context != null) {
 			this.context.close();
 		}
+	}
+
+	@Test
+	public void configureWhenPrivateKeyIsProvidedThenExposesJwtAccessTokenConverter() throws Exception {
+		Path privateKeyPath = new ClassPathResource("key.private", this.getClass()).getFile().toPath();
+		String privateKey = Files.readAllLines(privateKeyPath).stream().collect(Collectors.joining("\n"));
+
+		TestPropertyValues.of(
+				"security.oauth2.authorization.jwt.key-value=" + privateKey)
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
+				.environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
+
 	}
 
 	@Test

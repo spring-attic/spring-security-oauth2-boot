@@ -94,6 +94,12 @@ public class AuthorizationServerProperties {
 	public class Jwt {
 
 		/**
+		 * The signing key of the JWT token. Can either be a symmetric secret or
+		 * PEM-encoded RSA private key.
+		 */
+		private String keyValue;
+
+		/**
 		 * The location of the key store.
 		 */
 		private String keyStore;
@@ -112,6 +118,14 @@ public class AuthorizationServerProperties {
 		 * The password of the key from the key store
 		 */
 		private String keyPassword;
+
+		public String getKeyValue() {
+			return this.keyValue;
+		}
+
+		public void setKeyValue(String keyValue) {
+			this.keyValue = keyValue;
+		}
 
 		public String getKeyStore() {
 			return keyStore;

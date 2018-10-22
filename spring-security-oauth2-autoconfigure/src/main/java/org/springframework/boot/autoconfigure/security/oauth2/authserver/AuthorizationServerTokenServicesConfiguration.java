@@ -53,6 +53,52 @@ import org.springframework.util.StringUtils;
 public class AuthorizationServerTokenServicesConfiguration {
 
 	/**
+	 * Configuration for writing a single-key JWT token-issuing authorization server.
+	 *
+	 * To use, provide a private or symmetric key via
+	 *
+	 * {@code security.oauth2.authorization.jwt.key-value}
+	 */
+	@Configuration
+	@Conditional(JwtTokenCondition.class)
+	protected static class JwtTokenServicesConfiguration {
+
+		private final AuthorizationServerProperties authorization;
+
+		public JwtTokenServicesConfiguration(AuthorizationServerProperties authorization) {
+			this.authorization = authorization;
+		}
+
+		@Bean
+		@ConditionalOnMissingBean(AuthorizationServerTokenServices.class)
+		public DefaultTokenServices jwtTokenServices(TokenStore jwtTokenStore) {
+			DefaultTokenServices services = new DefaultTokenServices();
+			services.setTokenStore(jwtTokenStore);
+			return services;
+		}
+
+		@Bean
+		@ConditionalOnMissingBean(TokenStore.class)
+		public TokenStore jwtTokenStore() {
+			return new JwtTokenStore(jwtTokenEnhancer());
+		}
+
+		@Bean
+		public JwtAccessTokenConverter jwtTokenEnhancer() {
+			String keyValue = this.authorization.getJwt().getKeyValue();
+			Assert.notNull(this.authorization.getJwt().getKeyValue(), "keyValue cannot be null");
+
+			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+			if (!keyValue.startsWith("-----BEGIN")) {
+				converter.setSigningKey(keyValue);
+			}
+			converter.setVerifierKey(keyValue);
+
+			return converter;
+		}
+	}
+
+	/**
 	 * Configuration for writing a single-key JWT token-issuing authorization server based on a key store.
 	 *
 	 * To use, provide a key store and key alias via
