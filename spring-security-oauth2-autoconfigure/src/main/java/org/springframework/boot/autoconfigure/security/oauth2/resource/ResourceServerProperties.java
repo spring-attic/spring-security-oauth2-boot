@@ -16,14 +16,13 @@
 
 package org.springframework.boot.autoconfigure.security.oauth2.resource;
 
-import javax.annotation.PostConstruct;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
@@ -41,7 +40,7 @@ import org.springframework.validation.BindingResult;
  * @since 1.3.0
  */
 @ConfigurationProperties(prefix = "security.oauth2.resource")
-public class ResourceServerProperties implements BeanFactoryAware {
+public class ResourceServerProperties implements BeanFactoryAware, InitializingBean {
 
 	@JsonIgnore
 	private final String clientId;
@@ -173,7 +172,10 @@ public class ResourceServerProperties implements BeanFactoryAware {
 		return this.clientSecret;
 	}
 
-	@PostConstruct
+	public void afterPropertiesSet() {
+		validate();
+	}
+
 	public void validate() {
 		if (countBeans(AuthorizationServerEndpointsConfiguration.class) > 0) {
 			// If we are an authorization server we don't need remote resource token

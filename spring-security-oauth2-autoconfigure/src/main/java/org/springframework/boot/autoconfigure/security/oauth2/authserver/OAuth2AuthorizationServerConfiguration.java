@@ -19,11 +19,11 @@ package org.springframework.boot.autoconfigure.security.oauth2.authserver;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
-import javax.annotation.PostConstruct;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -155,7 +155,7 @@ public class OAuth2AuthorizationServerConfiguration
 	}
 
 	@Configuration
-	protected static class ClientDetailsLogger {
+	protected static class ClientDetailsLogger implements InitializingBean {
 
 		private final OAuth2ClientProperties credentials;
 
@@ -163,7 +163,10 @@ public class OAuth2AuthorizationServerConfiguration
 			this.credentials = credentials;
 		}
 
-		@PostConstruct
+		public void afterPropertiesSet() {
+			init();
+		}
+
 		public void init() {
 			String prefix = "security.oauth2.client";
 			boolean defaultSecret = this.credentials.isDefaultSecret();
