@@ -1,153 +1,388 @@
 [[boot-features-security-oauth2]]
-= OAuth2 Autoconfig
+= OAuth2 Boot
 
-If you have `spring-security-oauth2` on your classpath you can take advantage of some
-auto-configuration to make it easy to set up Authorization or Resource Server. For full
+If you have `spring-security-oauth2` on your classpath, you can take advantage of some
+auto-configuration to simplify setting up Authorization and Resource Servers. For full
 details, see the https://projects.spring.io/spring-security-oauth/docs/oauth2.html[Spring
 Security OAuth 2 Developers Guide].
 
 [NOTE]
 ====
+These projects are in maintenance mode.
+
+You are of course welcome to use them, and we will help you out!
+
+But, before selecting `spring-security-oauth2` and `spring-security-oauth2-autoconfigure`, make sure
+to check out https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix[Spring Security's feature matrix] to see if the new first-class support meets your needs.
+====
+
+[NOTE]
+====
 This project is a port of the Spring Security OAuth support that came with Spring Boot 1.x.
-Support was removed in favor of Spring Security 5's first class OAuth support.
+Support was removed in Spring Boot 2.x in favor of https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[Spring Security 5's first-class OAuth support].
+
 To ease migration, this project exists as a bridge between the old Spring Security OAuth
 support and Spring Boot 2.x.
 ====
 
-== Downloading
-
-Since `spring-security-oauth2-autoconfigure` is externalized you will need to ensure to add it to your classpath.
-
-=== Source
-
-You can get the source and log issues on https://github.com/spring-projects/spring-security-oauth2-boot[GitHub].
-
-=== Maven
-
-A minimal Maven set of dependencies typically looks like the following:
-
-.pom.xml
-[source,xml]
-[subs="verbatim,attributes"]
-----
-<dependencies>
-  <!-- ... other dependency elements ... -->
-  <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-security</artifactId>
-  </dependency>
-  <dependency>
-    <groupId>org.springframework.security.oauth.boot</groupId>
-    <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-    <version>{version}</version>
-  </dependency>
-</dependencies>
-----
-
-All GA releases (i.e. versions ending in .RELEASE) are deployed to Maven Central, so no additional Maven repositories need to be declared in your pom.
-
-If you are using a SNAPSHOT version, you will need to ensure you have the Spring Snapshot repository defined as shown below:
-
-.pom.xml.
-[source,xml]
-----
-<repositories>
-  <!-- ... possibly other repository elements ... -->
-  <repository>
-    <id>spring-snapshot</id>
-    <name>Spring Snapshot Repository</name>
-    <url>http://repo.spring.io/snapshot</url>
-  </repository>
-</repositories>
-----
-
-If you are using a milestone or release candidate version, you will need to ensure you have the Spring Milestone repository defined as shown below:
-
-.pom.xml.
-[source,xml]
-----
-<repositories>
-  <!-- ... possibly other repository elements ... -->
-  <repository>
-    <id>spring-milestone</id>
-      <name>Spring Milestone Repository</name>
-      <url>http://repo.spring.io/milestone</url>
-  </repository>
-</repositories>
-----
-
-=== Gradle
-
-A minimal Spring Security Gradle set of dependencies typically looks like the following:
-
-.build.gradle
-[source,groovy]
-[subs="verbatim,attributes"]
-----
-dependencies {
-  compile 'org.springframework.boot:spring-boot-starter-security'
-  compile 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:{version}'
-}
-----
-
-All GA releases (i.e. versions ending in .RELEASE) are deployed to Maven Central, so using the mavenCentral() repository is sufficient for GA releases.
-
-.build.gradle
-[source,groovy]
-----
-repositories {
-  mavenCentral()
-}
-----
-
-If you are using a SNAPSHOT version, you will need to ensure you have the Spring Snapshot repository defined as shown below:
-
-.build.gradle
-[source,groovy]
-----
-repositories {
-  maven { url 'https://repo.spring.io/snapshot' }
-}
-----
-
-If you are using a milestone or release candidate version, you will need to ensure you have the Spring Milestone repository defined as shown below:
-
-.build.gradle
-[source,groovy]
-----
-repositories {
-  maven { url 'https://repo.spring.io/milestone' }
-}
-----
-
 [[boot-features-security-oauth2-authorization-server]]
 == Authorization Server
-To create an Authorization Server and grant access tokens you need to use
-`@EnableAuthorizationServer` and provide `security.oauth2.client.client-id` and
-`security.oauth2.client.client-secret]` properties. The client will be registered for you
-in an in-memory repository.
 
-Having done that you will be able to use the client credentials to create an access token,
-for example:
+Spring Security OAuth2 Boot simplifies standing up an OAuth 2.0 Authorization Server.
 
-[indent=0]
+=== Do I Need to Stand Up My Own Authorization Server?
+
+You need to stand up your own authorization server if:
+
+- You want to delegate the operations of sign-in, sign-out, and password recovery to a separate service (also called _identity federation_) that you want to manage yourself, and
+- You want to use the OAuth 2.0 protocol for this separate service to coordinate with other services
+
+=== Dependencies
+
+To leverage the auto-configuration features in this library, you'll need `spring-security-oauth2`, which has the OAuth 2.0 primitives and `spring-security-oauth2-autoconfigure`.
+Note that you'll need to specify the version for `spring-security-oauth2-autoconfigure` since it isn't managed by Spring Boot any longer, though, it should match Boot's version anyway.
+
+Also, for JWT support, you'll also need `spring-security-jwt`.
+
+[[oauth2-boot-authorization-server-minimal]]
+=== Minimal OAuth2 Boot Configuration
+
+Creating a minimal Spring Boot authorization server consists of three basic steps.
+The first is including the dependencies.
+The second is to include the `@EnableAuthorizationServer` annotation.
+And the third is to specify at least one client id and secret pair.
+
+==== Enabling the Authorization Server
+
+Similar to other Spring Boot `@Enable` annotations, you can add the `@EnableAuthorizationServer` annotation to the class that contains your `main` method:
+
+[source,java]
 ----
-  $ curl client:secret@localhost:8080/oauth/token -d grant_type=password -d username=user -d password=pwd
+@EnableAuthorizationServer
+@SpringBootApplication
+public class SimpleAuthorizationServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SimpleAuthorizationServerApplication, args);
+    }
+}
 ----
 
-The basic auth credentials for the `/token` endpoint are the `client-id` and
-`client-secret`. The user credentials are the normal Spring Security user details (which
-default in Spring Boot to "`user`" and a random password).
+Adding this annotation imports other Spring configuration files that add a number of reasonable defaults, like how tokens ought to be signed, their duration, and what grants to allow.
 
-To switch off the auto-configuration and configure the Authorization Server features
-yourself just add a `@Bean` of type `AuthorizationServerConfigurer`.
+==== Specifying a Client and Secret
 
-If you use your own authorization server configuration to configure the list of
-valid clients through an instance of `ClientDetailsServiceConfigurer` as shown
-below, take note that the passwords you configure here are subject to
-https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#core-services-password-encoding[the modernized password storage] that came with
-Spring Security 5. That means you have to prefix your passwords with an Id if
-you use Spring Boot Securities defaults for password storage.
+By spec, numerous OAuth 2.0 endpoints require client authentication, and so you'll need to specify at least one client in order for anyone to be able to communicate with your authorization server.
+
+To specify a client, simply do:
+
+[source,yaml]
+----
+security:
+  oauth2:
+    client:
+      client-id: first_client
+      client-secret: noonewilleverguess
+----
+
+[NOTE]
+While convenient, this makes a number of assumptions that are unlikely to be viable in production.
+You will likely need to do more than this to ship.
+
+And that's it!
+
+But, what do you do with it?
+
+==== Retrieving a Token
+
+OAuth 2.0 is essentially a framework that specifies strategies for exchanging long-lived tokens for short-lived ones.
+
+By default, `@EnableAuthorizationServer` grants a client access to client credentials, which means you can do:
+
+[source,bash]
+----
+curl first-client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=client_credentials -dscope=any
+----
+
+And it will respond with a token:
+
+[source,json]
+----
+{
+    "access_token" : "f05a1ea7-4c80-4583-a123-dc7a99415588",
+    "token_type" : "bearer",
+    "expires_in" : 43173,
+    "scope" : "any"
+}
+----
+
+This token can be presented to any resource server that supports opaque OAuth 2.0 tokens and is configured to point at this authorization server for verification.
+
+From here, you can jump to:
+
+* <<oauth2-boot-authorization-server-disable,How to Switch Off Spring Boot's Auto Configuration>>
+* <<oauth2-boot-authorization-server-authorization-code-grant,How to Make Authorization Code Grant Flow Work>>
+* <<oauth2-boot-authorization-server-password-grant,How to Make Password Grant Flow Work>>
+* <<oauth2-boot-authorization-server-authentication-manager,How and When to Give Authorization Server an AuthenticationManager>>
+* <<oauth2-boot-authorization-server-spring-security-oauth2-resource-server,Is Authorization Server Compatible with Spring Security 5.1 OAuth 2.0 Resource Server and Client?>>
+* https://projects.spring.io/spring-security-oauth/docs/oauth2.html#jwt-tokens[How to Configure for Jwt Tokens]
+
+[[oauth2-boot-authorization-server-disable]]
+=== How to Switch Off OAuth2 Boot's Auto Configuration
+
+Basically, the OAuth2 Boot project will create https://projects.spring.io/spring-security-oauth/docs/oauth2.html#authorization-server-configuration[an instance of `AuthorizationServerConfigurer`] with some reasonable defaults:
+
+* It will register a `NoOpPasswordEncoder` (overriding https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#core-services-password-encoding[the Spring Security default])
+* It will allow the client you provided to use any grant type this server supports; `authorization_code`, `password`, `client_credentials`, `implicit`, `refresh_token`
+
+Otherwise, it will also attempt to pick up a handful of beans if they are defined, namely:
+
+* `AuthenticationManager` - for looking up end users (not clients)
+* `TokenStore` - for generating and retrieving tokens
+* `AccessTokenConverter` - for converting access tokens into different formats, like Jwt
+
+[NOTE]
+While this documentation will cover a bit of what each of these does, the https://projects.spring.io/spring-security-oauth/docs/oauth2.html[Spring Security OAuth documentation] is a better place to read up on its primitives
+
+If you expose a bean of type `AuthorizationServerConfigurer`, none of this will be done automatically.
+
+So, for example, if you need to configure more than one client, change their allowed grant types, or use something better than the no-op password encoder (highly recommended!), then you'll want to expose your own `AuthorizationServerConfigurer`:
+
+[source,java]
+----
+@Configuration
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Autowired DataSource dataSource;
+
+    protected void configure(ClientDetailsServiceConfigurer clients) {
+        clients
+            .jdbc(this.dataSource)
+            .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder());
+    }
+}
+----
+
+The above configuration will cause OAuth2 Boot to no longer retrieve the client from environment properties and will now fall back to the Spring Security password encoder default.
+
+From here, you may want to learn more about:
+
+* <<oauth2-boot-authorization-server-authorization-code-grant,How to Make Authorization Code Grant Flow Work>>
+* <<oauth2-boot-authorization-server-password-grant,How to Make Password Grant Flow Work>>
+
+[[oauth2-boot-authorization-server-authorization-code-grant]]
+=== How to Make Authorization Code Grant Flow Work
+
+With the default configuration, while the Authorization Code Flow is technically allowed, it isn't completely configured.
+
+This is because, in addition to what comes pre-configured, the Authorization Code Flow requires:
+
+1. End users
+2. An end-user login flow, and
+3. A redirect URI registered with the client
+
+==== Adding End Users
+
+In a typical Spring Boot application, secured by Spring Security, https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#tech-userdetailsservice[users are defined via a `UserDetailsService`].
+In that regard, an authorization server is no different:
+
+[source,java]
+----
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean
+    @Override
+    public void UserDetailsService userDetailsService() {
+        return new InMemoryUserDetailsManager(
+            User.withDefaultPasswordEncoder()
+                .username("enduser")
+                .password("password")
+                .roles("USER")
+                .build());
+    }
+}
+----
+
+Note that, as is typical of a Spring Security web application, users are defined in a `WebSecurityConfigurerAdapter` instance.
+
+==== Adding an End-User Login Flow
+
+Incidentally, adding an instance of `WebSecurityConfigurerAdapter` is all we need for now to add a form login flow for end users.
+Though, note that this is where any other configuration regarding the web application itself, not the OAuth 2.0 API, goes.
+
+If you want to customize the login page, offer more than just form login for the user, or add additional support like password recovery, the `WebSecurityConfigurerAdapter` is what picks it up.
+
+==== Registering a Redirect-Uri With the Client
+
+OAuth2 Boot does not support configuring a redirect uri as a property, say, alongside `client-id` and `client-secret`.
+
+To add a redirect-uri, then, you'll need to specify the client either via `InMemoryClientDetailsService` or `JdbcClientDetailsService`.
+
+Doing either will mean <<oauth2-boot-authorization-server-disabled,replacing the OAuth2 Boot-provided `AuthorizationServerConfigurer`>> with your own:
+
+[source,java]
+----
+@Configuration
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    protected void configure(ClientDetailsServiceConfigurer clients) {
+        clients
+            .inMemory()
+                .withClient("first-client")
+                .secret(passwordEncoder().encode("noonewilleverguess"))
+                .scopes("resource:read")
+                .authorizedGrantTypes("authorization_code")
+                .redirectUris("http://localhost:8081/oauth/login/client-app");
+    }
+}
+----
+
+==== Testing Authorization Code Flow
+
+Testing OAuth can be tricky since it requires more than one server to see the full flow in action.
+However, the first steps are straight-forward:
+
+1. Browse to http://localhost:8080/oauth/authorize?grant_type=authorization_code&response_type=code&client_id=first-client&state=1234
+2. The application, if the user is not logged in, will redirect to the login page, at http://localhost:8080/login
+3. Once the user logs in, then the application generates a code and redirects to the registered redirect uri, in this case http://localhost:8081/oauth/login/client-app
+
+The flow could continue at this point by standing up any resource server that is configured for opaque tokens and is pointed at this authorization server instance.
+
+[[oauth2-boot-authorization-server-password-grant]]
+=== How to Make Password Grant Flow Work
+
+With the default configuration, while the Password Flow is technically possible, it, like Authorization Code, is missing users.
+
+That said, because the default configuration will create a user with a username of `user` and a randomly-generated password, you can hypothetically check the logs for the password and do:
+
+[source,bash]
+----
+curl first-client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=password -dscope=any -dusername=user -dpassword=the-password-from-the-logs
+----
+
+and get a token back.
+
+More likely, though, is that you will want to specify a set of users.
+
+As was stated in <<oauth2-boot-authorization-server-authorization-code-grant,How to Make Authorization Code Flow Work>>, in Spring Security, users are typically specified in a `UserDetailsService` and this application is no different:
+
+[source,java]
+----
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean
+    @Override
+    public void UserDetailsService userDetailsService() {
+        return new InMemoryUserDetailsManager(
+            User.withDefaultPasswordEncoder()
+                .username("enduser")
+                .password("password")
+                .roles("USER")
+                .build());
+    }
+}
+----
+
+This is all we need to do. We don't need to override `AuthorizationServerConfigurer`, because the client-id and secret are specified as environment properties.
+
+So, the following should now work:
+
+[source,bash]
+----
+curl first-client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=password -dscope=any -dusername=enduser -dpassword=password
+----
+
+[[oauth2-boot-authorization-server-authentication-manager]]
+=== How and When to Give Authorization Server an AuthenticationManager
+
+It's a very common question, and not terribly intuitive, when `AuthorizationServerEndpointsConfigurer` needs an `AuthenticationManager` instance to be specified.
+The short answer is: Only when using <<oauth2-boot-authorization-server-password-grant,the Resource Owner Password Flow>>.
+
+It's helpful to remember a few fundamentals:
+
+* An `AuthenticationManager` is an abstraction for authenticating users; it typically needs some kind of `UserDetailsService` to be specified in order to be complete.
+* End users are specified in a `WebSecurityConfigurerAdapter`
+* OAuth2 Boot by default will automatically pick up any exposed `AuthenticationManager`
+
+But, not all flows require an `AuthenticationManager` because not all flows have end users involved.
+For example, the Client Credentials flow asks for a token based only on the client's authority, not the end user's.
+And the Refresh Token flow asks for a token based only on the authority of a refresh token.
+
+And, not all flows specifically require the OAuth 2.0 API itself to have an `AuthenticationManager` either.
+For example, the Authorization Code and Implicit flows verify the user when they login (application flow), not when the token (OAuth 2.0 API) is requested.
+
+Only the Resource Owner Password flow returns a code based off of the end user's credentials.
+This means that the Authorization Server only needs an `AuthenticationManager` when clients are using the Resource Owner Password flow.
+
+So, if you are using the Resource Owner Password flow:
+
+[source,java]
+----
+.authorizedGrantTypes("password", ...)
+----
+
+Then your Authorization Server will need an instance of `AuthenticationManager`.
+
+There are a few simple ways to do this, remembering the fundamentals from earlier:
+
+* Leave the OAuth2 Boot defaults (you aren't exposing a `AuthorizationServerConfigurer`) and <<oauth2-boot-authorization-server-password-grant-user-details-service,expose a `UserDetailsService`>>
+* Leave the OAuth2 Boot defaults and <<oauth2-boot-authorization-server-password-grant-authentication-manager,expose an `AuthenticationManager`>>
+* Override `AuthorizationServerConfigurerAdapter` (removing OAuth2 Boot's defaults) and <<oauth2-boot-authorization-server-password-grant-authentication-configuration,depend on `AuthenticationConfiguration`>>
+* Override `AuthorizationServerConfigurerAdapter` and <<oauth2-boot-authorization-server-password-grant-autowired-authentication-manager,manually wire the `AuthenticationManager`>>
+
+[[oauth2-boot-authorization-server-password-grant-user-details-service]]
+==== Expose a UserDetailsService
+
+End users are specified in a `WebSecurityConfigurerAdapter` via a `UserDetailsService`.
+So, if you are using the OAuth2 Boot defaults, meaning you haven't implemented a `AuthorizationServerConfigurer`, then you can quite simply expose a `UserDetailsService` and be done:
+
+[source,java]
+----
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired DataSource dataSource;
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new JdbcUserDetailsManager(this.dataSource);
+    }
+}
+----
+
+[[oauth2-boot-authorization-server-password-grant-authentication-manager]]
+==== Expose an AuthenticationManager
+
+In case you need to do more specialized configuration of the `AuthenticationManager`, you can do so in the `WebSecurityConfigurerAdapter` and then expose it:
+
+[source,java]
+----
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean(BeansId.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(customAuthenticationProvider());
+    }
+}
+----
+
+If you are using the OAuth2 Boot defaults, then it will pick up the bean automatically.
+
+[[oauth2-boot-authorization-server-password-grant-authentication-configuration]]
+==== Depend on AuthenticationConfiguration
+
+Any configured `AuthenticationManager` is available in `AuthenticationConfiguration`.
+This means that if you need to have an `AuthorizationServerConfigurer` (in which case you need to do your own autowiring), then you can have it depend on `AuthenticationConfiguration` to get the `AuthenticationManager` bean:
 
 [source,java,indent=0]
 ----
@@ -157,32 +392,207 @@ public class CustomAuthorizationServerConfigurer extends
 
     AuthenticationManager authenticationManager;
 
-    public CustomAuthorizationServerConfigurer(
-        AuthenticationConfiguration authenticationConfiguration
-    ) throws Exception {
-        this.authenticationManager =
-            authenticationConfiguration.getAuthenticationManager();
+    public CustomAuthorizationServerConfigurer(AuthenticationConfiguration authenticationConfiguration) {
+        this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
     }
 
     @Override
-    public void configure(
-        ClientDetailsServiceConfigurer clients
-    ) throws Exception {
-        clients.inMemory()
-            .withClient("client")
-                .authorizedGrantTypes("password")
-                .secret("{noop}secret")
-                .scopes("all");
+    public void configure(ClientDetailsServiceConfigurer clients) {
+        // .. your client configuration that allows the password grant
     }
 
     @Override
-    public void configure(
-        AuthorizationServerEndpointsConfigurer endpoints
-    ) throws Exception {
-        endpoints.authenticationManager(authenticationManager);    
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        endpoints.authenticationManager(authenticationManager);
     }
 }
 ----
+
+[source,java]
+----
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new MyCustomUserDetailsService();
+    }
+}
+----
+
+[[oauth2-boot-authorization-server-password-grant-autowired-authentication-manager]]
+==== Manually Wire An AuthenticationManager
+
+In the most sophisticated case, where the `AuthenticationManager` needs special configuration and you have your own `AuthenticationServerConfigurer`, then you need to do both:
+
+[source,java,indent=0]
+----
+@Component
+public class CustomAuthorizationServerConfigurer extends
+    AuthorizationServerConfigurerAdapter {
+
+    AuthenticationManager authenticationManager;
+
+    public CustomAuthorizationServerConfigurer(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) {
+        // .. your client configuration that allows the password grant
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        endpoints.authenticationManager(authenticationManager);
+    }
+}
+----
+
+[source,java]
+----
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Bean(BeansId.AUTHENTICATION_MANAGER)
+    @Override
+    public AuthenticationManager authenticationManagerBean() {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(customAuthenticationProvider());
+    }
+}
+----
+
+[[oauth2-boot-authorization-server-spring-security-oauth2-resource-server]]
+=== Is Authorization Server compatible with Spring Security 5.1 Resource Server and Client?
+
+No, not out of the box.
+Spring Security 5.1 supports JWT-encoded JWK-signed authorization only, and Authorization Server doesn't ship with a JWK Set Uri.
+
+Basic support is possible, though.
+
+In order to configure Authorization Server to be compatible with Spring Security 5.1 Resource Server, for example, you need to do the following:
+
+* Configure it to use JWKs
+* Add a JWK Set URI endpoint
+
+[[oauth2-boot-authorization-server-spring-security-oauth2-resource-server-jwk]]
+==== Configure Authorization Server to Use JWKs
+
+To change the format used for access and refresh tokens, you can simply change out the `AccessTokenConverter` and the `TokenStore`:
+
+[source,java]
+----
+@EnableAuthorizationServer
+@Configuration
+public class JwkSetConfiguration extends AuthorizationServerConfigurerAdapter {
+
+	AuthenticationManager authenticationManager;
+	KeyPair keyPair;
+
+	public JwkSetConfiguration(AuthenticationConfiguration authenticationConfiguration,
+			KeyPair keyPair) throws Exception {
+
+		this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
+		this.keyPair = keyPair;
+	}
+
+    // ... client configuration, etc.
+
+	@Override
+	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+		// @formatter:off
+		endpoints
+			.authenticationManager(this.authenticationManager)
+			.accessTokenConverter(accessTokenConverter())
+			.tokenStore(tokenStore());
+		// @formatter:on
+	}
+
+	@Bean
+	public TokenStore tokenStore() {
+		return new JwtTokenStore(accessTokenConverter());
+	}
+
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+		converter.setKeyPair(this.keyPair);
+		return converter;
+	}
+}
+----
+
+[[oauth2-boot-authorization-server-spring-security-oauth2-resource-server-jwk-set-uri]]
+==== Add a JWK Set URI Endpoint
+
+Spring Security OAuth does not support JWKs, nor does `@EnableAuthorizationServer` support adding more OAuth 2.0 API endpoints to its initial set.
+But, we can add this with only a few lines.
+
+First, you'll need to add another dependency, `com.nimbusds:nimbus-jose-jwt`. This is going to give you the appropriate JWK primitives.
+
+Second, instead of using `@EnableAuthorizationServer`, you're going to include its two `@Configuration` classes directly.
+
+`AuthorizationServerEndpointsConfiguration` is the `@Configuration` class for configuring the OAuth 2.0 API endpoints, like what format to use for the tokens.
+
+`AuthorizationServerSecurityConfiguration` is the `@Configuration` class for the access rules around those endpoints.
+This is the one that you need to extend:
+
+[source,java]
+----
+@FrameworkEndpoint
+class JwkSetEndpoint {
+	KeyPair keyPair;
+
+	public JwkSetEndpoint(KeyPair keyPair) {
+		this.keyPair = keyPair;
+	}
+
+	@GetMapping("/.well-known/jwks.json")
+	@ResponseBody
+	public Map<String, Object> getKey(Principal principal) {
+		RSAPublicKey publicKey = (RSAPublicKey) this.keyPair.getPublic();
+		RSAKey key = new RSAKey.Builder(publicKey).build();
+		return new JWKSet(key).toJSONObject();
+	}
+}
+----
+
+[source,java]
+----
+@Configuration
+class JwkSetEndpointConfiguration extends AuthorizationServerSecurityConfiguration {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		super.configure(http);
+		http
+			.requestMatchers()
+				.mvcMatchers("/.well-known/jwks.json")
+				.and()
+			.authorizeRequests()
+				.mvcMatchers("/.well-known/jwks.json").permitAll();
+	}
+}
+----
+
+And then, since you don't need to change `AuthorizationServerEndpointsConfiguration`, you can simply `@Import` it instead of using `@EnableAuthorizationServer`:
+
+[source,java]
+----
+@Import(AuthorizationServerEndpointsConfiguration.class)
+@Configuration
+public class JwkSetConfiguration extends AuthorizationServerConfigurerAdapter {
+
+    // ... the rest of the configuration from the previous section
+}
+----
+
+==== Testing Against Spring Security 5.1 Resource Server
+
+Now, you can simply POST to the `/oauth/token` endpoint as before to obtain a token, and then present that to a https://github.com/spring-projects/spring-security/tree/master/samples/boot/oauth2resourceserver[Spring Security 5.1 Resource Server].
 
 [[boot-features-security-oauth2-resource-server]]
 == Resource Server
@@ -241,7 +651,7 @@ change the order).
 
 
 [[boot-features-security-oauth2-token-type]]
-= Token Type in User Info
+=== Token Type in User Info
 Google, and certain other 3rd party identity providers, are more strict about the token
 type name that is sent in the headers to the user info endpoint. The default is "`Bearer`"
 which suits most providers and matches the spec, but if you need to change it you can set
@@ -250,7 +660,7 @@ which suits most providers and matches the spec, but if you need to change it yo
 
 
 [[boot-features-security-custom-user-info]]
-= Customizing the User Info RestTemplate
+=== Customizing the User Info RestTemplate
 If you have a `user-info-uri`, the resource server features use an `OAuth2RestTemplate`
 internally to fetch user details for authentication. This is provided as a `@Bean` of
 type `UserInfoRestTemplateFactory`. The default should be fine for most providers, but
