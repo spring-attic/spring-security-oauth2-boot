@@ -76,8 +76,9 @@ public class AuthorizationServerTokenServicesConfigurationTests {
 		this.context = new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
 				.environment(this.environment)
 				.web(WebApplicationType.NONE).run();
-		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 
+		JwtAccessTokenConverter converter = this.context.getBean(JwtAccessTokenConverter.class);
+		assertThat(converter.isPublic()).isTrue();
 	}
 
 	@Test
