@@ -1,0 +1,14 @@
+apply plugin: 'io.spring.convention.spring-sample-boot'
+
+dependencies {
+	compile project(':spring-security-oauth2-autoconfigure')
+
+	compile 'org.springframework.boot:spring-boot-starter-security'
+	compile 'org.springframework.boot:spring-boot-starter-web'
+
+	compile 'org.springframework.security.oauth:spring-security-oauth2'
+	compile 'org.springframework.security:spring-security-jwt'
+
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'org.springframework.security:spring-security-test'
+}
