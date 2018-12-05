@@ -90,9 +90,9 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 			if (!keyValue.startsWith("-----BEGIN")) {
-				converter.setSigningKey(keyValue);
+				converter.setVerifierKey(keyValue);
 			}
-			converter.setVerifierKey(keyValue);
+			converter.setSigningKey(keyValue);
 
 			return converter;
 		}
