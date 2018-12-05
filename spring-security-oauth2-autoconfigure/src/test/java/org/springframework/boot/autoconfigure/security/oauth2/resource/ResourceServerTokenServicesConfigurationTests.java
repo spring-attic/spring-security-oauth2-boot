@@ -16,7 +16,6 @@
 
 package org.springframework.boot.autoconfigure.security.oauth2.resource;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
 
 import org.junit.After;
@@ -61,15 +60,11 @@ import org.springframework.social.autoconfigure.SocialWebAutoConfiguration;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.facebook.autoconfigure.FacebookAutoConfiguration;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for {@link ResourceServerTokenServicesConfiguration}.
@@ -288,41 +283,6 @@ public class ResourceServerTokenServicesConfigurationTests {
 	}
 
 	@Test
-	public void autoconfigureWhenCustomUserDetailsServiceExposedAsBeanThenJwkTokenStorePicksItUp() throws Exception {
-		TestPropertyValues
-				.of("security.oauth2.resource.jwk.key-set-uri=http://my-auth-server/token_keys")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(UserDetailsServiceConfiguration.class,
-				ResourceConfiguration.class).environment(this.environment)
-				.web(WebApplicationType.NONE).run();
-
-		UserDetailsService service = this.context.getBean(UserDetailsService.class);
-		when(service.loadUserByUsername(anyString())).thenReturn(mock(UserDetails.class));
-
-		JwkTokenStore store = this.context.getBean(JwkTokenStore.class);
-
-		JwtAccessTokenConverter accessTokenConverter = findJwtAccessTokenConverter(store);
-		accessTokenConverter.extractAuthentication(Collections.singletonMap("user_name", "tom"));
-		verify(service).loadUserByUsername(anyString());
-	}
-
-	@Test
-	public void autoconfigureWhenCustomUserDetailsServiceExposedAsBeanThenJwtTokenStorePicksItUp() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY)
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(UserDetailsServiceConfiguration.class,
-				ResourceConfiguration.class).environment(this.environment)
-				.web(WebApplicationType.NONE).run();
-
-		UserDetailsService service = this.context.getBean(UserDetailsService.class);
-		when(service.loadUserByUsername(anyString())).thenReturn(mock(UserDetails.class));
-
-		JwtAccessTokenConverter accessTokenConverter = this.context.getBean(JwtAccessTokenConverter.class);
-		accessTokenConverter.extractAuthentication(Collections.singletonMap("user_name", "tom"));
-		verify(service).loadUserByUsername(anyString());
-	}
-
-	@Test
 	public void configureWhenKeyStoreIsProvidedThenExposesJwtTokenStore() {
 		TestPropertyValues.of(
 				"security.oauth2.resource.jwt.key-store=classpath:" +
@@ -516,14 +476,6 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	}
 
-	@Configuration
-	static class UserDetailsServiceConfiguration {
-		@Bean
-		public UserDetailsService userDetailsService() {
-			return mock(UserDetailsService.class);
-		}
-	}
-
 	private static class MockRestCallCustomizer
 			implements JwtAccessTokenConverterRestTemplateCustomizer {
 
@@ -540,14 +492,4 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	}
 
-	private JwtAccessTokenConverter findJwtAccessTokenConverter(JwkTokenStore tokenStore) {
-		TokenStore delegate = getProperty("delegate", tokenStore);
-		return getProperty("jwtTokenEnhancer", delegate);
-	}
-
-	private <T> T getProperty(String name, Object target) {
-		Field field = ReflectionUtils.findField(target.getClass(), name);
-		field.setAccessible(true);
-		return (T) ReflectionUtils.getField(field, target);
-	}
 }

@@ -52,21 +52,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestOperations;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.RequestEnhancer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.UserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
@@ -225,11 +220,9 @@ public class ResourceServerTokenServicesConfiguration {
 
 	@Configuration
 	@Conditional(JwkCondition.class)
-	protected static class JwkTokenStoreConfiguration implements ApplicationContextAware {
+	protected static class JwkTokenStoreConfiguration {
 
 		private final ResourceServerProperties resource;
-
-		private ApplicationContext context;
 
 		public JwkTokenStoreConfiguration(ResourceServerProperties resource) {
 			this.resource = resource;
@@ -246,41 +239,13 @@ public class ResourceServerTokenServicesConfiguration {
 		@Bean
 		@ConditionalOnMissingBean(TokenStore.class)
 		public TokenStore jwkTokenStore() {
-			DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
-			accessTokenConverter.setUserTokenConverter(userAuthenticationConverter());
-
-			return new JwkTokenStore(this.resource.getJwk().getKeySetUri(), accessTokenConverter);
-		}
-
-		@Override
-		public void setApplicationContext(ApplicationContext context) throws BeansException {
-			this.context = context;
-		}
-
-		private UserAuthenticationConverter userAuthenticationConverter() {
-			DefaultUserAuthenticationConverter userAuthenticationConverter =
-					new DefaultUserAuthenticationConverter();
-
-			if (hasExactlyOneBean(UserDetailsService.class)) {
-				UserDetailsService userDetailsService = this.context.getBean(UserDetailsService.class);
-				userAuthenticationConverter.setUserDetailsService(userDetailsService);
-			}
-
-			return userAuthenticationConverter;
-		}
-
-		private <T> boolean hasExactlyOneBean(Class<T> clazz) {
-			if (this.context == null) {
-				return false;
-			}
-
-			return this.context.getBeanNamesForType(clazz).length == 1;
+			return new JwkTokenStore(this.resource.getJwk().getKeySetUri());
 		}
 	}
 
 	@Configuration
 	@Conditional(JwtTokenCondition.class)
-	protected static class JwtTokenServicesConfiguration implements ApplicationContextAware {
+	protected static class JwtTokenServicesConfiguration {
 
 		private final ResourceServerProperties resource;
 
@@ -288,19 +253,12 @@ public class ResourceServerTokenServicesConfiguration {
 
 		private final List<JwtAccessTokenConverterRestTemplateCustomizer> customizers;
 
-		private ApplicationContext context;
-
 		public JwtTokenServicesConfiguration(ResourceServerProperties resource,
 				ObjectProvider<List<JwtAccessTokenConverterConfigurer>> configurers,
 				ObjectProvider<List<JwtAccessTokenConverterRestTemplateCustomizer>> customizers) {
 			this.resource = resource;
 			this.configurers = configurers.getIfAvailable();
 			this.customizers = customizers.getIfAvailable();
-		}
-
-		@Override
-		public void setApplicationContext(ApplicationContext context) throws BeansException {
-			this.context = context;
 		}
 
 		@Bean
@@ -320,8 +278,6 @@ public class ResourceServerTokenServicesConfiguration {
 		@Bean
 		public JwtAccessTokenConverter jwtTokenEnhancer() {
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-			converter.setAccessTokenConverter(accessTokenConverter());
-
 			String keyValue = this.resource.getJwt().getKeyValue();
 			if (!StringUtils.hasText(keyValue)) {
 				keyValue = getKeyFromServer();
@@ -339,25 +295,6 @@ public class ResourceServerTokenServicesConfiguration {
 				}
 			}
 			return converter;
-		}
-
-		private AccessTokenConverter accessTokenConverter() {
-			DefaultAccessTokenConverter accessTokenConverter = new DefaultAccessTokenConverter();
-			accessTokenConverter.setUserTokenConverter(userAuthenticationConverter());
-			return accessTokenConverter;
-		}
-
-		private UserAuthenticationConverter userAuthenticationConverter() {
-			DefaultUserAuthenticationConverter userAuthenticationConverter =
-					new DefaultUserAuthenticationConverter();
-
-			if (hasExactlyOneBean(UserDetailsService.class)) {
-				UserDetailsService userDetailsService = this.context.getBean(UserDetailsService.class);
-
-				userAuthenticationConverter.setUserDetailsService(userDetailsService);
-			}
-
-			return userAuthenticationConverter;
 		}
 
 		private String getKeyFromServer() {
@@ -382,13 +319,6 @@ public class ResourceServerTokenServicesConfiguration {
 					.get("value");
 		}
 
-		private <T> boolean hasExactlyOneBean(Class<T> clazz) {
-			if (this.context == null) {
-				return false;
-			}
-
-			return this.context.getBeanNamesForType(clazz).length == 1;
-		}
 	}
 
 	@Configuration
