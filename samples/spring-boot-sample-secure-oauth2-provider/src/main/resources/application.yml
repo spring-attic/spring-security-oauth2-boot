@@ -1,0 +1,9 @@
+security:
+  oauth2:
+    authorization:
+      check-token-access: isAuthenticated()
+    client:
+      client-id: first-client
+      client-secret: noonewilleverguess
+
+# logging.level.org.springframework.security=DEBUG
