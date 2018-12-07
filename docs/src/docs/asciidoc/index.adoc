@@ -43,7 +43,7 @@ You need to stand up your own authorization server if:
 === Dependencies
 
 To use the auto-configuration features in this library, you need `spring-security-oauth2`, which has the OAuth 2.0 primitives and `spring-security-oauth2-autoconfigure`.
-Note that you need to specify the version for `spring-security-oauth2-autoconfigure`. since it is not managed by Spring Boot any longer, though it should match Boot's version anyway.
+Note that you need to specify the version for `spring-security-oauth2-autoconfigure`, since it is not managed by Spring Boot any longer, though it should match Boot's version anyway.
 
 For JWT support, you also need `spring-security-jwt`.
 
@@ -450,7 +450,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 [[oauth2-boot-authorization-server-password-grant-autowired-authentication-manager]]
 ==== Manually Wiring An `AuthenticationManager`
 
-In the most sophisticated case, where the `AuthenticationManager` needs special configuration and you have your own `AuthenticationServerConfigurer`, then you need to both create your own `AuthorizationServerConfigurerAdapter` and your own WebSecurityConfigurerAdapter:
+In the most sophisticated case, where the `AuthenticationManager` needs special configuration and you have your own `AuthenticationServerConfigurer`, then you need to both create your own `AuthorizationServerConfigurerAdapter` and your own `WebSecurityConfigurerAdapter`:
 
 ====
 [source,java,indent=0]
