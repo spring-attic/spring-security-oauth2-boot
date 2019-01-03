@@ -2,6 +2,7 @@ buildscript {
 	dependencies {
 		classpath 'io.spring.gradle:spring-build-conventions:0.0.22.RELEASE'
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
+		classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.6'
 	}
 	repositories {
 		maven { url 'https://repo.spring.io/plugins-snapshot' }
@@ -21,4 +22,5 @@ subprojects {
         plugins.withType(JavaPlugin) {
                 project.sourceCompatibility='1.8'
         }
+	apply plugin: 'io.spring.javaformat'
 }
