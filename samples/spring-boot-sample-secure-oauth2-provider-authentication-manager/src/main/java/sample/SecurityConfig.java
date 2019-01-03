@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 package sample;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +34,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
@@ -46,16 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new InMemoryUserDetailsManager(
-				User.withDefaultPasswordEncoder()
-						.username("enduser")
-						.password("password")
-						.roles("USER")
-						.build());
+		return new InMemoryUserDetailsManager(User.withDefaultPasswordEncoder()
+				.username("enduser").password("password").roles("USER").build());
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		// @formatter:off
 		auth
 			.authenticationEventPublisher(new AuthenticationEventPublisher() {
 				@Override
@@ -69,5 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				}
 			})
 			.userDetailsService(userDetailsService());
+		// @formatter:on
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,8 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		private final AuthorizationServerProperties authorization;
 
-		public JwtTokenServicesConfiguration(AuthorizationServerProperties authorization) {
+		public JwtTokenServicesConfiguration(
+				AuthorizationServerProperties authorization) {
 			this.authorization = authorization;
 		}
 
@@ -86,7 +87,8 @@ public class AuthorizationServerTokenServicesConfiguration {
 		@Bean
 		public JwtAccessTokenConverter jwtTokenEnhancer() {
 			String keyValue = this.authorization.getJwt().getKeyValue();
-			Assert.notNull(this.authorization.getJwt().getKeyValue(), "keyValue cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyValue(),
+					"keyValue cannot be null");
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 			if (!keyValue.startsWith("-----BEGIN")) {
@@ -96,10 +98,12 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 			return converter;
 		}
+
 	}
 
 	/**
-	 * Configuration for writing a single-key JWT token-issuing authorization server based on a key store.
+	 * Configuration for writing a single-key JWT token-issuing authorization server based
+	 * on a key store.
 	 *
 	 * To use, provide a key store and key alias via
 	 *
@@ -112,6 +116,7 @@ public class AuthorizationServerTokenServicesConfiguration {
 	protected class JwtKeyStoreConfiguration implements ApplicationContextAware {
 
 		private final AuthorizationServerProperties authorization;
+
 		private ApplicationContext context;
 
 		@Autowired
@@ -120,7 +125,8 @@ public class AuthorizationServerTokenServicesConfiguration {
 		}
 
 		@Override
-		public void setApplicationContext(ApplicationContext context) throws BeansException {
+		public void setApplicationContext(ApplicationContext context)
+				throws BeansException {
 			this.context = context;
 		}
 
@@ -140,31 +146,38 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		@Bean
 		public JwtAccessTokenConverter accessTokenConverter() {
-			Assert.notNull(this.authorization.getJwt().getKeyStore(), "keyStore cannot be null");
-			Assert.notNull(this.authorization.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
-			Assert.notNull(this.authorization.getJwt().getKeyAlias(), "keyAlias cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyStore(),
+					"keyStore cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyStorePassword(),
+					"keyStorePassword cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyAlias(),
+					"keyAlias cannot be null");
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-			Resource keyStore = this.context.getResource(this.authorization.getJwt().getKeyStore());
-			char[] keyStorePassword = this.authorization.getJwt().getKeyStorePassword().toCharArray();
-			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, keyStorePassword);
+			Resource keyStore = this.context
+					.getResource(this.authorization.getJwt().getKeyStore());
+			char[] keyStorePassword = this.authorization.getJwt().getKeyStorePassword()
+					.toCharArray();
+			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore,
+					keyStorePassword);
 
 			String keyAlias = this.authorization.getJwt().getKeyAlias();
-			char[] keyPassword = Optional.ofNullable(
-					this.authorization.getJwt().getKeyPassword())
+			char[] keyPassword = Optional
+					.ofNullable(this.authorization.getJwt().getKeyPassword())
 					.map(String::toCharArray).orElse(keyStorePassword);
 			converter.setKeyPair(keyStoreKeyFactory.getKeyPair(keyAlias, keyPassword));
 
 			return converter;
 		}
+
 	}
 
 	private static class JwtTokenCondition extends SpringBootCondition {
 
 		@Override
 		public ConditionOutcome getMatchOutcome(ConditionContext context,
-												AnnotatedTypeMetadata metadata) {
+				AnnotatedTypeMetadata metadata) {
 			ConditionMessage.Builder message = ConditionMessage
 					.forCondition("OAuth JWT Condition");
 			Environment environment = context.getEnvironment();
@@ -174,8 +187,8 @@ public class AuthorizationServerTokenServicesConfiguration {
 				return ConditionOutcome
 						.match(message.foundExactly("provided private or symmetric key"));
 			}
-			return ConditionOutcome
-					.noMatch(message.didNotFind("provided private or symmetric key").atAll());
+			return ConditionOutcome.noMatch(
+					message.didNotFind("provided private or symmetric key").atAll());
 		}
 
 	}
@@ -184,7 +197,7 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		@Override
 		public ConditionOutcome getMatchOutcome(ConditionContext context,
-												AnnotatedTypeMetadata metadata) {
+				AnnotatedTypeMetadata metadata) {
 			ConditionMessage.Builder message = ConditionMessage
 					.forCondition("OAuth JWT KeyStore Condition");
 			Environment environment = context.getEnvironment();
@@ -199,4 +212,5 @@ public class AuthorizationServerTokenServicesConfiguration {
 		}
 
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
  * curl first-client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=client_credentials -dscope=any
  * </pre>
  *
- * The response should be similar to:
- * <pre>
+ * The response should be similar to: <pre>
  * 	{
  * 		"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzY29wZSI6WyJhbnkiXSwiZXhwIjoxNTQ0MDkyMDY0LCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwianRpIjoiZTJmMDE3ODItNTczMC00OWI5LWI2Y2ItNTI1NjQ2NjVkMmYxIiwiY2xpZW50X2lkIjoiZmlyc3QtY2xpZW50In0.MaNc5R7ViGzX2d9ldCE-pbaaoRAULqyIbmURqY8_IZBRJCkEwGBlySI4UhMUK271Yd8KyE0MnSWQ6CDFZpryP_IsFsdICpklJQE7vLnAFqAS9TQupbEPpnDY6Ceb4bEHaYyyRYjsgZeyLyBP8E41VmuFNqydWBg0jqaqYu66YJw",
  * 		"token_type":"bearer",
@@ -47,4 +46,5 @@ public class SampleSecureOAuth2Application {
 	public static void main(String[] args) {
 		SpringApplication.run(SampleSecureOAuth2Application.class, args);
 	}
+
 }

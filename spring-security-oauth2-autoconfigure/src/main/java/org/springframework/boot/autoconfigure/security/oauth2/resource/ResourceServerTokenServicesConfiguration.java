@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,6 +241,7 @@ public class ResourceServerTokenServicesConfiguration {
 		public TokenStore jwkTokenStore() {
 			return new JwkTokenStore(this.resource.getJwk().getKeySetUri());
 		}
+
 	}
 
 	@Configuration
@@ -326,6 +327,7 @@ public class ResourceServerTokenServicesConfiguration {
 	protected class JwtKeyStoreConfiguration implements ApplicationContextAware {
 
 		private final ResourceServerProperties resource;
+
 		private ApplicationContext context;
 
 		@Autowired
@@ -334,7 +336,8 @@ public class ResourceServerTokenServicesConfiguration {
 		}
 
 		@Override
-		public void setApplicationContext(ApplicationContext context) throws BeansException {
+		public void setApplicationContext(ApplicationContext context)
+				throws BeansException {
 			this.context = context;
 		}
 
@@ -354,24 +357,31 @@ public class ResourceServerTokenServicesConfiguration {
 
 		@Bean
 		public JwtAccessTokenConverter accessTokenConverter() {
-			Assert.notNull(this.resource.getJwt().getKeyStore(), "keyStore cannot be null");
-			Assert.notNull(this.resource.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
-			Assert.notNull(this.resource.getJwt().getKeyAlias(), "keyAlias cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyStore(),
+					"keyStore cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyStorePassword(),
+					"keyStorePassword cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyAlias(),
+					"keyAlias cannot be null");
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-			Resource keyStore = this.context.getResource(this.resource.getJwt().getKeyStore());
-			char[] keyStorePassword = this.resource.getJwt().getKeyStorePassword().toCharArray();
-			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, keyStorePassword);
+			Resource keyStore = this.context
+					.getResource(this.resource.getJwt().getKeyStore());
+			char[] keyStorePassword = this.resource.getJwt().getKeyStorePassword()
+					.toCharArray();
+			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore,
+					keyStorePassword);
 
 			String keyAlias = this.resource.getJwt().getKeyAlias();
-			char[] keyPassword = Optional.ofNullable(
-					this.resource.getJwt().getKeyPassword())
+			char[] keyPassword = Optional
+					.ofNullable(this.resource.getJwt().getKeyPassword())
 					.map(String::toCharArray).orElse(keyStorePassword);
 			converter.setKeyPair(keyStoreKeyFactory.getKeyPair(keyAlias, keyPassword));
 
 			return converter;
 		}
+
 	}
 
 	private static class TokenInfoCondition extends SpringBootCondition {
@@ -453,7 +463,7 @@ public class ResourceServerTokenServicesConfiguration {
 
 		@Override
 		public ConditionOutcome getMatchOutcome(ConditionContext context,
-												AnnotatedTypeMetadata metadata) {
+				AnnotatedTypeMetadata metadata) {
 			ConditionMessage.Builder message = ConditionMessage
 					.forCondition("OAuth JWT KeyStore Condition");
 			Environment environment = context.getEnvironment();
@@ -463,8 +473,8 @@ public class ResourceServerTokenServicesConfiguration {
 				return ConditionOutcome
 						.match(message.foundExactly("provided key store location"));
 			}
-			return ConditionOutcome
-					.noMatch(message.didNotFind("key store location not provided").atAll());
+			return ConditionOutcome.noMatch(
+					message.didNotFind("key store location not provided").atAll());
 		}
 
 	}
@@ -502,6 +512,7 @@ public class ResourceServerTokenServicesConfiguration {
 		static class HasKeyStoreConfiguration {
 
 		}
+
 	}
 
 	static class AcceptJsonRequestInterceptor implements ClientHttpRequestInterceptor {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,10 +47,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 public class SampleSecureOAuth2ApplicationTests {
+
 	private static final String CLIENT_ID = "first-client";
+
 	private static final String CLIENT_SECRET = "noonewilleverguess";
-	private static final RequestPostProcessor CLIENT_CREDENTIALS =
-			httpBasic(CLIENT_ID, CLIENT_SECRET);
+
+	private static final RequestPostProcessor CLIENT_CREDENTIALS = httpBasic(CLIENT_ID,
+			CLIENT_SECRET);
 
 	@Value("${security.oauth2.authorization.jwt.key-value}")
 	String privateKeyValue;
@@ -62,13 +65,10 @@ public class SampleSecureOAuth2ApplicationTests {
 
 	@Test
 	public void tokenWhenUsingClientCredentialsThenIsValid() throws Exception {
-		MvcResult result =
-				this.mvc.perform(post("/oauth/token")
-						.with(CLIENT_CREDENTIALS)
-						.param("grant_type", "client_credentials")
-						.param("scope", "any"))
-						.andExpect(status().isOk())
-						.andReturn();
+		MvcResult result = this.mvc
+				.perform(post("/oauth/token").with(CLIENT_CREDENTIALS)
+						.param("grant_type", "client_credentials").param("scope", "any"))
+				.andExpect(status().isOk()).andReturn();
 
 		String accessToken = extract(result, "access_token");
 
@@ -78,7 +78,7 @@ public class SampleSecureOAuth2ApplicationTests {
 	private String extract(MvcResult result, String property) throws Exception {
 		return this.objectMapper
 				.readValue(result.getResponse().getContentAsString(), Map.class)
-				.get(property)
-				.toString();
+				.get(property).toString();
 	}
+
 }

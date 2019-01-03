@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * This sample is intended to demonstrate that
  * {@link org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer}
- * only needs an {@link org.springframework.security.authentication.AuthenticationManager} when the
- * {@code password} grant type is configured.
+ * only needs an {@link org.springframework.security.authentication.AuthenticationManager}
+ * when the {@code password} grant type is configured.
  *
  * After you launch the app, you can retrieve a bearer token like this:
  *
@@ -30,8 +30,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * curl ifusespasswordgranttype:thenneedsauthenticationmanager@localhost:8080/oauth/token -dgrant_type=password -dusername=enduser -dpassword=password -dscope=any
  * </pre>
  *
- * The response should be similar to:
- * <pre>
+ * The response should be similar to: <pre>
  *	{
  *		"access_token":"6b79fdbc-734c-4e33-b625-1930e1b74719"",
  *		"token_type":"bearer",
@@ -51,4 +50,5 @@ public class SampleSecureOAuth2Application {
 	public static void main(String[] args) {
 		SpringApplication.run(SampleSecureOAuth2Application.class, args);
 	}
+
 }

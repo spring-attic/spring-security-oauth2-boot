@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,37 +49,32 @@ public class SampleSecureOAuth2ActuatorApplicationTests {
 
 	@Test
 	public void homePageSecuredByDefault() throws Exception {
-		this.mvc.perform(get("/"))
-				.andExpect(status().isUnauthorized())
+		this.mvc.perform(get("/")).andExpect(status().isUnauthorized())
 				.andExpect(header().string("WWW-Authenticate", containsString("Bearer")));
 	}
 
 	@Test
 	public void healthSecured() throws Exception {
-		this.mvc.perform(get("/actuator/health"))
-				.andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/actuator/health")).andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void healthWithBasicAuthorization() throws Exception {
 		MockHttpServletRequestBuilder request = get("/actuator/health")
 				.with(userCredentials());
-		this.mvc.perform(request)
-				.andExpect(status().isOk());
+		this.mvc.perform(request).andExpect(status().isOk());
 	}
 
 	@Test
 	public void envSecured() throws Exception {
-		this.mvc.perform(get("/actuator/env"))
-				.andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/actuator/env")).andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void envWithBasicAuthorization() throws Exception {
 		MockHttpServletRequestBuilder request = get("/actuator/env")
 				.with(userCredentials());
-		this.mvc.perform(request)
-				.andExpect(status().isOk());
+		this.mvc.perform(request).andExpect(status().isOk());
 	}
 
 	private RequestPostProcessor userCredentials() {

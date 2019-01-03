@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
  * @since 2.1.0
  */
 public class AuthorizationServerTokenServicesConfigurationTests {
+
 	private ConfigurableApplicationContext context;
 
 	private ConfigurableEnvironment environment = new StandardEnvironment();
@@ -66,92 +67,90 @@ public class AuthorizationServerTokenServicesConfigurationTests {
 	}
 
 	@Test
-	public void configureWhenPrivateKeyIsProvidedThenExposesJwtAccessTokenConverter() throws Exception {
-		Path privateKeyPath = new ClassPathResource("key.private", this.getClass()).getFile().toPath();
-		String privateKey = Files.readAllLines(privateKeyPath).stream().collect(Collectors.joining("\n"));
+	public void configureWhenPrivateKeyIsProvidedThenExposesJwtAccessTokenConverter()
+			throws Exception {
+		Path privateKeyPath = new ClassPathResource("key.private", this.getClass())
+				.getFile().toPath();
+		String privateKey = Files.readAllLines(privateKeyPath).stream()
+				.collect(Collectors.joining("\n"));
 
-		TestPropertyValues.of(
-				"security.oauth2.authorization.jwt.key-value=" + privateKey)
+		TestPropertyValues.of("security.oauth2.authorization.jwt.key-value=" + privateKey)
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
-				.environment(this.environment)
-				.web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(
+				AuthorizationServerConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
 
-		JwtAccessTokenConverter converter = this.context.getBean(JwtAccessTokenConverter.class);
+		JwtAccessTokenConverter converter = this.context
+				.getBean(JwtAccessTokenConverter.class);
 		assertThat(converter.isPublic()).isTrue();
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedThenExposesJwtTokenStore() {
-		TestPropertyValues.of(
-				"security.oauth2.authorization.jwt.key-store=classpath:" +
-						"org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
+		TestPropertyValues.of("security.oauth2.authorization.jwt.key-store=classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
 				"security.oauth2.authorization.jwt.key-store-password=changeme",
 				"security.oauth2.authorization.jwt.key-alias=jwt")
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(AuthorizationServerConfiguration.class).environment(this.environment)
-				.web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(
+				AuthorizationServerConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(TokenStore.class)).hasSize(1);
-		assertThat(this.context.getBean(TokenStore.class)).isInstanceOf(JwtTokenStore.class);
+		assertThat(this.context.getBean(TokenStore.class))
+				.isInstanceOf(JwtTokenStore.class);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedThenExposesJwtAccessTokenConverter() {
-		TestPropertyValues.of(
-				"security.oauth2.authorization.jwt.key-store=classpath:" +
-						"org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
+		TestPropertyValues.of("security.oauth2.authorization.jwt.key-store=classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
 				"security.oauth2.authorization.jwt.key-store-password=changeme",
 				"security.oauth2.authorization.jwt.key-alias=jwt")
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
-				.environment(this.environment)
-				.web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(
+				AuthorizationServerConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedWithKeyPasswordThenExposesJwtAccessTokenConverter() {
-		TestPropertyValues.of(
-				"security.oauth2.authorization.jwt.key-store=classpath:" +
-						"org/springframework/boot/autoconfigure/security/oauth2/authserver/keyhaspassword.jks",
+		TestPropertyValues.of("security.oauth2.authorization.jwt.key-store=classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keyhaspassword.jks",
 				"security.oauth2.authorization.jwt.key-store-password=changeme",
 				"security.oauth2.authorization.jwt.key-alias=jwt",
 				"security.oauth2.authorization.jwt.key-password=password")
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
-				.environment(this.environment)
-				.web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(
+				AuthorizationServerConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedButNoAliasThenThrowsException() {
-		TestPropertyValues.of(
-				"security.oauth2.authorization.jwt.key-store=classpath:" +
-						"org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
+		TestPropertyValues.of("security.oauth2.authorization.jwt.key-store=classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
 				"security.oauth2.authorization.jwt.key-store-password=changeme")
 				.applyTo(this.environment);
 
-		assertThatCode(() ->
-			new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
-							.environment(this.environment)
-							.web(WebApplicationType.NONE).run())
-				.isInstanceOf(UnsatisfiedDependencyException.class);
+		assertThatCode(
+				() -> new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
+						.environment(this.environment).web(WebApplicationType.NONE).run())
+								.isInstanceOf(UnsatisfiedDependencyException.class);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedButNoPasswordThenThrowsException() {
-		TestPropertyValues.of(
-				"security.oauth2.authorization.jwt.key-store=classpath:" +
-						"org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
+		TestPropertyValues.of("security.oauth2.authorization.jwt.key-store=classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
 				"security.oauth2.authorization.jwt.key-alias=jwt")
 				.applyTo(this.environment);
 
-		assertThatCode(() ->
-				new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
-						.environment(this.environment)
-						.web(WebApplicationType.NONE).run())
-				.isInstanceOf(UnsatisfiedDependencyException.class);
+		assertThatCode(
+				() -> new SpringApplicationBuilder(AuthorizationServerConfiguration.class)
+						.environment(this.environment).web(WebApplicationType.NONE).run())
+								.isInstanceOf(UnsatisfiedDependencyException.class);
 	}
 
 	@Configuration

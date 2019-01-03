@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -398,8 +398,8 @@ public class OAuth2AutoConfigurationTests {
 	public void resourceServerConditionWhenJwkConfigurationPresentShouldMatch()
 			throws Exception {
 		this.context = new AnnotationConfigServletWebServerApplicationContext();
-		TestPropertyValues
-				.of("security.oauth2.resource.jwk.key-set-uri:http://my-auth-server/token_keys")
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwk.key-set-uri:http://my-auth-server/token_keys")
 				.applyTo(this.context);
 		this.context.register(ResourceServerConfiguration.class,
 				MinimalSecureWebApplication.class);
@@ -503,9 +503,13 @@ public class OAuth2AutoConfigurationTests {
 
 		@Autowired
 		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+			// @formatter:off
 			auth.inMemoryAuthentication()
 					.passwordEncoder(NoOpPasswordEncoder.getInstance())
-					.withUser("foo").password("bar").roles("USER");
+					.withUser("foo")
+					.password("bar")
+					.roles("USER");
+			// @formatter:on
 		}
 
 		@Bean
@@ -606,8 +610,15 @@ public class OAuth2AutoConfigurationTests {
 
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests().anyRequest().authenticated().and().httpBasic().and()
-					.csrf().disable();
+			// @formatter:off
+			http
+				.authorizeRequests()
+					.anyRequest().authenticated()
+					.and()
+				.httpBasic()
+					.and()
+				.csrf().disable();
+			// @formatter:on
 		}
 
 	}
@@ -637,10 +648,17 @@ public class OAuth2AutoConfigurationTests {
 
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-			clients.inMemory().withClient("client").secret("secret")
-					.resourceIds("resource-id").authorizedGrantTypes("password")
-					.authorities("USER").scopes("read")
+			// @formatter:off
+			clients
+				.inMemory()
+					.withClient("client")
+					.secret("secret")
+					.resourceIds("resource-id")
+					.authorizedGrantTypes("password")
+					.authorities("USER")
+					.scopes("read")
 					.redirectUris("http://localhost:8080");
+			// @formatter:on
 		}
 
 		@Override
@@ -654,6 +672,7 @@ public class OAuth2AutoConfigurationTests {
 		public static PasswordEncoder passwordEncoder() {
 			return NoOpPasswordEncoder.getInstance();
 		}
+
 	}
 
 	@Configuration

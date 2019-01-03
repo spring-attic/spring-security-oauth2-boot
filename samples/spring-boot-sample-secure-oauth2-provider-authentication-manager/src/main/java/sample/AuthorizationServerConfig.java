@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,14 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
 	@Autowired
 	AuthenticationManager authenticationManager;
 
 	@Override
-	public void configure(ClientDetailsServiceConfigurer clients)
-			throws Exception {
-		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+		PasswordEncoder passwordEncoder = PasswordEncoderFactories
+				.createDelegatingPasswordEncoder();
 
 		// @formatter:off
 		clients.inMemory()
@@ -55,10 +56,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 
 	@Override
-	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+	public void configure(AuthorizationServerSecurityConfigurer security)
+			throws Exception {
 		// @formatter:off
 		security
 			.checkTokenAccess("isAuthenticated()");
 		// @formatter:on
 	}
+
 }
