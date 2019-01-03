@@ -31,7 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -72,7 +72,7 @@ public class SampleSecureOAuth2ApplicationTests {
 		result = this.mvc.perform(get("/oauth/check_token").with(CLIENT_CREDENTIALS)
 				.param("token", accessToken)).andReturn();
 
-		assertTrue(Boolean.valueOf(extract(result, "active")));
+		assertThat(Boolean.valueOf(extract(result, "active"))).isTrue();
 	}
 
 	private String extract(MvcResult result, String property) throws Exception {

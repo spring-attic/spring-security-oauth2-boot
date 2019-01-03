@@ -16,6 +16,8 @@
 
 package org.springframework.social.autoconfigure;
 
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -47,12 +49,9 @@ import org.springframework.social.connect.web.DisconnectInterceptor;
 import org.springframework.social.connect.web.ProviderSignInController;
 import org.springframework.social.connect.web.ProviderSignInInterceptor;
 import org.springframework.social.connect.web.SignInAdapter;
-import org.springframework.social.connect.web.thymeleaf.SpringSocialDialect;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.view.BeanNameViewResolver;
-
-import java.util.List;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for Spring Social's web connection

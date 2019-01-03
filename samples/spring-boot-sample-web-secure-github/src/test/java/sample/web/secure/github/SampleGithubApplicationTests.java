@@ -16,8 +16,6 @@
 
 package sample.web.secure.github;
 
-import java.net.URI;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
