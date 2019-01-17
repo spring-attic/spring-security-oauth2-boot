@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package sample.secure.oauth2.actuator;
+package sample;
 
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
-/**
- * Basic auth security for actuator endpoints.
- *
- * @author Madhura Bhave
- */
-@Configuration
-@Order(2) // before the resource server configuration
-public class ActuatorSecurityConfiguration extends WebSecurityConfigurerAdapter {
+@SpringBootApplication
+@EnableResourceServer
+public class SampleSecureOAuth2ResourceApplication
+		extends ResourceServerConfigurerAdapter {
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	public void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
 		http
-			.requestMatcher(EndpointRequest.toAnyEndpoint())
+			.antMatcher("/flights/**")
 			.authorizeRequests()
-				.anyRequest().authenticated()
-				.and()
-			.httpBasic();
+				.anyRequest().authenticated();
 		// @formatter:on
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(SampleSecureOAuth2ResourceApplication.class, args);
 	}
 
 }

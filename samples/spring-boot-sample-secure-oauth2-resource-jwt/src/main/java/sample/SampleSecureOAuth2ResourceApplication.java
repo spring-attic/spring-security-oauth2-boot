@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sample.secure.oauth2.resource;
+package sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

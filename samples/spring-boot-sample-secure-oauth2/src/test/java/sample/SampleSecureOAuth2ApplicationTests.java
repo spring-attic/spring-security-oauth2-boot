@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sample.secure.oauth2;
+package sample;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Ignore;

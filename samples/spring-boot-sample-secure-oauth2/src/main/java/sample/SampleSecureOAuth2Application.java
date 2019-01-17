@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sample.secure.oauth2;
+package sample;
 
 import java.security.Principal;
 

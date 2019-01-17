@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sample.web.secure.github;
+package sample;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

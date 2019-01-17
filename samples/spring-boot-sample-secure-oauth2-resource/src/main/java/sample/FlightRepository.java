@@ -14,19 +14,27 @@
  * limitations under the License.
  */
 
-package sample.web.secure.github;
+package sample;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import java.util.Optional;
 
-@SpringBootApplication
-@EnableOAuth2Sso
-public class SampleGithubSecureApplication implements WebMvcConfigurer {
+import org.springframework.data.repository.CrudRepository;
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(SampleGithubSecureApplication.class, args);
-	}
+/**
+ * Spring Data interface with secured methods
+ *
+ * @author Craig Walls
+ * @author Greg Turnquist
+ */
+public interface FlightRepository extends CrudRepository<Flight, Long> {
+
+	@Override
+	Iterable<Flight> findAll();
+
+	@Override
+	Optional<Flight> findById(Long aLong);
+
+	@Override
+	<S extends Flight> S save(S entity);
 
 }

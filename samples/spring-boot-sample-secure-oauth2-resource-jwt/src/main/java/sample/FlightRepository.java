@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sample.secure.oauth2.resource;
+package sample;
 
 import java.util.Optional;
 

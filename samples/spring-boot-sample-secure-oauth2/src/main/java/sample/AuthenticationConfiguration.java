@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package sample.secure.oauth2;
+package sample;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
