@@ -106,7 +106,7 @@ By default, `@EnableAuthorizationServer` grants a client access to client creden
 ====
 [source,bash]
 ----
-curl first-client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=client_credentials -dscope=any
+curl first_client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=client_credentials -dscope=any
 ----
 ====
 
