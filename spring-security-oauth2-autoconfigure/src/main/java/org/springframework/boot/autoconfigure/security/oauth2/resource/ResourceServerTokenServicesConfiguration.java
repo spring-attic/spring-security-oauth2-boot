@@ -276,6 +276,7 @@ public class ResourceServerTokenServicesConfiguration {
 		}
 
 		@Bean
+		@ConditionalOnMissingBean(JwtAccessTokenConverter.class)
 		public JwtAccessTokenConverter jwtTokenEnhancer() {
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 			String keyValue = this.resource.getJwt().getKeyValue();
@@ -353,6 +354,7 @@ public class ResourceServerTokenServicesConfiguration {
 		}
 
 		@Bean
+		@ConditionalOnMissingBean(JwtAccessTokenConverter.class)
 		public JwtAccessTokenConverter accessTokenConverter() {
 			Assert.notNull(this.resource.getJwt().getKeyStore(), "keyStore cannot be null");
 			Assert.notNull(this.resource.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");

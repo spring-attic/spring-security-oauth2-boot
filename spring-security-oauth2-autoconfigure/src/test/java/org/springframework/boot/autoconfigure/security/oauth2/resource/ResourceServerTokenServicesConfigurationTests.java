@@ -283,6 +283,30 @@ public class ResourceServerTokenServicesConfigurationTests {
 	}
 
 	@Test
+	public void jwtAccessTokenConverterForKeyValueShouldBeConditionalOnMissingBean()
+			throws Exception {
+		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY)
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class,
+				ResourceConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
+	}
+
+	@Test
+	public void jwtAccessTokenConverterForKeyStoreShouldBeConditionalOnMissingBean()
+			throws Exception {
+		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+				"security.oauth2.resource.jwt.key-store-password=changeme",
+				"security.oauth2.resource.jwt.key-alias=jwt").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class,
+				ResourceConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
+	}
+
+	@Test
 	public void configureWhenKeyStoreIsProvidedThenExposesJwtTokenStore() {
 		TestPropertyValues.of(
 				"security.oauth2.resource.jwt.key-store=classpath:" +
