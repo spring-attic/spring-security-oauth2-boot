@@ -87,7 +87,7 @@ The following example shows how to specify a client:
 security:
   oauth2:
     client:
-      client-id: first_client
+      client-id: first-client
       client-secret: noonewilleverguess
 ----
 ====
@@ -106,7 +106,7 @@ By default, `@EnableAuthorizationServer` grants a client access to client creden
 ====
 [source,bash]
 ----
-curl first_client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=client_credentials -dscope=any
+curl first-client:noonewilleverguess@localhost:8080/oauth/token -dgrant_type=client_credentials -dscope=any
 ----
 ====
 
