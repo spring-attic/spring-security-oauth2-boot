@@ -202,7 +202,7 @@ In that regard, an authorization server is no different, as the following exampl
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
-    public void UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
             User.withDefaultPasswordEncoder()
                 .username("enduser")
@@ -294,7 +294,7 @@ As was stated in <<oauth2-boot-authorization-server-authorization-code-grant>>, 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
-    public void UserDetailsService userDetailsService() {
+    public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
             User.withDefaultPasswordEncoder()
                 .username("enduser")
