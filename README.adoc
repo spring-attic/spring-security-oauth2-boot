@@ -1,4 +1,11 @@
 image::https://travis-ci.org/spring-projects/spring-security-oauth2-boot.svg?branch=master[Build Status]
+
+[NOTE]
+======
+This project is in https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/[maintainence mode].
+Spring's https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[new support for OAuth] is built directly into Spring Security.
+======
+
 = Spring Security OAuth Boot 2 Autoconfig
 
 This project provides auto configuration for Spring Boot 2 and the old Spring Security OAuth project.

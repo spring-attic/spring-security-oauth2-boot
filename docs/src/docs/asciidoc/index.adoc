@@ -16,7 +16,7 @@ The following projects are in maintenance mode:
 You are, of course, welcome to use them, and we will help you out!
 
 However, before selecting `spring-security-oauth2` and `spring-security-oauth2-autoconfigure`,
-you should check out https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix[Spring Security's feature matrix] to see if the new first-class support meets your needs.
+you should check out https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix[Spring Security's feature matrix] to see if the new https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[first-class support] meets your needs.
 ====
 
 [NOTE]
