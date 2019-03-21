@@ -38,6 +38,9 @@ import org.springframework.validation.BindingResult;
  * @author Dave Syer
  * @author Madhura Bhave
  * @since 1.3.0
+ * @deprecated Use <a target="_blank" href=
+ * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
+ * Security's built-in support</a>
  */
 @ConfigurationProperties(prefix = "security.oauth2.resource")
 public class ResourceServerProperties implements BeanFactoryAware, InitializingBean {

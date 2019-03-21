@@ -22,6 +22,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 
+/**
+ * @deprecated Use <a target="_blank" href=
+ * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
+ * Security's built-in support</a>
+ */
 @SpringBootApplication
 @EnableResourceServer
 public class SampleSecureOAuth2ResourceApplication

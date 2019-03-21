@@ -27,6 +27,9 @@ import org.springframework.web.client.RestTemplate;
  * @since 1.5.2
  * @see JwtAccessTokenConverter#setSigningKey(String)
  * @see JwtAccessTokenConverter#setVerifierKey(String)
+ * @deprecated Use <a target="_blank" href=
+ * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
+ * Security's built-in support</a>
  */
 @FunctionalInterface
 public interface JwtAccessTokenConverterRestTemplateCustomizer {

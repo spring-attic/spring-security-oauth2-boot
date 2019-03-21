@@ -23,6 +23,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author Dave Syer
  * @since 1.3.0
+ * @deprecated Use <a target="_blank" href=
+ * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2login">Spring
+ * Security's built-in support</a>
  */
 @ConfigurationProperties(prefix = "security.oauth2.sso")
 public class OAuth2SsoProperties {

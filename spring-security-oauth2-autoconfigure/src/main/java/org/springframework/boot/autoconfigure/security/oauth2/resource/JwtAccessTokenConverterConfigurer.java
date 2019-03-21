@@ -24,6 +24,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
  *
  * @author Dave Syer
  * @since 1.3.0
+ * @deprecated Use <a target="_blank" href=
+ * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
+ * Security's built-in support</a>
  */
 @FunctionalInterface
 public interface JwtAccessTokenConverterConfigurer {
