@@ -8,21 +8,21 @@ Security OAuth 2 Developers Guide].
 
 [NOTE]
 ====
-The following projects are in maintenance mode:
+*The following projects are in maintenance mode:*
 
 * `spring-security-oauth2`
 * `spring-security-oauth2-autoconfigure`
 
 You are, of course, welcome to use them, and we will help you out!
 
-However, before selecting `spring-security-oauth2` and `spring-security-oauth2-autoconfigure`,
-you should check out https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix[Spring Security's feature matrix] to see if the new https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[first-class support] meets your needs.
+*However, before selecting `spring-security-oauth2` and `spring-security-oauth2-autoconfigure`,
+you should check out https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Features-Matrix[Spring Security's feature matrix] to see if the new https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[first-class support] meets your needs.*
 ====
 
 [NOTE]
 ====
 This project is a port of the Spring Security OAuth support that came with Spring Boot 1.x.
-Support was removed in Spring Boot 2.x in favor of https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[Spring Security 5's first-class OAuth support].
+*Support was removed in Spring Boot 2.x in favor of https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2client[Spring Security 5's first-class OAuth support].*
 
 To ease migration, this project exists as a bridge between the old Spring Security OAuth
 support and Spring Boot 2.x.
@@ -631,105 +631,311 @@ Now you can POST to the `/oauth/token` endpoint (<<oauth2-boot-testing-authoriza
 [[boot-features-security-oauth2-resource-server]]
 == Resource Server
 
-To use the access token, you need a Resource Server (which can be the same as the
-Authorization Server). To create a Resource Server, add
-`@EnableResourceServer` and provide some configuration to let the server decode
-access tokens. If your application is also an Authorization Server, it already knows how
-to decode tokens, so there is nothing else to do. If your application is a standalone service,
-you need to give it some more configuration, by using one of the following options:
+Spring Security OAuth2 Boot simplifies protecting your resources using Bearer Token authentication in two different token formats: JWT and Opaque.
 
-* `security.oauth2.resource.user-info-uri` to use the `/me` resource -- for example,
-`\https://uaa.run.pivotal.io/userinfo` on Pivotal Web Services (PWS).
+=== Dependencies
 
-* `security.oauth2.resource.token-info-uri` to use the token decoding endpoint -- for example
-`\https://uaa.run.pivotal.io/check_token` on PWS.
+To use the auto-configuration features in this library, you need `spring-security-oauth2`, which has the OAuth 2.0 primitives and `spring-security-oauth2-autoconfigure`.
+Note that you need to specify the version for `spring-security-oauth2-autoconfigure`, since it is not managed by Spring Boot any longer, though it should match Boot's version anyway.
 
-If you specify both the `user-info-uri` and the `token-info-uri`, you can set the `prefer-token-info` flag
-to specify that one is preferred over the other (`prefer-token-info=true` is the default).
+For JWT support, you also need `spring-security-jwt`.
 
-Alternatively (instead of `user-info-uri` or `token-info-uri`), if the tokens are JWTs, you
-can configure a `security.oauth2.resource.jwt.key-value` to decode them locally (where the
-key is a verification key). The verification key value is either a symmetric secret or
-PEM-encoded RSA public key. If you do not have the key and it is public, you can provide a
-URI from which it can be downloaded (as a JSON object with a `value` field) with
-`security.oauth2.resource.jwt.key-uri`. For example, on PWS, you could do the following:
+[[oauth2-boot-resource-server-minimal]]
+=== Minimal OAuth2 Boot Configuration
 
-====
-[indent=0]
-----
-  $ curl https://uaa.run.pivotal.io/token_key
-  {"alg":"SHA256withRSA","value":"-----BEGIN PUBLIC KEY-----\nMIIBI...\n-----END PUBLIC KEY-----\n"}
-----
-====
+Creating a minimal Spring Boot resource server consists of three basic steps:
 
-Additionally, if your authorization server has an endpoint that returns a set of JSON Web
-Keys(JWKs), you can configure `security.oauth2.resource.jwk.key-set-uri`. For example, on PWS, you could do the following:
+. Including the dependencies.
+. Including the `@EnableResourceServer` annotation.
+. Specifying a strategy for verifying the bearer token.
+
+==== Enabling the Resource Server
+
+Similar to other Spring Boot `@Enable` annotations, you can add the `@EnableResourceServer` annotation to the class that contains your `main` method, as the following example shows:
 
 ====
-[indent=0]
+[source,java]
 ----
-  $ curl https://uaa.run.pivotal.io/token_keys
-  {"keys":[{"kid":"key-1","alg":"RS256","value":"-----BEGIN PUBLIC KEY-----\nMIIBI...\n-----END PUBLIC KEY-----\n"]}
+@EnableResourceServer
+@SpringBootApplication
+public class SimpleAuthorizationServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(SimpleAuthorizationServerApplication, args);
+    }
+}
 ----
 ====
 
-CAUTION: Configuring both JWT and JWK properties causes an error. You should configure only one of
-`security.oauth2.resource.jwt.key-uri` (or `security.oauth2.resource.jwt.key-value`) and
-`security.oauth2.resource.jwk.key-set-uri`.
+Adding this annotation adds the `OAuth2AuthenticationProcessingFilter`, though it will need one more configuration to know how to appropriately process and validate tokens.
 
-CAUTION: If you use the `security.oauth2.resource.jwt.key-uri` or
-`security.oauth2.resource.jwk.key-set-uri`, the authorization server needs to be running
-when your application starts up. It logs a warning if it cannot find the key and tells
-you what to do to fix it.
+==== Specifying a Token Verification Strategy
 
-OAuth2 resources are protected by a filter chain with the order specified by
-`security.oauth2.resource.filter-order`. The default is, after the filter, protecting the
-actuator endpoints (so actuator endpoints stay on HTTP Basic unless you
-change the order).
+Bearer Tokens typically come in one of two forms: JWT-encoded or opaque. You will need to configure the resource server with one or the other strategy.
 
-[[boot-features-security-oauth2-token-type]]
-=== Token Type in User Info
-Google and certain other third-party identity providers are more strict about the token
-type name that is sent in the headers to the user info endpoint. The default is `Bearer`,
-which suits most providers and matches the spec. However, if you need to change it, you can set
-`security.oauth2.resource.token-type`.
+===== JWT
 
-[[boot-features-security-custom-user-info]]
-=== Customizing the User Info RestTemplate
+To indicate JWT, simply specify the JWK Set Uri hosted on your Authorization Server:
 
-If you have a `user-info-uri`, the resource server features use an `OAuth2RestTemplate`
-internally to fetch user details for authentication. This is provided as a `@Bean` of
-type `UserInfoRestTemplateFactory`. The default should be fine for most providers, but
-(occasionally) you might need to add additional interceptors or change the request
-authenticator (which is how the token gets attached to outgoing requests). To add a
-customization, you can create a bean of type `UserInfoRestTemplateCustomizer`. It has a
-single method that is called after the bean is created but before it is initialized.
-The rest template that is being customized here is used only internally to carry out
-authentication. Alternatively, you could define your own `UserInfoRestTemplateFactory`
-`@Bean` to take full control.
-
-[TIP]
 ====
-To set an RSA key value in YAML, you can use the `pipe` continuation marker (`|`) to split it over
-multiple lines and remember to indent the key value (it is a standard YAML
-language feature). The following example shows how to do so:
-
-=====
-[source,yaml,indent=0]
+[source,yaml]
 ----
+spring:
+  security:
+    oauth2:
+      resource:
+        jwk:
+          key-set-uri: https://issuer/.well-known/jwks.json
+----
+====
+
+Instead of a JWK Set Uri, you can also specify a key.
+
+Note that with this configuration, your authorization server needs to be up in order for Resource Server to start up.
+
+===== Opaque
+
+To indicate opaque, simply specify the Authorization Server endpoint that knows how to decode the token:
+
+====
+[source,yaml]
+----
+spring:
+  security:
+    oauth2:
+      resource:
+        token-info-uri: https://issuer/oauth2/introspect
+----
+====
+
+NOTE: It's likely this endpoint requires some kind of authorization separate from the token itself, for example, client authentication.
+
+That's it! But, what do you do with it? We cover that next.
+
+==== Accessing a Resource
+
+To confirm that Resource Server is correctly processing tokens, you can add a simple controller endpoint like so:
+
+====
+[source,java]
+----
+@RestController
+public class SimpleController
+	@GetMapping("/whoami")
+	public String whoami(@AuthenticationPrincipal(expression="name") String name) {
+		return name;
+    }
+}
+----
+====
+
+Then, obtain an active access token from your Authorization Server and present it to the Resource Server:
+
+====
+[source,bash]
+----
+curl -H "Authorization: $TOKEN" http://localhost:8080/whoami
+----
+====
+
+And you should see the value of the `user_name` attribute in the token.
+
+From this point, you may want to learn more about three alternative ways to authenticate using bearer tokens:
+
+* <<oauth2-boot-resource-server-jwt-single-key>>
+* <<oauth2-boot-resource-server-token-info>>
+* <<oauth2-boot-resource-server-user-info>>
+
+[[oauth2-boot-resource-server-jwt-single-key]]
+=== How to Use JWT with a Single Key
+
+Instead of a JWK Set endpoint, you may have a local key you want to configure for verification.
+While this is weaker due to the key being static, it may be necessary in your situation.
+
+Configuring the resource server with the appropriate symmetric key or PKCS#8 PEM-encoded public key is simple, as can be seen below:
+
+====
+[source,yaml]
+----
+spring:
   security:
     oauth2:
       resource:
         jwt:
-          keyValue: |
+          key-value: |
             -----BEGIN PUBLIC KEY-----
             MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC...
             -----END PUBLIC KEY-----
 ----
-=====
 ====
 
+TIP: The pipe in yaml indicates a multi-line property value.
 
+You can also instead supply a `key-store`, `key-store-password`, `key-alias`, and `key-password` properties.
+
+Or you can use the `key-uri` endpoint to get the key remotely from your authorization server, which is something of a happy medium between static, local configuration and a JWK Set endpoint.
+
+[[oauth2-boot-resource-server-token-info]]
+=== How to Configure the Token Info Endpoint
+
+The token info endpoint, also sometimes called the introspection endpoint, likely requires some kind of client authentication, either Basic or Bearer.
+Generally speaking, the bearer token in the `SecurityContext` won't suffice since that is tied to the user.
+Instead, you'll need to specify credentials that represent this client, like so:
+
+====
+[source,yaml]
+----
+spring:
+  security:
+    oauth2:
+      client:
+        clientId: client-id
+        clientSecret: client-secret
+      resource:
+        tokenInfoUri: https://issuer/oauth2/check_token
+----
+====
+
+By default, this will use Basic authentication, using the configured credentials, to authenticate against the token info endpoint.
+
+[[oauth2-boot-resource-server-user-info]]
+=== How to Configure the User Info Endpoint
+
+It's atypical for a resource server to need to call a user info endpoint.
+This is because, fundamentally, a resource server is about authorizing a request, not authenticating it.
+That said, it is at times necessary.
+
+If you specify a user info endpoint like so:
+
+====
+[source,yaml]
+----
+spring:
+  security:
+    oauth2:
+      resource:
+        userInfoUri: https://issuer/oauth2/userinfo
+----
+====
+
+Then Resource Server will send it the bearer token that is part of the request and enhance the `Authentication` object with the result.
+
+[[oauth2-boot-resource-server-custom-user-info]]
+==== Customizing the User Info Request
+
+Internally, Resource Server uses an `OAuth2RestTemplate` to invoke the `/userinfo` endpoint.
+At times, it may be necessary to add filters or perform other customization for this invocation.
+To customize the creation of this bean, you can expose a `UserInfoRestTemplateCustomizer`, like so:
+
+====
+[source,java]
+----
+@Bean
+public UserInfoRestTemplateCustomizer customHeader() {
+	return restTemplate ->
+			restTemplate.getInterceptors().add(new MyCustomInterceptor());
+}
+----
+====
+
+This bean will be handed to a `UserInfoTemplateFactory` which will add other configurations helpful to coordinating with the `/userinfo` endpoint.
+
+And, of course, you can replace the `UserInfoTemplateFactory` completely, if you need complete control over `OAuth2RestTemplate`'s configuration.
+
+[[oauth2-boot-resource-server-authorization]]
+=== Customizing Authorization Rules
+
+Similar to how Spring Security works, you can customize authorization rules by endpoint in Spring Security OAuth, like so:
+
+====
+[source,java]
+----
+
+public class HasAuthorityConfig
+		extends ResourceServerConfigurerAdapter {
+
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+		// @formatter:off
+		http
+			.authorizeRequests()
+				.antMatchers("/flights/**").hasAuthority("#oauth2.hasScope('message:read')")
+				.anyRequest().authenticated();
+		// @formatter:on
+	}
+----
+====
+
+Though, note that if a server is configured both as a resource server and as an authorization server, then there are certain endpoint that require special handling.
+To avoid configuring over the top of those endpoints (like `/token`), it would be better to isolate your resource server endpoints to a targeted directory like so:
+
+====
+[source,java]
+----
+
+public class ResourceServerEndpointConfig
+		extends ResourceServerConfigurerAdapter {
+
+	@Override
+	public void configure(HttpSecurity http) throws Exception {
+		// @formatter:off
+		http
+			.antMatchers("/resourceA/**", "/resourceB/**")
+			.authorizeRequests()
+				.antMatchers("/resourceA/**").hasAuthority("#oauth2.hasScope('resourceA:read')")
+				.antMatchers("/resourceB/**").hasAuthority("#oauth2.hasScope('resourceB:read')")
+				.anyRequest().authenticated();
+		// @formatter:on
+	}
+----
+====
+
+As the above configuration will target your resource endpoints and not affect authorization server-specific endpoints.
+
+[[oauth2-boot-resource-server-less-common]]
+=== Less Common Features
+
+[[oauth2-boot-resource-server-token-type]]
+==== Changing the Token Type
+
+Google and certain other third-party identity providers are more strict about the token type name that is sent in the headers to the user info endpoint.
+The default is `Bearer`, which suits most providers and matches the spec.
+However, if you need to change it, you can set `security.oauth2.resource.token-type`.
+
+[[oauth2-boot-resource-server-filter-order]]
+==== Changing the Filter Order
+
+OAuth2 resources are protected by a filter chain with the order specified by `security.oauth2.resource.filter-order`.
+The default is, after the filter, protecting the actuator endpoints (so actuator endpoints stay on HTTP Basic unless you change the order).
+
+[[oauth2-boot-resource-server-permit-error]]
+==== Permitting the /error Endpoint
+
+Resource Server, when also configured as a client, may rely on a request-scoped `OAuth2ClientContext` bean during the authentication process.
+And, in some error situations, Resource Server forwards to the ERROR servlet dispatcher.
+
+By default, request-scoped beans aren't available in the ERROR dispatch.
+And, because of this, you may see a complaint about the `OAuth2ClientContext` bean not being available.
+
+The simplest approach may be to permit the `/error` endpoint, so that Resource Server doesn't try and authenticate the request:
+
+====
+[source,java]
+----
+public class PermitErrorConfig extends ResourceServerConfigurerAdapter {
+    @Override
+	public void configure(HttpSecurity http) throws Exception {
+		// @formatter:off
+		http
+			.authorizeRequests()
+				.antMatchers("/error").permitAll()
+				.anyRequest().authenticated();
+		// @formatter:on
+	}
+}
+----
+====
+
+Other solutions are to configure Spring so that the `RequestContextFilter` is registered with the error dispatch or to register a `RequestContextListener` bean.
 
 [[boot-features-security-custom-user-info-client]]
 == Client
