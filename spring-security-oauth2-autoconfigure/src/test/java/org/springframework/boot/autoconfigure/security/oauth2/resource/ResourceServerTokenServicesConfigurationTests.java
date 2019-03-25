@@ -279,7 +279,8 @@ public class ResourceServerTokenServicesConfigurationTests {
 	}
 
 	@Test
-	public void jwtAccessTokenConverterForKeyValueShouldBeConditionalOnMissingBean() throws Exception {
+	public void jwtAccessTokenConverterForKeyValueShouldBeConditionalOnMissingBean()
+		throws Exception {
 		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY)
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class,
@@ -289,7 +290,8 @@ public class ResourceServerTokenServicesConfigurationTests {
 	}
 
 	@Test
-	public void jwtAccessTokenConverterForKeyStoreShouldBeConditionalOnMissingBean() throws Exception {
+	public void jwtAccessTokenConverterForKeyStoreShouldBeConditionalOnMissingBean()
+		throws Exception {
 		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
 				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
 				"security.oauth2.resource.jwt.key-store-password=changeme",
