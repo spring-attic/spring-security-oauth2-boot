@@ -99,7 +99,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void useRemoteTokenServices() {
-		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:http://example.com")
+		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
 				.environment(this.environment).web(WebApplicationType.NONE).run();
@@ -109,7 +109,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void switchToUserInfo() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:http://example.com")
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
 				.environment(this.environment).web(WebApplicationType.NONE).run();
@@ -120,7 +120,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void userInfoWithAuthorities() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:http://example.com")
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(AuthoritiesConfiguration.class)
 				.environment(this.environment).web(WebApplicationType.NONE).run();
@@ -133,7 +133,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void userInfoWithPrincipal() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:http://example.com")
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(PrincipalConfiguration.class)
 				.environment(this.environment).web(WebApplicationType.NONE).run();
@@ -147,7 +147,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 	@Test
 	public void userInfoWithClient() {
 		TestPropertyValues.of("security.oauth2.client.client-id=acme",
-				"security.oauth2.resource.userInfoUri:http://example.com",
+				"security.oauth2.resource.userInfoUri:https://example.com",
 				"server.port=-1", "debug=true").applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceNoClientConfiguration.class)
 				.environment(this.environment).web(WebApplicationType.SERVLET).run();
@@ -159,8 +159,8 @@ public class ResourceServerTokenServicesConfigurationTests {
 	@Test
 	public void preferUserInfo() {
 		TestPropertyValues
-				.of("security.oauth2.resource.userInfoUri:http://example.com",
-						"security.oauth2.resource.tokenInfoUri:http://example.com",
+				.of("security.oauth2.resource.userInfoUri:https://example.com",
+						"security.oauth2.resource.tokenInfoUri:https://example.com",
 						"security.oauth2.resource.preferTokenInfo:false")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
@@ -173,8 +173,8 @@ public class ResourceServerTokenServicesConfigurationTests {
 	@Test
 	public void userInfoWithCustomizer() {
 		TestPropertyValues
-				.of("security.oauth2.resource.userInfoUri:http://example.com",
-						"security.oauth2.resource.tokenInfoUri:http://example.com",
+				.of("security.oauth2.resource.userInfoUri:https://example.com",
+						"security.oauth2.resource.tokenInfoUri:https://example.com",
 						"security.oauth2.resource.preferTokenInfo:false")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceConfiguration.class,
@@ -223,7 +223,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 	@Test
 	public void springSocialUserInfo() {
 		TestPropertyValues
-				.of("security.oauth2.resource.userInfoUri:http://example.com",
+				.of("security.oauth2.resource.userInfoUri:https://example.com",
 						"spring.social.facebook.app-id=foo",
 						"spring.social.facebook.app-secret=bar")
 				.applyTo(this.environment);
@@ -239,7 +239,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void customUserInfoRestTemplateFactory() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:http://example.com")
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(
 				CustomUserInfoRestTemplateFactory.class, ResourceConfiguration.class)
@@ -471,7 +471,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 		@Bean
 		public TokenStore tokenStore() {
-			return new JwkTokenStore("http://my.key-set.uri");
+			return new JwkTokenStore("https://my.key-set.uri");
 		}
 
 	}
