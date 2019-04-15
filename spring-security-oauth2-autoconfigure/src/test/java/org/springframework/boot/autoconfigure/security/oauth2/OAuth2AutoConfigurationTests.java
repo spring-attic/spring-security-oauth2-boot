@@ -93,6 +93,7 @@ import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecur
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -320,7 +321,8 @@ public class OAuth2AutoConfigurationTests {
 		config.setAuthorizedGrantTypes(Arrays.asList("password"));
 		config.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList("USER"));
 		config.setScope(Arrays.asList("read"));
-		assertThat(countBeans(AUTHORIZATION_SERVER_CONFIG)).isEqualTo(0);
+		assertThat(countBeans(AUTHORIZATION_SERVER_CONFIG)).isEqualTo(1);
+		assertThat(countBeans(CustomAuthorizationServer.class)).isEqualTo(1);
 		assertThat(countBeans(RESOURCE_SERVER_CONFIG)).isEqualTo(1);
 		verifyAuthentication(config);
 	}
@@ -405,6 +407,50 @@ public class OAuth2AutoConfigurationTests {
 				MinimalSecureWebApplication.class);
 		this.context.refresh();
 		assertThat(countBeans(RESOURCE_SERVER_CONFIG)).isEqualTo(1);
+	}
+
+	@Test
+	public void authorizationServerWhenUsingJwtConfigurationThenConfiguresJwt() {
+		this.context = new AnnotationConfigServletWebServerApplicationContext();
+		this.context.register(AuthorizationServerConfiguration.class,
+				MinimalSecureWebApplication.class);
+		TestPropertyValues.of("security.oauth2.authorization.jwt.keyValue:DEADBEEF")
+				.applyTo(this.context);
+		ConfigurationPropertySources.attach(this.context.getEnvironment());
+		this.context.refresh();
+		assertThat(countBeans(RESOURCE_SERVER_CONFIG)).isEqualTo(0);
+		assertThat(countBeans(AUTHORIZATION_SERVER_CONFIG)).isEqualTo(1);
+		assertThat(countBeans(JwtAccessTokenConverter.class)).isEqualTo(1);
+	}
+
+	@Test
+	public void authorizationServerWhenJwtConfigurationAndCustomAuthorizationServerThenConfiguresJwt() {
+		this.context = new AnnotationConfigServletWebServerApplicationContext();
+		TestPropertyValues.of("security.oauth2.authorization.jwt.keyValue:DEADBEEF")
+				.applyTo(this.context);
+		this.context.register(AuthorizationServerConfiguration.class,
+				CustomAuthorizationServer.class, MinimalSecureWebApplication.class);
+		this.context.refresh();
+		assertThat(countBeans(RESOURCE_SERVER_CONFIG)).isEqualTo(0);
+		assertThat(countBeans(AUTHORIZATION_SERVER_CONFIG)).isEqualTo(1);
+		assertThat(countBeans(CustomAuthorizationServer.class)).isEqualTo(1);
+		assertThat(countBeans(JwtAccessTokenConverter.class)).isEqualTo(1);
+	}
+
+	@Test
+	public void authorizationServerWhenJwtKeyStoreConfigurationAndCustomAuthorizationServerThenConfiguresJwt() {
+		this.context = new AnnotationConfigServletWebServerApplicationContext();
+		TestPropertyValues.of("security.oauth2.authorization.jwt.keyStore:classpath:"
+				+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keystore.jks",
+				"security.oauth2.authorization.jwt.keyStorePassword:changeme",
+				"security.oauth2.authorization.jwt.keyAlias:jwt").applyTo(this.context);
+		this.context.register(AuthorizationServerConfiguration.class,
+				CustomAuthorizationServer.class, MinimalSecureWebApplication.class);
+		this.context.refresh();
+		assertThat(countBeans(RESOURCE_SERVER_CONFIG)).isEqualTo(0);
+		assertThat(countBeans(AUTHORIZATION_SERVER_CONFIG)).isEqualTo(1);
+		assertThat(countBeans(CustomAuthorizationServer.class)).isEqualTo(1);
+		assertThat(countBeans(JwtAccessTokenConverter.class)).isEqualTo(1);
 	}
 
 	/**
