@@ -74,8 +74,8 @@ public class ResourceServerPropertiesTests {
 
 	@Test
 	public void validateWhenBothJwtAndJwkKeyUrisPresentShouldFail() throws Exception {
-		this.properties.getJwk().setKeySetUri("https://my-auth-server/token_keys");
-		this.properties.getJwt().setKeyUri("https://my-auth-server/token_key");
+		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
+		this.properties.getJwt().setKeyUri("https://idp.example.com/token_key");
 		setListableBeanFactory();
 		this.thrown.expect(IllegalStateException.class);
 		this.thrown.expect(getMatcher("Only one of jwt.keyUri (or jwt.keyValue) "
@@ -86,7 +86,7 @@ public class ResourceServerPropertiesTests {
 	@Test
 	public void validateWhenBothJwtKeyValueAndJwkKeyUriPresentShouldFail()
 			throws Exception {
-		this.properties.getJwk().setKeySetUri("https://my-auth-server/token_keys");
+		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		this.properties.getJwt().setKeyValue("my-key");
 		setListableBeanFactory();
 		this.thrown.expect(IllegalStateException.class);
@@ -97,7 +97,7 @@ public class ResourceServerPropertiesTests {
 
 	@Test
 	public void validateWhenJwkKeySetUriProvidedShouldSucceed() throws Exception {
-		this.properties.getJwk().setKeySetUri("https://my-auth-server/token_keys");
+		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		setListableBeanFactory();
 		this.properties.validate();
 		verifyZeroInteractions(this.errors);
@@ -115,7 +115,7 @@ public class ResourceServerPropertiesTests {
 	public void validateWhenKeysUriOrValuePresentAndUserInfoAbsentShouldNotFail()
 			throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
-		this.properties.getJwk().setKeySetUri("https://my-auth-server/token_keys");
+		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		setListableBeanFactory();
 		this.properties.validate();
 		verifyZeroInteractions(this.errors);
@@ -133,7 +133,7 @@ public class ResourceServerPropertiesTests {
 
 	@Test
 	public void validateWhenTokenUriConfiguredShouldNotFail() throws Exception {
-		this.properties.setTokenInfoUri("https://my-auth-server/userinfo");
+		this.properties.setTokenInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
 		verifyZeroInteractions(this.errors);
@@ -141,7 +141,7 @@ public class ResourceServerPropertiesTests {
 
 	@Test
 	public void validateWhenUserInfoUriConfiguredShouldNotFail() throws Exception {
-		this.properties.setUserInfoUri("https://my-auth-server/userinfo");
+		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
 		verifyZeroInteractions(this.errors);
@@ -151,8 +151,8 @@ public class ResourceServerPropertiesTests {
 	public void validateWhenTokenUriPreferredAndClientSecretAbsentShouldFail()
 			throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
-		this.properties.setTokenInfoUri("https://my-auth-server/check_token");
-		this.properties.setUserInfoUri("https://my-auth-server/userinfo");
+		this.properties.setTokenInfoUri("https://idp.example.com/check_token");
+		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.thrown.expect(IllegalStateException.class);
 		this.thrown.expect(getMatcher("Missing client secret", "clientSecret"));
@@ -163,7 +163,7 @@ public class ResourceServerPropertiesTests {
 	public void validateWhenTokenUriAbsentAndClientSecretAbsentShouldNotFail()
 			throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
-		this.properties.setUserInfoUri("https://my-auth-server/userinfo");
+		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
 		verifyZeroInteractions(this.errors);
@@ -174,8 +174,8 @@ public class ResourceServerPropertiesTests {
 			throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
 		this.properties.setPreferTokenInfo(false);
-		this.properties.setTokenInfoUri("https://my-auth-server/check_token");
-		this.properties.setUserInfoUri("https://my-auth-server/userinfo");
+		this.properties.setTokenInfoUri("https://idp.example.com/check_token");
+		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
 		verifyZeroInteractions(this.errors);

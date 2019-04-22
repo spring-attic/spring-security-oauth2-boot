@@ -684,7 +684,7 @@ spring:
     oauth2:
       resource:
         jwk:
-          key-set-uri: https://issuer/.well-known/jwks.json
+          key-set-uri: https://idp.example.com/.well-known/jwks.json
 ----
 ====
 
@@ -703,7 +703,7 @@ spring:
   security:
     oauth2:
       resource:
-        token-info-uri: https://issuer/oauth2/introspect
+        token-info-uri: https://idp.example.com/oauth2/introspect
 ----
 ====
 
@@ -791,7 +791,7 @@ spring:
         clientId: client-id
         clientSecret: client-secret
       resource:
-        tokenInfoUri: https://issuer/oauth2/check_token
+        tokenInfoUri: https://idp.example.com/oauth2/check_token
 ----
 ====
 
@@ -813,7 +813,7 @@ spring:
   security:
     oauth2:
       resource:
-        userInfoUri: https://issuer/oauth2/userinfo
+        userInfoUri: https://idp.example.com/oauth2/userinfo
 ----
 ====
 
