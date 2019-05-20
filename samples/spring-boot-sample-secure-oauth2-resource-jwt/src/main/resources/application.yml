@@ -1,5 +1,4 @@
 server.port: 8081
-spring.datasource.platform: h2
 security.oauth2.resource.jwt.key-value: |
   -----BEGIN PUBLIC KEY-----
   MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDdlatRjRjogo3WojgGHFHYLugd
