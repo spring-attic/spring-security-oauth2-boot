@@ -77,6 +77,18 @@ try {
 					}
 				}
 			}
+		},
+		docs: {
+			stage('Deploy Docs') {
+				node {
+					checkout scm
+					withCredentials([file(credentialsId: 'docs.spring.io-jenkins_private_ssh_key', variable: 'DEPLOY_SSH_KEY')]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
+							sh "./gradlew deployDocs -PdeployDocsSshKeyPath=$DEPLOY_SSH_KEY -PdeployDocsSshUsername=$SPRING_DOCS_USERNAME --refresh-dependencies --no-daemon --stacktrace"
+						}
+					}
+				}
+			}
 		}
 	}
 } finally {
