@@ -3,13 +3,22 @@ buildscript {
 		classpath 'io.spring.gradle:spring-build-conventions:0.0.25.RELEASE'
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
 		classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.6'
+		classpath 'io.spring.nohttp:nohttp-gradle:0.0.1.RELEASE'
 	}
 	repositories {
+		maven { url 'https://repo.spring.io/libs-snapshot' }
 		maven { url 'https://repo.spring.io/plugins-snapshot' }
 		maven { url 'https://plugins.gradle.org/m2/' }
 	}
 }
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/libs-snapshot' }
+}
+
 apply plugin: 'io.spring.convention.root'
+apply plugin: 'io.spring.nohttp'
 
 group = 'org.springframework.security.oauth.boot'
 description = 'Spring Security OAuth2 Auto Configuration'
@@ -17,6 +26,12 @@ description = 'Spring Security OAuth2 Auto Configuration'
 ext.snapshotBuild = version.contains("SNAPSHOT")
 ext.releaseBuild = version.contains("SNAPSHOT")
 ext.milestoneBuild = !(snapshotBuild || releaseBuild)
+
+project.tasks.check.dependsOn checkstyleNohttp
+
+nohttp {
+	source.exclude "**/build/**"
+}
 
 subprojects {
         plugins.withType(JavaPlugin) {
