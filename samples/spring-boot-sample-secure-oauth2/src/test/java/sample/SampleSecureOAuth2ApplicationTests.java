@@ -92,7 +92,7 @@ public class SampleSecureOAuth2ApplicationTests {
 				.get("access_token");
 
 		MockHttpServletRequestBuilder flightsRequest = get("/flights/1")
-				.accept(MediaTypes.HAL_JSON)
+				.accept(MediaTypes.HAL_JSON_UTF8)
 				.header("Authorization", "Bearer " + accessToken);
 		MvcResult flightsAction = this.mvc.perform(flightsRequest)
 				.andExpect(
