@@ -9,15 +9,14 @@ dependencies {
 	compile 'org.springframework.security:spring-security-jwt'
 	compile 'com.fasterxml.jackson.core:jackson-annotations'
 	compile 'com.fasterxml.jackson.core:jackson-databind'
-
 	compile 'javax.xml.bind:jaxb-api'
-	compile 'com.sun.xml.bind:jaxb-core'
-	compile 'com.sun.xml.bind:jaxb-impl'
 
 	optional "org.springframework.boot:spring-boot-configuration-processor"
 	optional 'org.springframework.social:spring-social-config'
 	optional 'org.springframework.social:spring-social-core'
 	optional 'org.springframework.social:spring-social-web'
+
+	runtime 'org.glassfish.jaxb:jaxb-runtime'
 
 	provided 'javax.servlet:javax.servlet-api'
 

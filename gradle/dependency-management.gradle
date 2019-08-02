@@ -3,10 +3,6 @@ dependencyManagement {
 		mavenBom "org.springframework.boot:spring-boot-parent:$springBootVersion"
 	}
 	dependencies {
-		dependency 'com.sun.xml.bind:jaxb-core:2.3.0.1'
-		dependency 'com.sun.xml.bind:jaxb-impl:2.3.0.1'
-		dependency 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-
 		dependency "org.springframework.boot:spring-boot:$springBootVersion"
 		dependency 'org.springframework.security.oauth:spring-security-oauth2:2.3.5.RELEASE'
 		dependency 'org.springframework.security:spring-security-jwt:1.0.10.RELEASE'
