@@ -905,7 +905,13 @@ However, if you need to change it, you can set `security.oauth2.resource.token-t
 ==== Changing the Filter Order
 
 OAuth2 resources are protected by a filter chain with the order specified by `security.oauth2.resource.filter-order`.
-The default is, after the filter, protecting the actuator endpoints (so actuator endpoints stay on HTTP Basic unless you change the order).
+
+By default the filters in `AuthorizationServerConfigurerAdapter` come first, followed by those in `ResourceServerConfigurerAdapter`, followed by those in `WebSecurityConfigurerAdapter`.
+
+This means that all application endpoints will require bearer token authentication unless one of two things happens:
+
+1. The filter order is changed or
+2. The `ResourceServerConfigurerAdapter`'s set of authorized requests is narrowed
 
 [[oauth2-boot-resource-server-permit-error]]
 ==== Permitting the /error Endpoint
