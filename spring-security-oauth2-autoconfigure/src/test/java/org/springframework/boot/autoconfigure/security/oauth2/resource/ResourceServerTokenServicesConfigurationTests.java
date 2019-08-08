@@ -124,7 +124,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 				.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
 		assertThat(services).extracting("authoritiesExtractor")
-				.containsExactly(this.context.getBean(AuthoritiesExtractor.class));
+				.isSameAs(this.context.getBean(AuthoritiesExtractor.class));
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 				.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
 		assertThat(services).extracting("principalExtractor")
-				.containsExactly(this.context.getBean(PrincipalExtractor.class));
+				.isSameAs(this.context.getBean(PrincipalExtractor.class));
 	}
 
 	@Test
