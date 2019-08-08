@@ -234,9 +234,14 @@ when your application starts up. It will log a warning if it can't find the key,
 you what to do to fix it.
 
 OAuth2 resources are protected by a filter chain with order
-`security.oauth2.resource.filter-order` and the default is after the filter protecting the
-actuator endpoints by default (so actuator endpoints will stay on HTTP Basic unless you
-change the order).
+`security.oauth2.resource.filter-order`.
+
+By default the filters in `AuthorizationServerConfigurerAdapter` come first, followed by those in `ResourceServerConfigurerAdapter`, followed by those in `WebSecurityConfigurerAdapter`.
+
+This means that all application endpoints will require bearer token authentication unless one of two things happens:
+
+1. The filter order is changed or
+2. The `ResourceServerConfigurerAdapter`'s set of authorized requests is narrowed
 
 
 
