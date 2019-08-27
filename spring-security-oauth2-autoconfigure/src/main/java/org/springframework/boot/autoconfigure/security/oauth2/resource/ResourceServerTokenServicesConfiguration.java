@@ -111,6 +111,7 @@ public class ResourceServerTokenServicesConfiguration {
 			}
 
 			@Bean
+			@ConditionalOnMissingBean(ResourceServerTokenServices.class)
 			public RemoteTokenServices remoteTokenServices() {
 				RemoteTokenServices services = new RemoteTokenServices();
 				services.setCheckTokenEndpointUrl(this.resource.getTokenInfoUri());
