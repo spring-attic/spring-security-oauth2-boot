@@ -43,11 +43,16 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.http.client.MockClientHttpResponse;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -101,6 +106,20 @@ public class ResourceServerTokenServicesConfigurationTests {
 				.environment(this.environment).web(WebApplicationType.NONE).run();
 		RemoteTokenServices services = this.context.getBean(RemoteTokenServices.class);
 		assertThat(services).isNotNull();
+	}
+
+	@Test
+	public void overrideRemoteTokenServices() {
+		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com")
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(CustomRemoteTokenService.class,
+				ResourceConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
+		CustomRemoteTokenService services = this.context
+				.getBean(CustomRemoteTokenService.class);
+		assertThat(services).isNotNull();
+		this.thrown.expect(NoSuchBeanDefinitionException.class);
+		this.context.getBean(RemoteTokenServices.class);
 	}
 
 	@Test
@@ -449,6 +468,23 @@ public class ResourceServerTokenServicesConfigurationTests {
 		@Override
 		public OAuth2RestTemplate getUserInfoRestTemplate() {
 			return this.restTemplate;
+		}
+
+	}
+
+	@Component
+	protected static class CustomRemoteTokenService
+			implements ResourceServerTokenServices {
+
+		@Override
+		public OAuth2Authentication loadAuthentication(String accessToken)
+				throws AuthenticationException, InvalidTokenException {
+			return null;
+		}
+
+		@Override
+		public OAuth2AccessToken readAccessToken(String accessToken) {
+			return null;
 		}
 
 	}
