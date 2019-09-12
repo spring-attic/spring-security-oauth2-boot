@@ -238,12 +238,55 @@ OAuth2 resources are protected by a filter chain with order
 
 By default the filters in `AuthorizationServerConfigurerAdapter` come first, followed by those in `ResourceServerConfigurerAdapter`, followed by those in `WebSecurityConfigurerAdapter`.
 
-This means that all application endpoints will require bearer token authentication unless one of two things happens:
+This means that *all application endpoints will require bearer token authentication* unless one of two things happens:
 
-1. The filter order is changed or
-2. The `ResourceServerConfigurerAdapter`'s set of authorized requests is narrowed
+1. The filter chain order is changed or
+2. The `ResourceServerConfigurerAdapter` set of authorized requests is narrowed
 
+The first, changing the filter chain order, can be done by moving `WebSecurityConfigurerAdapter` in front of `ResourceServerConfigurerAdapter` like so:
 
+====
+[source,java]
+----
+@Order(2)
+@EnableWebSecurity
+public WebSecurityConfig extends WebSecurityConfigurerAdapter {
+        // ...
+}
+----
+====
+
+[NOTE]
+Resource Server's default `@Order` value is 3 which is why the example sets Web's `@Order` to 2, so that it's evaluated earlier.
+
+While this may work, it's a little odd since we may simply trade one problem:
+
+> `ResourceServerConfigurerAdapter` is handling requests it shouldn't
+
+For another:
+
+> `WebSecurityConfigurerAdapter` is handling requests it shouldn't
+
+The more robust solution, then, is to indicate to `ResourceServerConfigurerAdapter` which endpoints should be secured by bearer token authentication.
+
+For example, the following configures Resource Server to secure the web application endpoints that begin with `/rest`:
+
+====
+[source,java]
+----
+@EnableResourceServer
+public ResourceServerConfig extends ResourceServerConfigurerAdapter {
+        @Override
+    protected void configure(HttpSecurity http) {
+        http
+            .requestMatchers()
+                .antMatchers("/rest/**")
+            .authorizeRequests()
+                .anyRequest().authenticated();
+    }
+}
+----
+====
 
 [[boot-features-security-oauth2-token-type]]
 = Token Type in User Info
