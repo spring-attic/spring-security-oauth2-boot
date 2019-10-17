@@ -36,17 +36,15 @@ public class ArchitectureTests {
 	public void freeOfCycles() {
 		String pkg = "org.springframework.boot.autoconfigure.security.oauth2";
 		JavaClasses classes = new ClassFileImporter().importPackages(pkg);
-		slices().matching("..(*)..").should().beFreeOfCycles()
-				.ignoreDependency(isATestClass(), alwaysTrue()).check(classes);
+		slices().matching("..(*)..").should().beFreeOfCycles().ignoreDependency(isATestClass(), alwaysTrue())
+				.check(classes);
 	}
 
 	private DescribedPredicate<JavaClass> isATestClass() {
-		return when("full name containing 'Tests'",
-				input -> input.getFullName().contains("Tests"));
+		return when("full name containing 'Tests'", input -> input.getFullName().contains("Tests"));
 	}
 
-	private DescribedPredicate<JavaClass> when(String description,
-			Predicate<JavaClass> test) {
+	private DescribedPredicate<JavaClass> when(String description, Predicate<JavaClass> test) {
 		return new DescribedPredicate<JavaClass>(description) {
 			@Override
 			public boolean apply(JavaClass input) {

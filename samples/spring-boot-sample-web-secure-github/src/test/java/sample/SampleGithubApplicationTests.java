@@ -52,8 +52,7 @@ public class SampleGithubApplicationTests {
 	public void everythingIsSecuredByDefault() throws Exception {
 		ResponseEntity<Void> entity = this.restTemplate.getForEntity("/", Void.class);
 		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
-		assertThat(entity.getHeaders().getLocation().toString())
-				.startsWith("https://github.com/login/oauth");
+		assertThat(entity.getHeaders().getLocation().toString()).startsWith("https://github.com/login/oauth");
 	}
 
 }

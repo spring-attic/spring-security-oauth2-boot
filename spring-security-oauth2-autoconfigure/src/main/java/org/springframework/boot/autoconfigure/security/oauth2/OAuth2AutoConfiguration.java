@@ -41,9 +41,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @ConditionalOnClass({ OAuth2AccessToken.class, WebMvcConfigurer.class })
-@Import({ OAuth2AuthorizationServerConfiguration.class,
-		OAuth2MethodSecurityConfiguration.class, OAuth2ResourceServerConfiguration.class,
-		OAuth2RestOperationsConfiguration.class })
+@Import({ OAuth2AuthorizationServerConfiguration.class, OAuth2MethodSecurityConfiguration.class,
+		OAuth2ResourceServerConfiguration.class, OAuth2RestOperationsConfiguration.class })
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @EnableConfigurationProperties(OAuth2ClientProperties.class)
 public class OAuth2AutoConfiguration {
@@ -56,8 +55,7 @@ public class OAuth2AutoConfiguration {
 
 	@Bean
 	public ResourceServerProperties resourceServerProperties() {
-		return new ResourceServerProperties(this.credentials.getClientId(),
-				this.credentials.getClientSecret());
+		return new ResourceServerProperties(this.credentials.getClientId(), this.credentials.getClientSecret());
 	}
 
 }

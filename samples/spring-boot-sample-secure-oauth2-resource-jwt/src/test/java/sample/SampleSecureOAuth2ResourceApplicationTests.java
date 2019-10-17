@@ -56,24 +56,19 @@ public class SampleSecureOAuth2ResourceApplicationTests {
 
 	@Test
 	public void profileAvailable() throws Exception {
-		this.mvc.perform(get("/profile").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isOk());
+		this.mvc.perform(get("/profile").accept(MediaTypes.HAL_JSON)).andExpect(status().isOk());
 	}
 
 	@Test
 	public void flightsWhenUsingValidJwtThenOk() throws Exception {
-		this.mvc.perform(get("/flights").with(bearerToken(VALID_JWT)))
-				.andExpect(status().isOk());
-		this.mvc.perform(get("/flights/1").with(bearerToken(VALID_JWT)))
-				.andExpect(status().isOk());
+		this.mvc.perform(get("/flights").with(bearerToken(VALID_JWT))).andExpect(status().isOk());
+		this.mvc.perform(get("/flights/1").with(bearerToken(VALID_JWT))).andExpect(status().isOk());
 	}
 
 	@Test
 	public void flightsWhenUsingExpiredJwtThenUnauthorized() throws Exception {
-		this.mvc.perform(get("/flights").with(bearerToken(EXPIRED_JWT)))
-				.andExpect(status().isUnauthorized());
-		this.mvc.perform(get("/flights/1").with(bearerToken(EXPIRED_JWT)))
-				.andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/flights").with(bearerToken(EXPIRED_JWT))).andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/flights/1").with(bearerToken(EXPIRED_JWT))).andExpect(status().isUnauthorized());
 	}
 
 	private static class BearerTokenRequestPostProcessor implements RequestPostProcessor {

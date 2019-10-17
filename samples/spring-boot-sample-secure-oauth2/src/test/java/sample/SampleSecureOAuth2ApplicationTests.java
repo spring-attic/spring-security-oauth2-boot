@@ -59,14 +59,10 @@ public class SampleSecureOAuth2ApplicationTests {
 
 	@Test
 	public void everythingIsSecuredByDefault() throws Exception {
-		this.mvc.perform(get("/").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isUnauthorized());
-		this.mvc.perform(get("/flights").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isUnauthorized());
-		this.mvc.perform(get("/flights/1").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isUnauthorized());
-		this.mvc.perform(get("/alps").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/").accept(MediaTypes.HAL_JSON)).andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/flights").accept(MediaTypes.HAL_JSON)).andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/flights/1").accept(MediaTypes.HAL_JSON)).andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/alps").accept(MediaTypes.HAL_JSON)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
@@ -74,32 +70,26 @@ public class SampleSecureOAuth2ApplicationTests {
 	public void accessingRootUriPossibleWithUserAccount() throws Exception {
 		MockHttpServletRequestBuilder request = get("/").accept(MediaTypes.HAL_JSON)
 				.with(httpBasic("greg", "turnquist"));
-		this.mvc.perform(request)
-				.andExpect(header().string("Content-Type", MediaTypes.HAL_JSON_VALUE))
+		this.mvc.perform(request).andExpect(header().string("Content-Type", MediaTypes.HAL_JSON_VALUE))
 				.andExpect(status().isOk()).andDo(print());
 	}
 
 	@Test
 	public void useAppSecretsPlusUserAccountToGetBearerToken() throws Exception {
-		MockHttpServletRequestBuilder tokenRequest = post("/oauth/token")
-				.with(httpBasic("foo", "bar")).param("grant_type", "password")
-				.param("username", "greg").param("password", "turnquist")
+		MockHttpServletRequestBuilder tokenRequest = post("/oauth/token").with(httpBasic("foo", "bar"))
+				.param("grant_type", "password").param("username", "greg").param("password", "turnquist")
 				.param("scope", "read");
-		MvcResult result = this.mvc.perform(tokenRequest).andExpect(status().isOk())
-				.andReturn();
-		Object accessToken = this.objectMapper
-				.readValue(result.getResponse().getContentAsString(), Map.class)
+		MvcResult result = this.mvc.perform(tokenRequest).andExpect(status().isOk()).andReturn();
+		Object accessToken = this.objectMapper.readValue(result.getResponse().getContentAsString(), Map.class)
 				.get("access_token");
 
-		MockHttpServletRequestBuilder flightsRequest = get("/flights/1")
-				.accept(MediaTypes.HAL_JSON)
+		MockHttpServletRequestBuilder flightsRequest = get("/flights/1").accept(MediaTypes.HAL_JSON)
 				.header("Authorization", "Bearer " + accessToken);
 		MvcResult flightsAction = this.mvc.perform(flightsRequest)
-				.andExpect(header().string("Content-Type", MediaTypes.HAL_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
+				.andExpect(header().string("Content-Type", MediaTypes.HAL_JSON_VALUE)).andExpect(status().isOk())
+				.andReturn();
 
-		Flight flight = this.objectMapper.readValue(
-				flightsAction.getResponse().getContentAsString(), Flight.class);
+		Flight flight = this.objectMapper.readValue(flightsAction.getResponse().getContentAsString(), Flight.class);
 
 		assertThat(flight.getOrigin()).isEqualTo("Nashville");
 		assertThat(flight.getDestination()).isEqualTo("Dallas");

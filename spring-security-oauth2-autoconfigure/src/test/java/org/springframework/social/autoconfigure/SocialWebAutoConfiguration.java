@@ -70,8 +70,7 @@ public class SocialWebAutoConfiguration {
 	@Configuration
 	@EnableSocial
 	@ConditionalOnWebApplication(type = Type.SERVLET)
-	protected static class SocialAutoConfigurationAdapter
-			extends SocialConfigurerAdapter {
+	protected static class SocialAutoConfigurationAdapter extends SocialConfigurerAdapter {
 
 		private final List<ConnectInterceptor<?>> connectInterceptors;
 
@@ -79,8 +78,7 @@ public class SocialWebAutoConfiguration {
 
 		private final List<ProviderSignInInterceptor<?>> signInInterceptors;
 
-		public SocialAutoConfigurationAdapter(
-				ObjectProvider<List<ConnectInterceptor<?>>> connectInterceptorsProvider,
+		public SocialAutoConfigurationAdapter(ObjectProvider<List<ConnectInterceptor<?>>> connectInterceptorsProvider,
 				ObjectProvider<List<DisconnectInterceptor<?>>> disconnectInterceptorsProvider,
 				ObjectProvider<List<ProviderSignInInterceptor<?>>> signInInterceptorsProvider) {
 			this.connectInterceptors = connectInterceptorsProvider.getIfAvailable();
@@ -90,11 +88,9 @@ public class SocialWebAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean(ConnectController.class)
-		public ConnectController connectController(
-				ConnectionFactoryLocator factoryLocator,
+		public ConnectController connectController(ConnectionFactoryLocator factoryLocator,
 				ConnectionRepository repository) {
-			ConnectController controller = new ConnectController(factoryLocator,
-					repository);
+			ConnectController controller = new ConnectController(factoryLocator, repository);
 			if (!CollectionUtils.isEmpty(this.connectInterceptors)) {
 				controller.setConnectInterceptors(this.connectInterceptors);
 			}
@@ -116,11 +112,10 @@ public class SocialWebAutoConfiguration {
 		@Bean
 		@ConditionalOnBean(SignInAdapter.class)
 		@ConditionalOnMissingBean
-		public ProviderSignInController signInController(
-				ConnectionFactoryLocator factoryLocator,
+		public ProviderSignInController signInController(ConnectionFactoryLocator factoryLocator,
 				UsersConnectionRepository usersRepository, SignInAdapter signInAdapter) {
-			ProviderSignInController controller = new ProviderSignInController(
-					factoryLocator, usersRepository, signInAdapter);
+			ProviderSignInController controller = new ProviderSignInController(factoryLocator, usersRepository,
+					signInAdapter);
 			if (!CollectionUtils.isEmpty(this.signInInterceptors)) {
 				controller.setSignInInterceptors(this.signInInterceptors);
 			}
@@ -146,8 +141,7 @@ public class SocialWebAutoConfiguration {
 	@EnableSocial
 	@ConditionalOnWebApplication(type = Type.SERVLET)
 	@ConditionalOnClass(SecurityContextHolder.class)
-	protected static class AuthenticationUserIdSourceConfig
-			extends SocialConfigurerAdapter {
+	protected static class AuthenticationUserIdSourceConfig extends SocialConfigurerAdapter {
 
 		@Override
 		public UserIdSource getUserIdSource() {
@@ -162,8 +156,7 @@ public class SocialWebAutoConfiguration {
 		public String getUserId() {
 			SecurityContext context = SecurityContextHolder.getContext();
 			Authentication authentication = context.getAuthentication();
-			Assert.state(authentication != null,
-					"Unable to get a ConnectionRepository: no user signed in");
+			Assert.state(authentication != null, "Unable to get a ConnectionRepository: no user signed in");
 			return authentication.getName();
 		}
 

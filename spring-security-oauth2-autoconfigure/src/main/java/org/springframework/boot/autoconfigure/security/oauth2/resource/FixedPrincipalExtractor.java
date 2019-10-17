@@ -27,8 +27,8 @@ import java.util.Map;
  */
 public class FixedPrincipalExtractor implements PrincipalExtractor {
 
-	private static final String[] PRINCIPAL_KEYS = new String[] { "user", "username",
-			"userid", "user_id", "login", "id", "name" };
+	private static final String[] PRINCIPAL_KEYS = new String[] { "user", "username", "userid", "user_id", "login",
+			"id", "name" };
 
 	@Override
 	public Object extractPrincipal(Map<String, Object> map) {

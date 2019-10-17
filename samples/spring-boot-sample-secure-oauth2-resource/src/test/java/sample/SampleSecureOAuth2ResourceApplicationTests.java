@@ -52,16 +52,13 @@ public class SampleSecureOAuth2ResourceApplicationTests {
 
 	@Test
 	public void flightsSecuredByDefault() throws Exception {
-		this.mvc.perform(get("/flights").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isUnauthorized());
-		this.mvc.perform(get("/flights/1").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/flights").accept(MediaTypes.HAL_JSON)).andExpect(status().isUnauthorized());
+		this.mvc.perform(get("/flights/1").accept(MediaTypes.HAL_JSON)).andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void profileAvailable() throws Exception {
-		this.mvc.perform(get("/profile").accept(MediaTypes.HAL_JSON))
-				.andExpect(status().isOk());
+		this.mvc.perform(get("/profile").accept(MediaTypes.HAL_JSON)).andExpect(status().isOk());
 	}
 
 }

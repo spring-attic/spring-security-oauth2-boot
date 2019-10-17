@@ -60,8 +60,7 @@ public class SampleSecureOAuth2ActuatorApplicationTests {
 
 	@Test
 	public void healthWithBasicAuthorization() throws Exception {
-		MockHttpServletRequestBuilder request = get("/actuator/health")
-				.with(userCredentials());
+		MockHttpServletRequestBuilder request = get("/actuator/health").with(userCredentials());
 		this.mvc.perform(request).andExpect(status().isOk());
 	}
 
@@ -72,8 +71,7 @@ public class SampleSecureOAuth2ActuatorApplicationTests {
 
 	@Test
 	public void envWithBasicAuthorization() throws Exception {
-		MockHttpServletRequestBuilder request = get("/actuator/env")
-				.with(userCredentials());
+		MockHttpServletRequestBuilder request = get("/actuator/env").with(userCredentials());
 		this.mvc.perform(request).andExpect(status().isOk());
 	}
 

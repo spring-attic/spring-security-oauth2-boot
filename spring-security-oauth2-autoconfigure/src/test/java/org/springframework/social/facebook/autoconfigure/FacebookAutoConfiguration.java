@@ -71,8 +71,7 @@ public class FacebookAutoConfiguration {
 		@ConditionalOnMissingBean(Facebook.class)
 		@Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
 		public Facebook facebook(ConnectionRepository repository) {
-			Connection<Facebook> connection = repository
-					.findPrimaryConnection(Facebook.class);
+			Connection<Facebook> connection = repository.findPrimaryConnection(Facebook.class);
 			return connection != null ? connection.getApi() : null;
 		}
 
@@ -84,8 +83,7 @@ public class FacebookAutoConfiguration {
 
 		@Override
 		protected ConnectionFactory<?> createConnectionFactory() {
-			return new FacebookConnectionFactory(this.properties.getAppId(),
-					this.properties.getAppSecret());
+			return new FacebookConnectionFactory(this.properties.getAppId(), this.properties.getAppSecret());
 		}
 
 	}

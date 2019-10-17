@@ -32,8 +32,7 @@ public class FlightController {
 
 	@GetMapping("/flights/{id}")
 	public Flight getFlight(@PathVariable("id") Long id) {
-		return this.flightRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("dude"));
+		return this.flightRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("dude"));
 	}
 
 }

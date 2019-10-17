@@ -67,13 +67,11 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 @Import(AuthorizationServerTokenServicesConfiguration.class)
 public class OAuth2AuthorizationServerConfiguration {
 
-	private static final Log logger = LogFactory
-			.getLog(OAuth2AuthorizationServerConfiguration.class);
+	private static final Log logger = LogFactory.getLog(OAuth2AuthorizationServerConfiguration.class);
 
 	@Configuration
 	@ConditionalOnMissingBean(AuthorizationServerConfigurer.class)
-	private static class AuthorizationSecurityConfigurer
-			extends AuthorizationServerConfigurerAdapter {
+	private static class AuthorizationSecurityConfigurer extends AuthorizationServerConfigurerAdapter {
 
 		private final BaseClientDetails details;
 
@@ -86,14 +84,12 @@ public class OAuth2AuthorizationServerConfiguration {
 		private final AuthorizationServerProperties properties;
 
 		public AuthorizationSecurityConfigurer(BaseClientDetails details,
-				AuthenticationConfiguration authenticationConfiguration,
-				ObjectProvider<TokenStore> tokenStore,
-				ObjectProvider<AccessTokenConverter> tokenConverter,
-				AuthorizationServerProperties properties) throws Exception {
+				AuthenticationConfiguration authenticationConfiguration, ObjectProvider<TokenStore> tokenStore,
+				ObjectProvider<AccessTokenConverter> tokenConverter, AuthorizationServerProperties properties)
+				throws Exception {
 
 			this.details = details;
-			this.authenticationManager = authenticationConfiguration
-					.getAuthenticationManager();
+			this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
 			this.tokenStore = tokenStore.getIfAvailable();
 			this.tokenConverter = tokenConverter.getIfAvailable();
 			this.properties = properties;
@@ -101,38 +97,31 @@ public class OAuth2AuthorizationServerConfiguration {
 
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-			ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder>.ClientBuilder builder = clients
-					.inMemory().withClient(this.details.getClientId());
+			ClientDetailsServiceBuilder<InMemoryClientDetailsServiceBuilder>.ClientBuilder builder = clients.inMemory()
+					.withClient(this.details.getClientId());
 			builder.secret(this.details.getClientSecret())
 					.resourceIds(this.details.getResourceIds().toArray(new String[0]))
-					.authorizedGrantTypes(
-							this.details.getAuthorizedGrantTypes().toArray(new String[0]))
-					.authorities(AuthorityUtils
-							.authorityListToSet(this.details.getAuthorities())
-							.toArray(new String[0]))
+					.authorizedGrantTypes(this.details.getAuthorizedGrantTypes().toArray(new String[0]))
+					.authorities(
+							AuthorityUtils.authorityListToSet(this.details.getAuthorities()).toArray(new String[0]))
 					.scopes(this.details.getScope().toArray(new String[0]));
 
 			if (this.details.getAutoApproveScopes() != null) {
-				builder.autoApprove(
-						this.details.getAutoApproveScopes().toArray(new String[0]));
+				builder.autoApprove(this.details.getAutoApproveScopes().toArray(new String[0]));
 			}
 			if (this.details.getAccessTokenValiditySeconds() != null) {
-				builder.accessTokenValiditySeconds(
-						this.details.getAccessTokenValiditySeconds());
+				builder.accessTokenValiditySeconds(this.details.getAccessTokenValiditySeconds());
 			}
 			if (this.details.getRefreshTokenValiditySeconds() != null) {
-				builder.refreshTokenValiditySeconds(
-						this.details.getRefreshTokenValiditySeconds());
+				builder.refreshTokenValiditySeconds(this.details.getRefreshTokenValiditySeconds());
 			}
 			if (this.details.getRegisteredRedirectUri() != null) {
-				builder.redirectUris(
-						this.details.getRegisteredRedirectUri().toArray(new String[0]));
+				builder.redirectUris(this.details.getRegisteredRedirectUri().toArray(new String[0]));
 			}
 		}
 
 		@Override
-		public void configure(AuthorizationServerEndpointsConfigurer endpoints)
-				throws Exception {
+		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 			if (this.tokenConverter != null) {
 				endpoints.accessTokenConverter(this.tokenConverter);
 			}
@@ -145,8 +134,7 @@ public class OAuth2AuthorizationServerConfiguration {
 		}
 
 		@Override
-		public void configure(AuthorizationServerSecurityConfigurer security)
-				throws Exception {
+		public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 			security.passwordEncoder(NoOpPasswordEncoder.getInstance());
 			if (this.properties.getCheckTokenAccess() != null) {
 				security.checkTokenAccess(this.properties.getCheckTokenAccess());
@@ -175,11 +163,10 @@ public class OAuth2AuthorizationServerConfiguration {
 			public void init() {
 				String prefix = "security.oauth2.client";
 				boolean defaultSecret = this.credentials.isDefaultSecret();
-				logger.info(String.format(
-						"Initialized OAuth2 Client%n%n%s.client-id = %s%n"
-								+ "%s.client-secret = %s%n%n",
-						prefix, this.credentials.getClientId(), prefix,
-						defaultSecret ? this.credentials.getClientSecret() : "****"));
+				logger.info(
+						String.format("Initialized OAuth2 Client%n%n%s.client-id = %s%n" + "%s.client-secret = %s%n%n",
+								prefix, this.credentials.getClientId(), prefix,
+								defaultSecret ? this.credentials.getClientSecret() : "****"));
 			}
 
 		}
@@ -203,10 +190,9 @@ public class OAuth2AuthorizationServerConfiguration {
 				}
 				details.setClientId(this.client.getClientId());
 				details.setClientSecret(this.client.getClientSecret());
-				details.setAuthorizedGrantTypes(Arrays.asList("authorization_code",
-						"password", "client_credentials", "implicit", "refresh_token"));
-				details.setAuthorities(
-						AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
+				details.setAuthorizedGrantTypes(Arrays.asList("authorization_code", "password", "client_credentials",
+						"implicit", "refresh_token"));
+				details.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER"));
 				details.setRegisteredRedirectUri(Collections.<String>emptySet());
 				return details;
 			}

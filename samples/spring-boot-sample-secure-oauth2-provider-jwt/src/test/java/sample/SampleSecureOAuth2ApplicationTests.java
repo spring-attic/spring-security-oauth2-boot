@@ -52,8 +52,7 @@ public class SampleSecureOAuth2ApplicationTests {
 
 	private static final String CLIENT_SECRET = "noonewilleverguess";
 
-	private static final RequestPostProcessor CLIENT_CREDENTIALS = httpBasic(CLIENT_ID,
-			CLIENT_SECRET);
+	private static final RequestPostProcessor CLIENT_CREDENTIALS = httpBasic(CLIENT_ID, CLIENT_SECRET);
 
 	@Value("${security.oauth2.authorization.jwt.key-value}")
 	String privateKeyValue;
@@ -65,10 +64,9 @@ public class SampleSecureOAuth2ApplicationTests {
 
 	@Test
 	public void tokenWhenUsingClientCredentialsThenIsValid() throws Exception {
-		MvcResult result = this.mvc
-				.perform(post("/oauth/token").with(CLIENT_CREDENTIALS)
-						.param("grant_type", "client_credentials").param("scope", "any"))
-				.andExpect(status().isOk()).andReturn();
+		MvcResult result = this.mvc.perform(post("/oauth/token").with(CLIENT_CREDENTIALS)
+				.param("grant_type", "client_credentials").param("scope", "any")).andExpect(status().isOk())
+				.andReturn();
 
 		String accessToken = extract(result, "access_token");
 
@@ -76,9 +74,8 @@ public class SampleSecureOAuth2ApplicationTests {
 	}
 
 	private String extract(MvcResult result, String property) throws Exception {
-		return this.objectMapper
-				.readValue(result.getResponse().getContentAsString(), Map.class)
-				.get(property).toString();
+		return this.objectMapper.readValue(result.getResponse().getContentAsString(), Map.class).get(property)
+				.toString();
 	}
 
 }

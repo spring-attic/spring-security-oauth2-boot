@@ -111,10 +111,8 @@ public class OAuth2RestOperationsConfiguration {
 		@Bean
 		@Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
 		public DefaultOAuth2ClientContext oauth2ClientContext() {
-			DefaultOAuth2ClientContext context = new DefaultOAuth2ClientContext(
-					new DefaultAccessTokenRequest());
-			Authentication principal = SecurityContextHolder.getContext()
-					.getAuthentication();
+			DefaultOAuth2ClientContext context = new DefaultOAuth2ClientContext(new DefaultAccessTokenRequest());
+			Authentication principal = SecurityContextHolder.getContext().getAuthentication();
 			if (principal instanceof OAuth2Authentication) {
 				OAuth2Authentication authentication = (OAuth2Authentication) principal;
 				Object details = authentication.getDetails();
@@ -135,18 +133,13 @@ public class OAuth2RestOperationsConfiguration {
 	static class OAuth2ClientIdCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			String clientId = context.getEnvironment()
-					.getProperty("security.oauth2.client.client-id");
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth Client ID");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			String clientId = context.getEnvironment().getProperty("security.oauth2.client.client-id");
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth Client ID");
 			if (StringUtils.hasLength(clientId)) {
-				return ConditionOutcome.match(message
-						.foundExactly("security.oauth2.client.client-id property"));
+				return ConditionOutcome.match(message.foundExactly("security.oauth2.client.client-id property"));
 			}
-			return ConditionOutcome.noMatch(message
-					.didNotFind("security.oauth2.client.client-id property").atAll());
+			return ConditionOutcome.noMatch(message.didNotFind("security.oauth2.client.client-id property").atAll());
 		}
 
 	}
@@ -176,7 +169,8 @@ public class OAuth2RestOperationsConfiguration {
 			super(ConfigurationPhase.PARSE_CONFIGURATION);
 		}
 
-		@ConditionalOnProperty(prefix = "security.oauth2.client", name = "grant-type", havingValue = "client_credentials", matchIfMissing = false)
+		@ConditionalOnProperty(prefix = "security.oauth2.client", name = "grant-type",
+				havingValue = "client_credentials", matchIfMissing = false)
 		static class ClientCredentialsConfigured {
 
 		}

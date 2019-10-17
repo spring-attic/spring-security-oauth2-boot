@@ -31,8 +31,7 @@ import org.springframework.social.connect.ConnectionFactory;
 public abstract class SocialAutoConfigurerAdapter extends SocialConfigurerAdapter {
 
 	@Override
-	public void addConnectionFactories(ConnectionFactoryConfigurer configurer,
-			Environment environment) {
+	public void addConnectionFactories(ConnectionFactoryConfigurer configurer, Environment environment) {
 		configurer.addConnectionFactory(createConnectionFactory());
 	}
 

@@ -45,8 +45,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
  */
 public class ResourceServerPropertiesTests {
 
-	private ResourceServerProperties properties = new ResourceServerProperties("client",
-			"secret");
+	private ResourceServerProperties properties = new ResourceServerProperties("client", "secret");
 
 	private Errors errors = mock(Errors.class);
 
@@ -78,20 +77,19 @@ public class ResourceServerPropertiesTests {
 		this.properties.getJwt().setKeyUri("https://idp.example.com/token_key");
 		setListableBeanFactory();
 		this.thrown.expect(IllegalStateException.class);
-		this.thrown.expect(getMatcher("Only one of jwt.keyUri (or jwt.keyValue) "
-				+ "and jwk.keySetUri should be configured.", null));
+		this.thrown.expect(getMatcher(
+				"Only one of jwt.keyUri (or jwt.keyValue) " + "and jwk.keySetUri should be configured.", null));
 		this.properties.validate();
 	}
 
 	@Test
-	public void validateWhenBothJwtKeyValueAndJwkKeyUriPresentShouldFail()
-			throws Exception {
+	public void validateWhenBothJwtKeyValueAndJwkKeyUriPresentShouldFail() throws Exception {
 		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		this.properties.getJwt().setKeyValue("my-key");
 		setListableBeanFactory();
 		this.thrown.expect(IllegalStateException.class);
-		this.thrown.expect(getMatcher("Only one of jwt.keyUri (or jwt.keyValue) "
-				+ "and jwk.keySetUri should be configured.", null));
+		this.thrown.expect(getMatcher(
+				"Only one of jwt.keyUri (or jwt.keyValue) " + "and jwk.keySetUri should be configured.", null));
 		this.properties.validate();
 	}
 
@@ -112,8 +110,7 @@ public class ResourceServerPropertiesTests {
 	}
 
 	@Test
-	public void validateWhenKeysUriOrValuePresentAndUserInfoAbsentShouldNotFail()
-			throws Exception {
+	public void validateWhenKeysUriOrValuePresentAndUserInfoAbsentShouldNotFail() throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
 		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		setListableBeanFactory();
@@ -122,12 +119,11 @@ public class ResourceServerPropertiesTests {
 	}
 
 	@Test
-	public void validateWhenKeyConfigAbsentAndInfoUrisNotConfiguredShouldFail()
-			throws Exception {
+	public void validateWhenKeyConfigAbsentAndInfoUrisNotConfiguredShouldFail() throws Exception {
 		setListableBeanFactory();
 		this.thrown.expect(IllegalStateException.class);
-		this.thrown.expect(getMatcher("Missing tokenInfoUri and userInfoUri and there"
-				+ " is no JWT verifier key", "tokenInfoUri"));
+		this.thrown.expect(getMatcher("Missing tokenInfoUri and userInfoUri and there" + " is no JWT verifier key",
+				"tokenInfoUri"));
 		this.properties.validate();
 	}
 
@@ -148,8 +144,7 @@ public class ResourceServerPropertiesTests {
 	}
 
 	@Test
-	public void validateWhenTokenUriPreferredAndClientSecretAbsentShouldFail()
-			throws Exception {
+	public void validateWhenTokenUriPreferredAndClientSecretAbsentShouldFail() throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
 		this.properties.setTokenInfoUri("https://idp.example.com/check_token");
 		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
@@ -160,8 +155,7 @@ public class ResourceServerPropertiesTests {
 	}
 
 	@Test
-	public void validateWhenTokenUriAbsentAndClientSecretAbsentShouldNotFail()
-			throws Exception {
+	public void validateWhenTokenUriAbsentAndClientSecretAbsentShouldNotFail() throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
 		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
@@ -170,8 +164,7 @@ public class ResourceServerPropertiesTests {
 	}
 
 	@Test
-	public void validateWhenTokenUriNotPreferredAndClientSecretAbsentShouldNotFail()
-			throws Exception {
+	public void validateWhenTokenUriNotPreferredAndClientSecretAbsentShouldNotFail() throws Exception {
 		this.properties = new ResourceServerProperties("client", "");
 		this.properties.setPreferTokenInfo(false);
 		this.properties.setTokenInfoUri("https://idp.example.com/check_token");
@@ -185,10 +178,8 @@ public class ResourceServerPropertiesTests {
 		ListableBeanFactory beanFactory = new StaticWebApplicationContext() {
 
 			@Override
-			public String[] getBeanNamesForType(Class<?> type,
-					boolean includeNonSingletons, boolean allowEagerInit) {
-				if (type.isAssignableFrom(
-						ResourceServerTokenServicesConfiguration.class)) {
+			public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
+				if (type.isAssignableFrom(ResourceServerTokenServicesConfiguration.class)) {
 					return new String[] { "ResourceServerTokenServicesConfiguration" };
 				}
 				return new String[0];

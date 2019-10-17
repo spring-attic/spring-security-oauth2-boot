@@ -55,19 +55,15 @@ public class MultipleResourceServerConfigurationTests {
 	public void orderIsUnchangedWhenThereAreMultipleResourceServerConfigurations() {
 		this.context = new AnnotationConfigWebApplicationContext();
 		this.context.register(DoubleResourceConfiguration.class);
-		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com",
-				"security.oauth2.client.clientId=acme").applyTo(this.context);
+		TestPropertyValues
+				.of("security.oauth2.resource.tokenInfoUri:https://example.com", "security.oauth2.client.clientId=acme")
+				.applyTo(this.context);
 		this.context.refresh();
-		assertThat(this.context
-				.getBean("adminResources", ResourceServerConfiguration.class).getOrder())
-						.isEqualTo(3);
-		assertThat(this.context
-				.getBean("otherResources", ResourceServerConfiguration.class).getOrder())
-						.isEqualTo(4);
+		assertThat(this.context.getBean("adminResources", ResourceServerConfiguration.class).getOrder()).isEqualTo(3);
+		assertThat(this.context.getBean("otherResources", ResourceServerConfiguration.class).getOrder()).isEqualTo(4);
 	}
 
-	@ImportAutoConfiguration({ OAuth2AutoConfiguration.class,
-			PropertyPlaceholderAutoConfiguration.class })
+	@ImportAutoConfiguration({ OAuth2AutoConfiguration.class, PropertyPlaceholderAutoConfiguration.class })
 	@EnableWebSecurity
 	@Configuration
 	protected static class DoubleResourceConfiguration {

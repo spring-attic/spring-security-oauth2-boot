@@ -60,8 +60,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = {
-		"security.oauth2.resource.userInfoUri:https://example.com",
-		"security.oauth2.client.clientId=foo" })
+		"security.oauth2.resource.userInfoUri:https://example.com", "security.oauth2.client.clientId=foo" })
 @DirtiesContext
 public class UserInfoTokenServicesRefreshTokenTests {
 
@@ -75,8 +74,7 @@ public class UserInfoTokenServicesRefreshTokenTests {
 
 	@Before
 	public void init() {
-		this.services = new UserInfoTokenServices(
-				"http://localhost:" + this.port + "/user", "foo");
+		this.services = new UserInfoTokenServices("http://localhost:" + this.port + "/user", "foo");
 	}
 
 	@Test
@@ -95,8 +93,7 @@ public class UserInfoTokenServicesRefreshTokenTests {
 		assertThat(this.services.loadAuthentication("FOO").getName()).isEqualTo("me");
 		assertThat(context.getAccessToken().getValue()).isEqualTo("FOO");
 		// The refresh token is still intact
-		assertThat(context.getAccessToken().getRefreshToken())
-				.isEqualTo(token.getRefreshToken());
+		assertThat(context.getAccessToken().getRefreshToken()).isEqualTo(token.getRefreshToken());
 	}
 
 	@Test
@@ -110,9 +107,8 @@ public class UserInfoTokenServicesRefreshTokenTests {
 	}
 
 	@Configuration
-	@Import({ ServletWebServerFactoryAutoConfiguration.class,
-			DispatcherServletAutoConfiguration.class, WebMvcAutoConfiguration.class,
-			HttpMessageConvertersAutoConfiguration.class,
+	@Import({ ServletWebServerFactoryAutoConfiguration.class, DispatcherServletAutoConfiguration.class,
+			WebMvcAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class,
 			PropertyPlaceholderAutoConfiguration.class })
 
 	@RestController

@@ -81,8 +81,7 @@ public class OAuth2ResourceServerConfiguration {
 		return new ResourceSecurityConfigurer(this.resource);
 	}
 
-	protected static class ResourceSecurityConfigurer
-			extends ResourceServerConfigurerAdapter {
+	protected static class ResourceSecurityConfigurer extends ResourceServerConfigurerAdapter {
 
 		private ResourceServerProperties resource;
 
@@ -91,8 +90,7 @@ public class OAuth2ResourceServerConfiguration {
 		}
 
 		@Override
-		public void configure(ResourceServerSecurityConfigurer resources)
-				throws Exception {
+		public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 			resources.resourceId(this.resource.getResourceId());
 		}
 
@@ -103,15 +101,13 @@ public class OAuth2ResourceServerConfiguration {
 
 	}
 
-	protected static class ResourceServerCondition extends SpringBootCondition
-			implements ConfigurationCondition {
+	protected static class ResourceServerCondition extends SpringBootCondition implements ConfigurationCondition {
 
-		private static final Bindable<Map<String, Object>> STRING_OBJECT_MAP = Bindable
-				.mapOf(String.class, Object.class);
+		private static final Bindable<Map<String, Object>> STRING_OBJECT_MAP = Bindable.mapOf(String.class,
+				Object.class);
 
 		private static final String AUTHORIZATION_ANNOTATION = "org.springframework."
-				+ "security.oauth2.config.annotation.web.configuration."
-				+ "AuthorizationServerEndpointsConfiguration";
+				+ "security.oauth2.config.annotation.web.configuration." + "AuthorizationServerEndpointsConfiguration";
 
 		@Override
 		public ConfigurationPhase getConfigurationPhase() {
@@ -119,14 +115,11 @@ public class OAuth2ResourceServerConfiguration {
 		}
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth ResourceServer Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth ResourceServer Condition");
 			Environment environment = context.getEnvironment();
 			if (!(environment instanceof ConfigurableEnvironment)) {
-				return ConditionOutcome
-						.noMatch(message.didNotFind("A ConfigurableEnvironment").atAll());
+				return ConditionOutcome.noMatch(message.didNotFind("A ConfigurableEnvironment").atAll());
 			}
 			if (hasOAuthClientId(environment)) {
 				return ConditionOutcome.match(message.foundExactly("client-id property"));
@@ -134,36 +127,28 @@ public class OAuth2ResourceServerConfiguration {
 			Binder binder = Binder.get(environment);
 			String prefix = "security.oauth2.resource.";
 			if (binder.bind(prefix + "jwt", STRING_OBJECT_MAP).isBound()) {
-				return ConditionOutcome
-						.match(message.foundExactly("JWT resource configuration"));
+				return ConditionOutcome.match(message.foundExactly("JWT resource configuration"));
 			}
 			if (binder.bind(prefix + "jwk", STRING_OBJECT_MAP).isBound()) {
-				return ConditionOutcome
-						.match(message.foundExactly("JWK resource configuration"));
+				return ConditionOutcome.match(message.foundExactly("JWK resource configuration"));
 			}
 			if (StringUtils.hasText(environment.getProperty(prefix + "user-info-uri"))) {
-				return ConditionOutcome
-						.match(message.foundExactly("user-info-uri property"));
+				return ConditionOutcome.match(message.foundExactly("user-info-uri property"));
 			}
 			if (StringUtils.hasText(environment.getProperty(prefix + "token-info-uri"))) {
-				return ConditionOutcome
-						.match(message.foundExactly("token-info-uri property"));
+				return ConditionOutcome.match(message.foundExactly("token-info-uri property"));
 			}
 			if (ClassUtils.isPresent(AUTHORIZATION_ANNOTATION, null)) {
-				if (AuthorizationServerEndpointsConfigurationBeanCondition
-						.matches(context)) {
-					return ConditionOutcome.match(
-							message.found("class").items(AUTHORIZATION_ANNOTATION));
+				if (AuthorizationServerEndpointsConfigurationBeanCondition.matches(context)) {
+					return ConditionOutcome.match(message.found("class").items(AUTHORIZATION_ANNOTATION));
 				}
 			}
-			return ConditionOutcome.noMatch(
-					message.didNotFind("client ID, JWT resource or authorization server")
-							.atAll());
+			return ConditionOutcome
+					.noMatch(message.didNotFind("client ID, JWT resource or authorization server").atAll());
 		}
 
 		private boolean hasOAuthClientId(Environment environment) {
-			return StringUtils.hasLength(
-					environment.getProperty("security.oauth2.client.client-id"));
+			return StringUtils.hasLength(environment.getProperty("security.oauth2.client.client-id"));
 		}
 
 	}
@@ -173,8 +158,7 @@ public class OAuth2ResourceServerConfiguration {
 
 		public static boolean matches(ConditionContext context) {
 			Class<AuthorizationServerEndpointsConfigurationBeanCondition> type = AuthorizationServerEndpointsConfigurationBeanCondition.class;
-			Conditional conditional = AnnotationUtils.findAnnotation(type,
-					Conditional.class);
+			Conditional conditional = AnnotationUtils.findAnnotation(type, Conditional.class);
 			StandardAnnotationMetadata metadata = new StandardAnnotationMetadata(type);
 			for (Class<? extends Condition> conditionType : conditional.value()) {
 				Condition condition = BeanUtils.instantiateClass(conditionType);

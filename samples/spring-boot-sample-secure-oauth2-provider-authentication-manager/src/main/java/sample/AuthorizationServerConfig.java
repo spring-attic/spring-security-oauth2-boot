@@ -35,8 +35,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		PasswordEncoder passwordEncoder = PasswordEncoderFactories
-				.createDelegatingPasswordEncoder();
+		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
 		// @formatter:off
 		clients.inMemory()
@@ -56,8 +55,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	}
 
 	@Override
-	public void configure(AuthorizationServerSecurityConfigurer security)
-			throws Exception {
+	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// @formatter:off
 		security
 			.checkTokenAccess("isAuthenticated()");

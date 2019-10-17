@@ -92,8 +92,7 @@ public class ResourceServerTokenServicesConfiguration {
 			ObjectProvider<List<UserInfoRestTemplateCustomizer>> customizers,
 			ObjectProvider<OAuth2ProtectedResourceDetails> details,
 			ObjectProvider<OAuth2ClientContext> oauth2ClientContext) {
-		return new DefaultUserInfoRestTemplateFactory(customizers, details,
-				oauth2ClientContext);
+		return new DefaultUserInfoRestTemplateFactory(customizers, details, oauth2ClientContext);
 	}
 
 	@Configuration
@@ -153,16 +152,14 @@ public class ResourceServerTokenServicesConfiguration {
 			@ConditionalOnBean(ConnectionFactoryLocator.class)
 			@ConditionalOnMissingBean(ResourceServerTokenServices.class)
 			public SpringSocialTokenServices socialTokenServices() {
-				return new SpringSocialTokenServices(this.connectionFactory,
-						this.sso.getClientId());
+				return new SpringSocialTokenServices(this.connectionFactory, this.sso.getClientId());
 			}
 
 			@Bean
-			@ConditionalOnMissingBean({ ConnectionFactoryLocator.class,
-					ResourceServerTokenServices.class })
+			@ConditionalOnMissingBean({ ConnectionFactoryLocator.class, ResourceServerTokenServices.class })
 			public UserInfoTokenServices userInfoTokenServices() {
-				UserInfoTokenServices services = new UserInfoTokenServices(
-						this.sso.getUserInfoUri(), this.sso.getClientId());
+				UserInfoTokenServices services = new UserInfoTokenServices(this.sso.getUserInfoUri(),
+						this.sso.getClientId());
 				services.setTokenType(this.sso.getTokenType());
 				services.setRestTemplate(this.restTemplate);
 				if (this.authoritiesExtractor != null) {
@@ -202,8 +199,8 @@ public class ResourceServerTokenServicesConfiguration {
 			@Bean
 			@ConditionalOnMissingBean(ResourceServerTokenServices.class)
 			public UserInfoTokenServices userInfoTokenServices() {
-				UserInfoTokenServices services = new UserInfoTokenServices(
-						this.sso.getUserInfoUri(), this.sso.getClientId());
+				UserInfoTokenServices services = new UserInfoTokenServices(this.sso.getUserInfoUri(),
+						this.sso.getClientId());
 				services.setRestTemplate(this.restTemplate);
 				services.setTokenType(this.sso.getTokenType());
 				if (this.authoritiesExtractor != null) {
@@ -311,15 +308,12 @@ public class ResourceServerTokenServicesConfiguration {
 			String username = this.resource.getClientId();
 			String password = this.resource.getClientSecret();
 			if (username != null && password != null) {
-				byte[] token = Base64.getEncoder()
-						.encode((username + ":" + password).getBytes());
+				byte[] token = Base64.getEncoder().encode((username + ":" + password).getBytes());
 				headers.add("Authorization", "Basic " + new String(token));
 			}
 			HttpEntity<Void> request = new HttpEntity<>(headers);
 			String url = this.resource.getJwt().getKeyUri();
-			return (String) keyUriRestTemplate
-					.exchange(url, HttpMethod.GET, request, Map.class).getBody()
-					.get("value");
+			return (String) keyUriRestTemplate.exchange(url, HttpMethod.GET, request, Map.class).getBody().get("value");
 		}
 
 	}
@@ -338,8 +332,7 @@ public class ResourceServerTokenServicesConfiguration {
 		}
 
 		@Override
-		public void setApplicationContext(ApplicationContext context)
-				throws BeansException {
+		public void setApplicationContext(ApplicationContext context) throws BeansException {
 			this.context = context;
 		}
 
@@ -360,26 +353,19 @@ public class ResourceServerTokenServicesConfiguration {
 		@Bean
 		@ConditionalOnMissingBean(JwtAccessTokenConverter.class)
 		public JwtAccessTokenConverter accessTokenConverter() {
-			Assert.notNull(this.resource.getJwt().getKeyStore(),
-					"keyStore cannot be null");
-			Assert.notNull(this.resource.getJwt().getKeyStorePassword(),
-					"keyStorePassword cannot be null");
-			Assert.notNull(this.resource.getJwt().getKeyAlias(),
-					"keyAlias cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyStore(), "keyStore cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
+			Assert.notNull(this.resource.getJwt().getKeyAlias(), "keyAlias cannot be null");
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-			Resource keyStore = this.context
-					.getResource(this.resource.getJwt().getKeyStore());
-			char[] keyStorePassword = this.resource.getJwt().getKeyStorePassword()
-					.toCharArray();
-			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore,
-					keyStorePassword);
+			Resource keyStore = this.context.getResource(this.resource.getJwt().getKeyStore());
+			char[] keyStorePassword = this.resource.getJwt().getKeyStorePassword().toCharArray();
+			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, keyStorePassword);
 
 			String keyAlias = this.resource.getJwt().getKeyAlias();
-			char[] keyPassword = Optional
-					.ofNullable(this.resource.getJwt().getKeyPassword())
-					.map(String::toCharArray).orElse(keyStorePassword);
+			char[] keyPassword = Optional.ofNullable(this.resource.getJwt().getKeyPassword()).map(String::toCharArray)
+					.orElse(keyStorePassword);
 			converter.setKeyPair(keyStoreKeyFactory.getKeyPair(keyAlias, keyPassword));
 
 			return converter;
@@ -390,30 +376,22 @@ public class ResourceServerTokenServicesConfiguration {
 	private static class TokenInfoCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth TokenInfo Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth TokenInfo Condition");
 			Environment environment = context.getEnvironment();
-			Boolean preferTokenInfo = environment.getProperty(
-					"security.oauth2.resource.prefer-token-info", Boolean.class);
+			Boolean preferTokenInfo = environment.getProperty("security.oauth2.resource.prefer-token-info",
+					Boolean.class);
 			if (preferTokenInfo == null) {
-				preferTokenInfo = environment
-						.resolvePlaceholders("${OAUTH2_RESOURCE_PREFERTOKENINFO:true}")
+				preferTokenInfo = environment.resolvePlaceholders("${OAUTH2_RESOURCE_PREFERTOKENINFO:true}")
 						.equals("true");
 			}
-			String tokenInfoUri = environment
-					.getProperty("security.oauth2.resource.token-info-uri");
-			String userInfoUri = environment
-					.getProperty("security.oauth2.resource.user-info-uri");
-			if (!StringUtils.hasLength(userInfoUri)
-					&& !StringUtils.hasLength(tokenInfoUri)) {
-				return ConditionOutcome
-						.match(message.didNotFind("user-info-uri property").atAll());
+			String tokenInfoUri = environment.getProperty("security.oauth2.resource.token-info-uri");
+			String userInfoUri = environment.getProperty("security.oauth2.resource.user-info-uri");
+			if (!StringUtils.hasLength(userInfoUri) && !StringUtils.hasLength(tokenInfoUri)) {
+				return ConditionOutcome.match(message.didNotFind("user-info-uri property").atAll());
 			}
 			if (StringUtils.hasLength(tokenInfoUri) && preferTokenInfo) {
-				return ConditionOutcome
-						.match(message.foundExactly("preferred token-info-uri property"));
+				return ConditionOutcome.match(message.foundExactly("preferred token-info-uri property"));
 			}
 			return ConditionOutcome.noMatch(message.didNotFind("token info").atAll());
 		}
@@ -423,21 +401,15 @@ public class ResourceServerTokenServicesConfiguration {
 	private static class JwtTokenCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth JWT Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth JWT Condition");
 			Environment environment = context.getEnvironment();
-			String keyValue = environment
-					.getProperty("security.oauth2.resource.jwt.key-value");
-			String keyUri = environment
-					.getProperty("security.oauth2.resource.jwt.key-uri");
+			String keyValue = environment.getProperty("security.oauth2.resource.jwt.key-value");
+			String keyUri = environment.getProperty("security.oauth2.resource.jwt.key-uri");
 			if (StringUtils.hasText(keyValue) || StringUtils.hasText(keyUri)) {
-				return ConditionOutcome
-						.match(message.foundExactly("provided public key"));
+				return ConditionOutcome.match(message.foundExactly("provided public key"));
 			}
-			return ConditionOutcome
-					.noMatch(message.didNotFind("provided public key").atAll());
+			return ConditionOutcome.noMatch(message.didNotFind("provided public key").atAll());
 		}
 
 	}
@@ -445,19 +417,14 @@ public class ResourceServerTokenServicesConfiguration {
 	private static class JwkCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth JWK Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth JWK Condition");
 			Environment environment = context.getEnvironment();
-			String keyUri = environment
-					.getProperty("security.oauth2.resource.jwk.key-set-uri");
+			String keyUri = environment.getProperty("security.oauth2.resource.jwk.key-set-uri");
 			if (StringUtils.hasText(keyUri)) {
-				return ConditionOutcome
-						.match(message.foundExactly("provided jwk key set URI"));
+				return ConditionOutcome.match(message.foundExactly("provided jwk key set URI"));
 			}
-			return ConditionOutcome
-					.noMatch(message.didNotFind("key jwk set URI not provided").atAll());
+			return ConditionOutcome.noMatch(message.didNotFind("key jwk set URI not provided").atAll());
 		}
 
 	}
@@ -465,19 +432,14 @@ public class ResourceServerTokenServicesConfiguration {
 	private static class JwtKeyStoreCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth JWT KeyStore Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth JWT KeyStore Condition");
 			Environment environment = context.getEnvironment();
-			String keyStore = environment
-					.getProperty("security.oauth2.resource.jwt.key-store");
+			String keyStore = environment.getProperty("security.oauth2.resource.jwt.key-store");
 			if (StringUtils.hasText(keyStore)) {
-				return ConditionOutcome
-						.match(message.foundExactly("provided key store location"));
+				return ConditionOutcome.match(message.foundExactly("provided key store location"));
 			}
-			return ConditionOutcome.noMatch(
-					message.didNotFind("key store location not provided").atAll());
+			return ConditionOutcome.noMatch(message.didNotFind("key store location not provided").atAll());
 		}
 
 	}
@@ -487,10 +449,8 @@ public class ResourceServerTokenServicesConfiguration {
 		private TokenInfoCondition tokenInfoCondition = new TokenInfoCondition();
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			return ConditionOutcome
-					.inverse(this.tokenInfoCondition.getMatchOutcome(context, metadata));
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			return ConditionOutcome.inverse(this.tokenInfoCondition.getMatchOutcome(context, metadata));
 		}
 
 	}
@@ -521,8 +481,8 @@ public class ResourceServerTokenServicesConfiguration {
 	static class AcceptJsonRequestInterceptor implements ClientHttpRequestInterceptor {
 
 		@Override
-		public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-				ClientHttpRequestExecution execution) throws IOException {
+		public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+				throws IOException {
 			request.getHeaders().setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 			return execution.execute(request, body);
 		}
@@ -532,8 +492,7 @@ public class ResourceServerTokenServicesConfiguration {
 	static class AcceptJsonRequestEnhancer implements RequestEnhancer {
 
 		@Override
-		public void enhance(AccessTokenRequest request,
-				OAuth2ProtectedResourceDetails resource,
+		public void enhance(AccessTokenRequest request, OAuth2ProtectedResourceDetails resource,
 				MultiValueMap<String, String> form, HttpHeaders headers) {
 			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		}

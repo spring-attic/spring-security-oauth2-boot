@@ -54,28 +54,22 @@ public class OAuth2RestOperationsConfigurationTests {
 
 	@Test
 	public void clientCredentialsWithClientId() throws Exception {
-		TestPropertyValues.of("security.oauth2.client.client-id=acme")
-				.applyTo(this.environment);
+		TestPropertyValues.of("security.oauth2.client.client-id=acme").applyTo(this.environment);
 		initializeContext(OAuth2RestOperationsConfiguration.class, true);
-		assertThat(this.context.getBean(OAuth2RestOperationsConfiguration.class))
-				.isNotNull();
-		assertThat(this.context.getBean(ClientCredentialsResourceDetails.class))
-				.isNotNull();
+		assertThat(this.context.getBean(OAuth2RestOperationsConfiguration.class)).isNotNull();
+		assertThat(this.context.getBean(ClientCredentialsResourceDetails.class)).isNotNull();
 	}
 
 	@Test
 	public void clientCredentialsWithNoClientId() throws Exception {
 		initializeContext(OAuth2RestOperationsConfiguration.class, true);
-		assertThat(this.context.getBean(OAuth2RestOperationsConfiguration.class))
-				.isNotNull();
-		assertThat(this.context.getBean(ClientCredentialsResourceDetails.class))
-				.isNotNull();
+		assertThat(this.context.getBean(OAuth2RestOperationsConfiguration.class)).isNotNull();
+		assertThat(this.context.getBean(ClientCredentialsResourceDetails.class)).isNotNull();
 	}
 
 	@Test
 	public void requestScopedWithClientId() throws Exception {
-		TestPropertyValues.of("security.oauth2.client.client-id=acme")
-				.applyTo(this.environment);
+		TestPropertyValues.of("security.oauth2.client.client-id=acme").applyTo(this.environment);
 		initializeContext(ConfigForRequestScopedConfiguration.class, false);
 		assertThat(this.context.containsBean("oauth2ClientContext")).isTrue();
 	}
@@ -89,8 +83,7 @@ public class OAuth2RestOperationsConfigurationTests {
 
 	@Test
 	public void sessionScopedWithClientId() throws Exception {
-		TestPropertyValues.of("security.oauth2.client.client-id=acme")
-				.applyTo(this.environment);
+		TestPropertyValues.of("security.oauth2.client.client-id=acme").applyTo(this.environment);
 		initializeContext(ConfigForSessionScopedConfiguration.class, false);
 		assertThat(this.context.containsBean("oauth2ClientContext")).isTrue();
 	}
@@ -103,10 +96,8 @@ public class OAuth2RestOperationsConfigurationTests {
 	}
 
 	private void initializeContext(Class<?> configuration, boolean clientCredentials) {
-		this.context = new SpringApplicationBuilder(configuration)
-				.environment(this.environment).web(clientCredentials
-						? WebApplicationType.NONE : WebApplicationType.SERVLET)
-				.run();
+		this.context = new SpringApplicationBuilder(configuration).environment(this.environment)
+				.web(clientCredentials ? WebApplicationType.NONE : WebApplicationType.SERVLET).run();
 	}
 
 	@Configuration
@@ -121,16 +112,13 @@ public class OAuth2RestOperationsConfigurationTests {
 	}
 
 	@Configuration
-	@Import({ SecurityProperties.class, OAuth2ClientConfiguration.class,
-			OAuth2RestOperationsConfiguration.class })
-	protected static class ConfigForSessionScopedConfiguration
-			extends WebApplicationConfiguration {
+	@Import({ SecurityProperties.class, OAuth2ClientConfiguration.class, OAuth2RestOperationsConfiguration.class })
+	protected static class ConfigForSessionScopedConfiguration extends WebApplicationConfiguration {
 
 	}
 
 	@Configuration
-	protected static class ConfigForRequestScopedConfiguration
-			extends WebApplicationConfiguration {
+	protected static class ConfigForRequestScopedConfiguration extends WebApplicationConfiguration {
 
 	}
 

@@ -53,8 +53,7 @@ public class OAuth2SsoDefaultConfiguration extends WebSecurityConfigurerAdapter 
 	protected static class NeedsWebSecurityCondition extends EnableOAuth2SsoCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 			return ConditionOutcome.inverse(super.getMatchOutcome(context, metadata));
 		}
 

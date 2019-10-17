@@ -100,23 +100,19 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void useRemoteTokenServices() {
-		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		RemoteTokenServices services = this.context.getBean(RemoteTokenServices.class);
 		assertThat(services).isNotNull();
 	}
 
 	@Test
 	public void overrideRemoteTokenServices() {
-		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(CustomRemoteTokenService.class,
-				ResourceConfiguration.class).environment(this.environment)
-						.web(WebApplicationType.NONE).run();
-		CustomRemoteTokenService services = this.context
-				.getBean(CustomRemoteTokenService.class);
+		TestPropertyValues.of("security.oauth2.resource.tokenInfoUri:https://example.com").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(CustomRemoteTokenService.class, ResourceConfiguration.class)
+				.environment(this.environment).web(WebApplicationType.NONE).run();
+		CustomRemoteTokenService services = this.context.getBean(CustomRemoteTokenService.class);
 		assertThat(services).isNotNull();
 		this.thrown.expect(NoSuchBeanDefinitionException.class);
 		this.context.getBean(RemoteTokenServices.class);
@@ -124,23 +120,19 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void switchToUserInfo() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
-		UserInfoTokenServices services = this.context
-				.getBean(UserInfoTokenServices.class);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		UserInfoTokenServices services = this.context.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
 	}
 
 	@Test
 	public void userInfoWithAuthorities() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(AuthoritiesConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
-		UserInfoTokenServices services = this.context
-				.getBean(UserInfoTokenServices.class);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(AuthoritiesConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		UserInfoTokenServices services = this.context.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
 		assertThat(services).extracting("authoritiesExtractor")
 				.isSameAs(this.context.getBean(AuthoritiesExtractor.class));
@@ -148,24 +140,21 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void userInfoWithPrincipal() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(PrincipalConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
-		UserInfoTokenServices services = this.context
-				.getBean(UserInfoTokenServices.class);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(PrincipalConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		UserInfoTokenServices services = this.context.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
-		assertThat(services).extracting("principalExtractor")
-				.isSameAs(this.context.getBean(PrincipalExtractor.class));
+		assertThat(services).extracting("principalExtractor").isSameAs(this.context.getBean(PrincipalExtractor.class));
 	}
 
 	@Test
 	public void userInfoWithClient() {
 		TestPropertyValues.of("security.oauth2.client.client-id=acme",
-				"security.oauth2.resource.userInfoUri:https://example.com",
-				"server.port=-1", "debug=true").applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceNoClientConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.SERVLET).run();
+				"security.oauth2.resource.userInfoUri:https://example.com", "server.port=-1", "debug=true")
+				.applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceNoClientConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.SERVLET).run();
 		BeanDefinition bean = ((BeanDefinitionRegistry) this.context)
 				.getBeanDefinition("scopedTarget.oauth2ClientContext");
 		assertThat(bean.getScope()).isEqualTo("request");
@@ -173,39 +162,31 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void preferUserInfo() {
-		TestPropertyValues
-				.of("security.oauth2.resource.userInfoUri:https://example.com",
-						"security.oauth2.resource.tokenInfoUri:https://example.com",
-						"security.oauth2.resource.preferTokenInfo:false")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
-		UserInfoTokenServices services = this.context
-				.getBean(UserInfoTokenServices.class);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com",
+				"security.oauth2.resource.tokenInfoUri:https://example.com",
+				"security.oauth2.resource.preferTokenInfo:false").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
+		UserInfoTokenServices services = this.context.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
 	}
 
 	@Test
 	public void userInfoWithCustomizer() {
-		TestPropertyValues
-				.of("security.oauth2.resource.userInfoUri:https://example.com",
-						"security.oauth2.resource.tokenInfoUri:https://example.com",
-						"security.oauth2.resource.preferTokenInfo:false")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class,
-				Customizer.class).environment(this.environment)
-						.web(WebApplicationType.NONE).run();
-		UserInfoTokenServices services = this.context
-				.getBean(UserInfoTokenServices.class);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com",
+				"security.oauth2.resource.tokenInfoUri:https://example.com",
+				"security.oauth2.resource.preferTokenInfo:false").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class, Customizer.class)
+				.environment(this.environment).web(WebApplicationType.NONE).run();
+		UserInfoTokenServices services = this.context.getBean(UserInfoTokenServices.class);
 		assertThat(services).isNotNull();
 	}
 
 	@Test
 	public void switchToJwt() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=FOOBAR")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=FOOBAR").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		DefaultTokenServices services = this.context.getBean(DefaultTokenServices.class);
 		assertThat(services).isNotNull();
 		this.thrown.expect(NoSuchBeanDefinitionException.class);
@@ -214,21 +195,19 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void asymmetricJwt() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY)
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY).applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		DefaultTokenServices services = this.context.getBean(DefaultTokenServices.class);
 		assertThat(services).isNotNull();
 	}
 
 	@Test
 	public void jwkConfiguration() throws Exception {
-		TestPropertyValues.of(
-				"security.oauth2.resource.jwk.key-set-uri=https://idp.example.com/token_keys")
+		TestPropertyValues.of("security.oauth2.resource.jwk.key-set-uri=https://idp.example.com/token_keys")
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		DefaultTokenServices services = this.context.getBean(DefaultTokenServices.class);
 		assertThat(services).isNotNull();
 		this.thrown.expect(NoSuchBeanDefinitionException.class);
@@ -237,152 +216,136 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	@Test
 	public void springSocialUserInfo() {
-		TestPropertyValues
-				.of("security.oauth2.resource.userInfoUri:https://example.com",
-						"spring.social.facebook.app-id=foo",
-						"spring.social.facebook.app-secret=bar")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(SocialResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.SERVLET).run();
-		ConnectionFactoryLocator connectionFactory = this.context
-				.getBean(ConnectionFactoryLocator.class);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com",
+				"spring.social.facebook.app-id=foo", "spring.social.facebook.app-secret=bar").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(SocialResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.SERVLET).run();
+		ConnectionFactoryLocator connectionFactory = this.context.getBean(ConnectionFactoryLocator.class);
 		assertThat(connectionFactory).isNotNull();
-		SpringSocialTokenServices services = this.context
-				.getBean(SpringSocialTokenServices.class);
+		SpringSocialTokenServices services = this.context.getBean(SpringSocialTokenServices.class);
 		assertThat(services).isNotNull();
 	}
 
 	@Test
 	public void customUserInfoRestTemplateFactory() {
-		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com")
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(
-				CustomUserInfoRestTemplateFactory.class, ResourceConfiguration.class)
-						.environment(this.environment).web(WebApplicationType.NONE).run();
-		assertThat(this.context.getBeansOfType(UserInfoRestTemplateFactory.class))
-				.hasSize(1);
+		TestPropertyValues.of("security.oauth2.resource.userInfoUri:https://example.com").applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(CustomUserInfoRestTemplateFactory.class,
+				ResourceConfiguration.class).environment(this.environment).web(WebApplicationType.NONE).run();
+		assertThat(this.context.getBeansOfType(UserInfoRestTemplateFactory.class)).hasSize(1);
 		assertThat(this.context.getBean(UserInfoRestTemplateFactory.class))
 				.isInstanceOf(CustomUserInfoRestTemplateFactory.class);
 	}
 
 	@Test
 	public void jwtAccessTokenConverterIsConfiguredWhenKeyUriIsProvided() {
-		TestPropertyValues
-				.of("security.oauth2.resource.jwt.key-uri=http://localhost:12345/banana")
+		TestPropertyValues.of("security.oauth2.resource.jwt.key-uri=http://localhost:12345/banana")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceConfiguration.class,
-				JwtAccessTokenConverterRestTemplateCustomizerConfiguration.class)
-						.environment(this.environment).web(WebApplicationType.NONE).run();
+				JwtAccessTokenConverterRestTemplateCustomizerConfiguration.class).environment(this.environment)
+						.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
 	public void jwkTokenStoreShouldBeConditionalOnMissingBean() throws Exception {
-		TestPropertyValues.of(
-				"security.oauth2.resource.jwk.key-set-uri=https://idp.example.com/token_keys")
+		TestPropertyValues.of("security.oauth2.resource.jwk.key-set-uri=https://idp.example.com/token_keys")
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(JwkTokenStoreConfiguration.class,
-				ResourceConfiguration.class).environment(this.environment)
-						.web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(JwkTokenStoreConfiguration.class, ResourceConfiguration.class)
+				.environment(this.environment).web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwkTokenStore.class)).hasSize(1);
 	}
 
 	@Test
 	public void jwtTokenStoreShouldBeConditionalOnMissingBean() throws Exception {
-		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY)
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class,
-				ResourceConfiguration.class).environment(this.environment)
-						.web(WebApplicationType.NONE).run();
+		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY).applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class, ResourceConfiguration.class)
+				.environment(this.environment).web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtTokenStore.class)).hasSize(1);
 	}
 
 	@Test
-	public void jwtAccessTokenConverterForKeyValueShouldBeConditionalOnMissingBean()
-			throws Exception {
-		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY)
-				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class,
-				ResourceConfiguration.class).environment(this.environment)
-						.web(WebApplicationType.NONE).run();
+	public void jwtAccessTokenConverterForKeyValueShouldBeConditionalOnMissingBean() throws Exception {
+		TestPropertyValues.of("security.oauth2.resource.jwt.keyValue=" + PUBLIC_KEY).applyTo(this.environment);
+		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class, ResourceConfiguration.class)
+				.environment(this.environment).web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
-	public void jwtAccessTokenConverterForKeyStoreShouldBeConditionalOnMissingBean()
-			throws Exception {
-		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
-				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+	public void jwtAccessTokenConverterForKeyStoreShouldBeConditionalOnMissingBean() throws Exception {
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
 				"security.oauth2.resource.jwt.key-store-password=changeme",
 				"security.oauth2.resource.jwt.key-alias=jwt").applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class,
-				ResourceConfiguration.class).environment(this.environment)
-						.web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(JwtTokenStoreConfiguration.class, ResourceConfiguration.class)
+				.environment(this.environment).web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedThenExposesJwtTokenStore() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
-				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
 				"security.oauth2.resource.jwt.key-store-password=changeme",
 				"security.oauth2.resource.jwt.key-alias=jwt").applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(TokenStore.class)).hasSize(1);
-		assertThat(this.context.getBean(TokenStore.class))
-				.isInstanceOf(JwtTokenStore.class);
+		assertThat(this.context.getBean(TokenStore.class)).isInstanceOf(JwtTokenStore.class);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedThenExposesJwtAccessTokenConverter() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
-				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
 				"security.oauth2.resource.jwt.key-store-password=changeme",
 				"security.oauth2.resource.jwt.key-alias=jwt").applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedWithKeyPasswordThenExposesJwtAccessTokenConverter() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
-				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keyhaspassword.jks",
-				"security.oauth2.resource.jwt.key-store-password=changeme",
-				"security.oauth2.resource.jwt.key-alias=jwt",
-				"security.oauth2.resource.jwt.key-password=password")
+		TestPropertyValues
+				.of("security.oauth2.resource.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keyhaspassword.jks",
+						"security.oauth2.resource.jwt.key-store-password=changeme",
+						"security.oauth2.resource.jwt.key-alias=jwt",
+						"security.oauth2.resource.jwt.key-password=password")
 				.applyTo(this.environment);
-		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run();
+		this.context = new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run();
 		assertThat(this.context.getBeansOfType(JwtAccessTokenConverter.class)).hasSize(1);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedButNoAliasThenThrowsException() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
-				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
-				"security.oauth2.resource.jwt.key-store-password=changeme")
-				.applyTo(this.environment);
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+				"security.oauth2.resource.jwt.key-store-password=changeme").applyTo(this.environment);
 
-		assertThatCode(() -> new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run())
-						.isInstanceOf(UnsatisfiedDependencyException.class);
+		assertThatCode(() -> new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run()).isInstanceOf(UnsatisfiedDependencyException.class);
 	}
 
 	@Test
 	public void configureWhenKeyStoreIsProvidedButNoPasswordThenThrowsException() {
-		TestPropertyValues.of("security.oauth2.resource.jwt.key-store=classpath:"
-				+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
+		TestPropertyValues.of(
+				"security.oauth2.resource.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/resource/keystore.jks",
 				"security.oauth2.resource.jwt.key-alias=jwt").applyTo(this.environment);
 
-		assertThatCode(() -> new SpringApplicationBuilder(ResourceConfiguration.class)
-				.environment(this.environment).web(WebApplicationType.NONE).run());
+		assertThatCode(() -> new SpringApplicationBuilder(ResourceConfiguration.class).environment(this.environment)
+				.web(WebApplicationType.NONE).run());
 	}
 
 	@Configuration
-	@Import({ ResourceServerTokenServicesConfiguration.class,
-			ResourceServerPropertiesConfiguration.class,
+	@Import({ ResourceServerTokenServicesConfiguration.class, ResourceServerPropertiesConfiguration.class,
 			PropertyPlaceholderAutoConfiguration.class })
 	@EnableConfigurationProperties(OAuth2ClientProperties.class)
 	protected static class ResourceConfiguration {
@@ -394,8 +357,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 		@Bean
 		AuthoritiesExtractor authoritiesExtractor() {
-			return (map) -> AuthorityUtils
-					.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
+			return (map) -> AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
 		}
 
 	}
@@ -431,8 +393,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 		@Bean
 		public ResourceServerProperties resourceServerProperties() {
-			return new ResourceServerProperties(this.credentials.getClientId(),
-					this.credentials.getClientSecret());
+			return new ResourceServerProperties(this.credentials.getClientId(), this.credentials.getClientSecret());
 		}
 
 	}
@@ -452,18 +413,15 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 		@Override
 		public void customize(OAuth2RestTemplate template) {
-			template.getInterceptors()
-					.add((request, body, execution) -> execution.execute(request, body));
+			template.getInterceptors().add((request, body, execution) -> execution.execute(request, body));
 		}
 
 	}
 
 	@Component
-	protected static class CustomUserInfoRestTemplateFactory
-			implements UserInfoRestTemplateFactory {
+	protected static class CustomUserInfoRestTemplateFactory implements UserInfoRestTemplateFactory {
 
-		private final OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(
-				new AuthorizationCodeResourceDetails());
+		private final OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(new AuthorizationCodeResourceDetails());
 
 		@Override
 		public OAuth2RestTemplate getUserInfoRestTemplate() {
@@ -473,8 +431,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 	}
 
 	@Component
-	protected static class CustomRemoteTokenService
-			implements ResourceServerTokenServices {
+	protected static class CustomRemoteTokenService implements ResourceServerTokenServices {
 
 		@Override
 		public OAuth2Authentication loadAuthentication(String accessToken)
@@ -519,15 +476,13 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	}
 
-	private static class MockRestCallCustomizer
-			implements JwtAccessTokenConverterRestTemplateCustomizer {
+	private static class MockRestCallCustomizer implements JwtAccessTokenConverterRestTemplateCustomizer {
 
 		@Override
 		public void customize(RestTemplate template) {
 			template.getInterceptors().add((request, body, execution) -> {
 				String payload = "{\"value\":\"FOO\"}";
-				MockClientHttpResponse response = new MockClientHttpResponse(
-						payload.getBytes(), HttpStatus.OK);
+				MockClientHttpResponse response = new MockClientHttpResponse(payload.getBytes(), HttpStatus.OK);
 				response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 				return response;
 			});

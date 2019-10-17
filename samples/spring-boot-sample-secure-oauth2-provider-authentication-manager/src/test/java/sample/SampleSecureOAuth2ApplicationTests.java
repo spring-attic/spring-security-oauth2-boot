@@ -50,8 +50,7 @@ public class SampleSecureOAuth2ApplicationTests {
 
 	private static final String CLIENT_SECRET = "thenneedsauthenticationmanager";
 
-	private static final RequestPostProcessor CLIENT_CREDENTIALS = httpBasic(CLIENT_ID,
-			CLIENT_SECRET);
+	private static final RequestPostProcessor CLIENT_CREDENTIALS = httpBasic(CLIENT_ID, CLIENT_SECRET);
 
 	@Autowired
 	MockMvc mvc;
@@ -61,23 +60,21 @@ public class SampleSecureOAuth2ApplicationTests {
 	@Test
 	public void tokenWhenUsingClientCredentialsThenIsValid() throws Exception {
 		MvcResult result = this.mvc
-				.perform(post("/oauth/token").with(CLIENT_CREDENTIALS)
-						.param("username", "enduser").param("password", "password")
-						.param("grant_type", "password"))
+				.perform(post("/oauth/token").with(CLIENT_CREDENTIALS).param("username", "enduser")
+						.param("password", "password").param("grant_type", "password"))
 				.andExpect(status().isOk()).andReturn();
 
 		String accessToken = extract(result, "access_token");
 
-		result = this.mvc.perform(post("/oauth/check_token").with(CLIENT_CREDENTIALS)
-				.param("token", accessToken)).andReturn();
+		result = this.mvc.perform(post("/oauth/check_token").with(CLIENT_CREDENTIALS).param("token", accessToken))
+				.andReturn();
 
 		assertThat(Boolean.valueOf(extract(result, "active"))).isTrue();
 	}
 
 	private String extract(MvcResult result, String property) throws Exception {
-		return this.objectMapper
-				.readValue(result.getResponse().getContentAsString(), Map.class)
-				.get(property).toString();
+		return this.objectMapper.readValue(result.getResponse().getContentAsString(), Map.class).get(property)
+				.toString();
 	}
 
 }

@@ -46,11 +46,11 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 @RunWith(SpringRunner.class)
 @DirtiesContext
 @SpringBootTest
-@TestPropertySource(properties = { "security.oauth2.client.clientId=client",
-		"security.oauth2.client.clientSecret=secret",
-		"security.oauth2.client.userAuthorizationUri=https://example.com/oauth/authorize",
-		"security.oauth2.client.accessTokenUri=https://example.com/oauth/token",
-		"security.oauth2.resource.jwt.keyValue=SSSSHHH" })
+@TestPropertySource(
+		properties = { "security.oauth2.client.clientId=client", "security.oauth2.client.clientSecret=secret",
+				"security.oauth2.client.userAuthorizationUri=https://example.com/oauth/authorize",
+				"security.oauth2.client.accessTokenUri=https://example.com/oauth/token",
+				"security.oauth2.resource.jwt.keyValue=SSSSHHH" })
 public class CustomRestTemplateBasicOAuth2SsoConfigurationTests {
 
 	@Autowired

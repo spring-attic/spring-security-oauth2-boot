@@ -41,8 +41,8 @@ public class SampleSecureOAuth2ActuatorApplication {
 
 	@Bean
 	UserDetailsService userDetailsService() throws Exception {
-		UserDetails user = User.withDefaultPasswordEncoder().username("user")
-				.password("password").roles("USER").build();
+		UserDetails user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER")
+				.build();
 		return new InMemoryUserDetailsManager(user);
 	}
 

@@ -65,8 +65,7 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		private final AuthorizationServerProperties authorization;
 
-		public JwtTokenServicesConfiguration(
-				AuthorizationServerProperties authorization) {
+		public JwtTokenServicesConfiguration(AuthorizationServerProperties authorization) {
 			this.authorization = authorization;
 		}
 
@@ -87,8 +86,7 @@ public class AuthorizationServerTokenServicesConfiguration {
 		@Bean
 		public JwtAccessTokenConverter jwtTokenEnhancer() {
 			String keyValue = this.authorization.getJwt().getKeyValue();
-			Assert.notNull(this.authorization.getJwt().getKeyValue(),
-					"keyValue cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyValue(), "keyValue cannot be null");
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 			if (!keyValue.startsWith("-----BEGIN")) {
@@ -125,8 +123,7 @@ public class AuthorizationServerTokenServicesConfiguration {
 		}
 
 		@Override
-		public void setApplicationContext(ApplicationContext context)
-				throws BeansException {
+		public void setApplicationContext(ApplicationContext context) throws BeansException {
 			this.context = context;
 		}
 
@@ -146,25 +143,18 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		@Bean
 		public JwtAccessTokenConverter accessTokenConverter() {
-			Assert.notNull(this.authorization.getJwt().getKeyStore(),
-					"keyStore cannot be null");
-			Assert.notNull(this.authorization.getJwt().getKeyStorePassword(),
-					"keyStorePassword cannot be null");
-			Assert.notNull(this.authorization.getJwt().getKeyAlias(),
-					"keyAlias cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyStore(), "keyStore cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
+			Assert.notNull(this.authorization.getJwt().getKeyAlias(), "keyAlias cannot be null");
 
 			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-			Resource keyStore = this.context
-					.getResource(this.authorization.getJwt().getKeyStore());
-			char[] keyStorePassword = this.authorization.getJwt().getKeyStorePassword()
-					.toCharArray();
-			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore,
-					keyStorePassword);
+			Resource keyStore = this.context.getResource(this.authorization.getJwt().getKeyStore());
+			char[] keyStorePassword = this.authorization.getJwt().getKeyStorePassword().toCharArray();
+			KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, keyStorePassword);
 
 			String keyAlias = this.authorization.getJwt().getKeyAlias();
-			char[] keyPassword = Optional
-					.ofNullable(this.authorization.getJwt().getKeyPassword())
+			char[] keyPassword = Optional.ofNullable(this.authorization.getJwt().getKeyPassword())
 					.map(String::toCharArray).orElse(keyStorePassword);
 			converter.setKeyPair(keyStoreKeyFactory.getKeyPair(keyAlias, keyPassword));
 
@@ -176,19 +166,14 @@ public class AuthorizationServerTokenServicesConfiguration {
 	private static class JwtTokenCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth JWT Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth JWT Condition");
 			Environment environment = context.getEnvironment();
-			String keyValue = environment
-					.getProperty("security.oauth2.authorization.jwt.key-value");
+			String keyValue = environment.getProperty("security.oauth2.authorization.jwt.key-value");
 			if (StringUtils.hasText(keyValue)) {
-				return ConditionOutcome
-						.match(message.foundExactly("provided private or symmetric key"));
+				return ConditionOutcome.match(message.foundExactly("provided private or symmetric key"));
 			}
-			return ConditionOutcome.noMatch(
-					message.didNotFind("provided private or symmetric key").atAll());
+			return ConditionOutcome.noMatch(message.didNotFind("provided private or symmetric key").atAll());
 		}
 
 	}
@@ -196,19 +181,14 @@ public class AuthorizationServerTokenServicesConfiguration {
 	private static class JwtKeyStoreCondition extends SpringBootCondition {
 
 		@Override
-		public ConditionOutcome getMatchOutcome(ConditionContext context,
-				AnnotatedTypeMetadata metadata) {
-			ConditionMessage.Builder message = ConditionMessage
-					.forCondition("OAuth JWT KeyStore Condition");
+		public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+			ConditionMessage.Builder message = ConditionMessage.forCondition("OAuth JWT KeyStore Condition");
 			Environment environment = context.getEnvironment();
-			String keyStore = environment
-					.getProperty("security.oauth2.authorization.jwt.key-store");
+			String keyStore = environment.getProperty("security.oauth2.authorization.jwt.key-store");
 			if (StringUtils.hasText(keyStore)) {
-				return ConditionOutcome
-						.match(message.foundExactly("provided key store location"));
+				return ConditionOutcome.match(message.foundExactly("provided key store location"));
 			}
-			return ConditionOutcome
-					.noMatch(message.didNotFind("provided key store location").atAll());
+			return ConditionOutcome.noMatch(message.didNotFind("provided key store location").atAll());
 		}
 
 	}
