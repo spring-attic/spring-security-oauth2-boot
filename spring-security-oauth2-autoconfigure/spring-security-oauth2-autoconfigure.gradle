@@ -20,7 +20,7 @@ dependencies {
 
 	provided 'javax.servlet:javax.servlet-api'
 
-	testCompile 'com.tngtech.archunit:archunit-junit4:0.10.2'
+	testCompile 'com.tngtech.archunit:archunit-junit4'
 	testCompile 'org.springframework.boot:spring-boot-test'
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'ch.qos.logback:logback-classic'
