@@ -24,11 +24,12 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
  *
  * @author Dave Syer
  * @since 1.3.0
- * @deprecated Use <a target="_blank" href=
- * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
- * Security's built-in support</a>
+ * @deprecated See the <a href=
+ * "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
+ * OAuth 2.0 Migration Guide</a> for Spring Security 5.
  */
 @FunctionalInterface
+@Deprecated
 public interface JwtAccessTokenConverterConfigurer {
 
 	/**
