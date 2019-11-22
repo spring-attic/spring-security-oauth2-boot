@@ -719,7 +719,7 @@ To confirm that Resource Server is correctly processing tokens, you can add a si
 [source,java]
 ----
 @RestController
-public class SimpleController
+public class SimpleController {
 	@GetMapping("/whoami")
 	public String whoami(@AuthenticationPrincipal(expression="name") String name) {
 		return name;
