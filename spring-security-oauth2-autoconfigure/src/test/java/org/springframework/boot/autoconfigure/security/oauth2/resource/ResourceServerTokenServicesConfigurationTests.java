@@ -345,8 +345,8 @@ public class ResourceServerTokenServicesConfigurationTests {
 	}
 
 	@Configuration
-	@Import({ ResourceServerTokenServicesConfiguration.class, ResourceServerPropertiesConfiguration.class,
-			PropertyPlaceholderAutoConfiguration.class })
+	@Import({ResourceServerTokenServicesConfiguration.class, ResourceServerPropertiesConfiguration.class,
+			PropertyPlaceholderAutoConfiguration.class})
 	@EnableConfigurationProperties(OAuth2ClientProperties.class)
 	protected static class ResourceConfiguration {
 
@@ -372,7 +372,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	}
 
-	@Import({ OAuth2RestOperationsConfiguration.class })
+	@Import({OAuth2RestOperationsConfiguration.class})
 	protected static class ResourceNoClientConfiguration extends ResourceConfiguration {
 
 		@Bean
@@ -398,7 +398,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 	}
 
-	@Import({ FacebookAutoConfiguration.class, SocialWebAutoConfiguration.class })
+	@Import({FacebookAutoConfiguration.class, SocialWebAutoConfiguration.class})
 	protected static class SocialResourceConfiguration extends ResourceConfiguration {
 
 		@Bean

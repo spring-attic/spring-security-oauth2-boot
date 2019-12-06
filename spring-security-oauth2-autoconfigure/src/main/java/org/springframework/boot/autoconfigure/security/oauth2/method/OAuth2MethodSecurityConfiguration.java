@@ -33,15 +33,15 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 
 /**
- * Auto-configure an expression handler for method-level security (if the user already has
- * {@code @EnableGlobalMethodSecurity}).
+ * Auto-configure an expression handler for method-level security (if the user
+ * already has {@code @EnableGlobalMethodSecurity}).
  *
  * @author Greg Turnquist
  * @author Dave Syer
  * @since 1.3.0
  */
 @Configuration
-@ConditionalOnClass({ OAuth2AccessToken.class })
+@ConditionalOnClass({OAuth2AccessToken.class})
 @ConditionalOnBean(GlobalMethodSecurityConfiguration.class)
 public class OAuth2MethodSecurityConfiguration implements BeanFactoryPostProcessor, ApplicationContextAware {
 

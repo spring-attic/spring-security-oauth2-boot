@@ -36,9 +36,9 @@ import org.springframework.context.annotation.Import;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ ServletWebServerFactoryAutoConfiguration.class, DispatcherServletAutoConfiguration.class,
+@Import({ServletWebServerFactoryAutoConfiguration.class, DispatcherServletAutoConfiguration.class,
 		WebMvcAutoConfiguration.class, HttpMessageConvertersAutoConfiguration.class, ErrorMvcAutoConfiguration.class,
-		PropertyPlaceholderAutoConfiguration.class, SecurityAutoConfiguration.class })
+		PropertyPlaceholderAutoConfiguration.class, SecurityAutoConfiguration.class})
 public @interface MinimalSecureWebConfiguration {
 
 }

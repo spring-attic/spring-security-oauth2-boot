@@ -54,7 +54,8 @@ import org.springframework.util.StringUtils;
 
 /**
  * Auto-configure a Spring Security OAuth2 resource server. Back off if another
- * {@link ResourceServerConfigurer} already exists or if resource server not enabled.
+ * {@link ResourceServerConfigurer} already exists or if resource server not
+ * enabled.
  *
  * @author Greg Turnquist
  * @author Dave Syer
@@ -63,7 +64,7 @@ import org.springframework.util.StringUtils;
  */
 @Configuration
 @Conditional(ResourceServerCondition.class)
-@ConditionalOnClass({ EnableResourceServer.class, SecurityProperties.class })
+@ConditionalOnClass({EnableResourceServer.class, SecurityProperties.class})
 @ConditionalOnWebApplication
 @ConditionalOnBean(ResourceServerConfiguration.class)
 @Import(ResourceServerTokenServicesConfiguration.class)

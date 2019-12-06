@@ -32,8 +32,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Series of automated integration tests to verify proper behavior of JWT-encoded Bearer
- * Token-secured Resource Server
+ * Series of automated integration tests to verify proper behavior of
+ * JWT-encoded Bearer Token-secured Resource Server
  *
  * @author Josh Cummings
  */

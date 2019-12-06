@@ -42,14 +42,14 @@ import org.springframework.social.facebook.api.Facebook;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Social connectivity with
- * Facebook.
+ * {@link EnableAutoConfiguration Auto-configuration} for Spring Social
+ * connectivity with Facebook.
  *
  * @author Craig Walls
  * @since 1.1.0
  */
 @Configuration
-@ConditionalOnClass({ SocialConfigurerAdapter.class, FacebookConnectionFactory.class })
+@ConditionalOnClass({SocialConfigurerAdapter.class, FacebookConnectionFactory.class})
 @ConditionalOnProperty(prefix = "spring.social.facebook", name = "app-id")
 @AutoConfigureBefore(SocialWebAutoConfiguration.class)
 @AutoConfigureAfter(WebMvcAutoConfiguration.class)
@@ -75,7 +75,7 @@ public class FacebookAutoConfiguration {
 			return connection != null ? connection.getApi() : null;
 		}
 
-		@Bean(name = { "connect/facebookConnect", "connect/facebookConnected" })
+		@Bean(name = {"connect/facebookConnect", "connect/facebookConnected"})
 		@ConditionalOnProperty(prefix = "spring.social", name = "auto-connection-views")
 		public GenericConnectionStatusView facebookConnectView() {
 			return new GenericConnectionStatusView("facebook", "Facebook");

@@ -34,12 +34,8 @@ public class ActuatorSecurityConfiguration extends WebSecurityConfigurerAdapter 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-		http
-			.requestMatcher(EndpointRequest.toAnyEndpoint())
-			.authorizeRequests()
-				.anyRequest().authenticated()
-				.and()
-			.httpBasic();
+		http.requestMatcher(EndpointRequest.toAnyEndpoint()).authorizeRequests().anyRequest().authenticated().and()
+				.httpBasic();
 		// @formatter:on
 	}
 

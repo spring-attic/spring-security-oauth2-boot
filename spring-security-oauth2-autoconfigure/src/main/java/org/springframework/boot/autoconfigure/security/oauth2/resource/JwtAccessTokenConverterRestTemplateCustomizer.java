@@ -20,16 +20,16 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Callback for customizing the {@link RestTemplate} that is used to fetch the keys used
- * by {@link JwtAccessTokenConverter}.
+ * Callback for customizing the {@link RestTemplate} that is used to fetch the
+ * keys used by {@link JwtAccessTokenConverter}.
  *
  * @author Eddú Meléndez
  * @since 1.5.2
  * @see JwtAccessTokenConverter#setSigningKey(String)
  * @see JwtAccessTokenConverter#setVerifierKey(String)
  * @deprecated See the <a href=
- * "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
- * OAuth 2.0 Migration Guide</a> for Spring Security 5.
+ *             "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
+ *             OAuth 2.0 Migration Guide</a> for Spring Security 5.
  */
 @FunctionalInterface
 @Deprecated
@@ -37,7 +37,8 @@ public interface JwtAccessTokenConverterRestTemplateCustomizer {
 
 	/**
 	 * Customize the {@code template} before it is initialized.
-	 * @param template the rest template
+	 * @param template
+	 *            the rest template
 	 */
 	void customize(RestTemplate template);
 

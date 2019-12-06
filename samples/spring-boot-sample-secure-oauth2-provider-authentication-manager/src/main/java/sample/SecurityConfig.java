@@ -53,19 +53,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		// @formatter:off
-		auth
-			.authenticationEventPublisher(new AuthenticationEventPublisher() {
-				@Override
-				public void publishAuthenticationSuccess(Authentication authentication) {
-					log.info("Token request by password grant succeeded.");
-				}
+		auth.authenticationEventPublisher(new AuthenticationEventPublisher() {
+			@Override
+			public void publishAuthenticationSuccess(Authentication authentication) {
+				log.info("Token request by password grant succeeded.");
+			}
 
-				@Override
-				public void publishAuthenticationFailure(AuthenticationException exception, Authentication authentication) {
-					log.info("Token request by password grant failed: {}", exception);
-				}
-			})
-			.userDetailsService(userDetailsService());
+			@Override
+			public void publishAuthenticationFailure(AuthenticationException exception, Authentication authentication) {
+				log.info("Token request by password grant failed: {}", exception);
+			}
+		}).userDetailsService(userDetailsService());
 		// @formatter:on
 	}
 

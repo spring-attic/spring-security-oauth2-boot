@@ -24,8 +24,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 
 /**
  * @deprecated Use <a target="_blank" href=
- * "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
- * Security's built-in support</a>
+ *             "https://docs.spring.io/spring-security/site/docs/current/reference/htmlsingle/#oauth2resourceserver">Spring
+ *             Security's built-in support</a>
  */
 @SpringBootApplication
 @EnableResourceServer
@@ -34,10 +34,7 @@ public class SampleSecureOAuth2ResourceApplication extends ResourceServerConfigu
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
-		http
-			.antMatcher("/flights/**")
-			.authorizeRequests()
-				.anyRequest().authenticated();
+		http.antMatcher("/flights/**").authorizeRequests().anyRequest().authenticated();
 		// @formatter:on
 	}
 

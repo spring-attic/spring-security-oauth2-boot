@@ -27,9 +27,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
- * Default implementation of {@link AuthoritiesExtractor}. Extracts the authorities from
- * the map with the key {@code authorities}. If no such value exists, a single
- * {@code ROLE_USER} authority is returned.
+ * Default implementation of {@link AuthoritiesExtractor}. Extracts the
+ * authorities from the map with the key {@code authorities}. If no such value
+ * exists, a single {@code ROLE_USER} authority is returned.
  *
  * @author Dave Syer
  * @since 1.3.0
@@ -38,7 +38,7 @@ public class FixedAuthoritiesExtractor implements AuthoritiesExtractor {
 
 	private static final String AUTHORITIES = "authorities";
 
-	private static final String[] AUTHORITY_KEYS = { "authority", "role", "value" };
+	private static final String[] AUTHORITY_KEYS = {"authority", "role", "value"};
 
 	@Override
 	public List<GrantedAuthority> extractAuthorities(Map<String, Object> map) {
@@ -60,11 +60,9 @@ public class FixedAuthoritiesExtractor implements AuthoritiesExtractor {
 			for (Object value : array) {
 				if (value instanceof String) {
 					authorities.add(value);
-				}
-				else if (value instanceof Map) {
+				} else if (value instanceof Map) {
 					authorities.add(asAuthority((Map<?, ?>) value));
-				}
-				else {
+				} else {
 					authorities.add(value);
 				}
 			}

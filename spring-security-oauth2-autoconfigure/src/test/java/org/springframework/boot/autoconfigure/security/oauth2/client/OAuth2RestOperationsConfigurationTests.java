@@ -101,7 +101,7 @@ public class OAuth2RestOperationsConfigurationTests {
 	}
 
 	@Configuration
-	@Import({ OAuth2RestOperationsConfiguration.class })
+	@Import({OAuth2RestOperationsConfiguration.class})
 	protected static class WebApplicationConfiguration {
 
 		@Bean
@@ -112,7 +112,7 @@ public class OAuth2RestOperationsConfigurationTests {
 	}
 
 	@Configuration
-	@Import({ SecurityProperties.class, OAuth2ClientConfiguration.class, OAuth2RestOperationsConfiguration.class })
+	@Import({SecurityProperties.class, OAuth2ClientConfiguration.class, OAuth2RestOperationsConfiguration.class})
 	protected static class ConfigForSessionScopedConfiguration extends WebApplicationConfiguration {
 
 	}

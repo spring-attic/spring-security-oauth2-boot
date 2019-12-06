@@ -38,8 +38,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 /**
- * Base class for Mock {@code ServletWebServer} implementations. Reduces the amount of
- * code that would otherwise be duplicated in {@code spring-boot},
+ * Base class for Mock {@code ServletWebServer} implementations. Reduces the
+ * amount of code that would otherwise be duplicated in {@code spring-boot},
  * {@code spring-boot-autoconfigure} and {@code spring-boot-actuator}.
  *
  * @author Phillip Webb
@@ -90,8 +90,7 @@ public abstract class MockServletWebServer {
 			for (Initializer initializer : this.initializers) {
 				initializer.onStartup(this.servletContext);
 			}
-		}
-		catch (ServletException ex) {
+		} catch (ServletException ex) {
 			throw new RuntimeException(ex);
 		}
 	}

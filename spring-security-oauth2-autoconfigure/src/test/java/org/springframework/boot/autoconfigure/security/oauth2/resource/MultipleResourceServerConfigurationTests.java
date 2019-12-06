@@ -63,7 +63,7 @@ public class MultipleResourceServerConfigurationTests {
 		assertThat(this.context.getBean("otherResources", ResourceServerConfiguration.class).getOrder()).isEqualTo(4);
 	}
 
-	@ImportAutoConfiguration({ OAuth2AutoConfiguration.class, PropertyPlaceholderAutoConfiguration.class })
+	@ImportAutoConfiguration({OAuth2AutoConfiguration.class, PropertyPlaceholderAutoConfiguration.class})
 	@EnableWebSecurity
 	@Configuration
 	protected static class DoubleResourceConfiguration {
