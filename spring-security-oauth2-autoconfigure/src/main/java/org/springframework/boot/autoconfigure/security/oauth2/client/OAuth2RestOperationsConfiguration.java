@@ -83,7 +83,7 @@ public class OAuth2RestOperationsConfiguration {
 
 	@Configuration
 	@ConditionalOnBean(OAuth2ClientConfiguration.class)
-	@Conditional({ OAuth2ClientIdCondition.class, NoClientCredentialsCondition.class })
+	@Conditional({OAuth2ClientIdCondition.class, NoClientCredentialsCondition.class})
 	@Import(OAuth2ProtectedResourceDetailsConfiguration.class)
 	protected static class SessionScopedConfiguration {
 
@@ -98,13 +98,15 @@ public class OAuth2RestOperationsConfiguration {
 
 	}
 
-	// When the authentication is per cookie but the stored token is an oauth2 one, we can
+	// When the authentication is per cookie but the stored token is an oauth2 one,
+	// we can
 	// pass that on to a client that wants to call downstream. We don't even need an
-	// OAuth2ClientContextFilter until we need to refresh the access token. To handle
+	// OAuth2ClientContextFilter until we need to refresh the access token. To
+	// handle
 	// refresh tokens you need to @EnableOAuth2Client
 	@Configuration
 	@ConditionalOnMissingBean(OAuth2ClientConfiguration.class)
-	@Conditional({ OAuth2ClientIdCondition.class, NoClientCredentialsCondition.class })
+	@Conditional({OAuth2ClientIdCondition.class, NoClientCredentialsCondition.class})
 	@Import(OAuth2ProtectedResourceDetailsConfiguration.class)
 	protected static class RequestScopedConfiguration {
 
@@ -128,7 +130,8 @@ public class OAuth2RestOperationsConfiguration {
 	}
 
 	/**
-	 * Condition to check if a {@code security.oauth2.client.client-id} is specified.
+	 * Condition to check if a {@code security.oauth2.client.client-id} is
+	 * specified.
 	 */
 	static class OAuth2ClientIdCondition extends SpringBootCondition {
 
@@ -169,8 +172,7 @@ public class OAuth2RestOperationsConfiguration {
 			super(ConfigurationPhase.PARSE_CONFIGURATION);
 		}
 
-		@ConditionalOnProperty(prefix = "security.oauth2.client", name = "grant-type",
-				havingValue = "client_credentials", matchIfMissing = false)
+		@ConditionalOnProperty(prefix = "security.oauth2.client", name = "grant-type", havingValue = "client_credentials", matchIfMissing = false)
 		static class ClientCredentialsConfigured {
 
 		}

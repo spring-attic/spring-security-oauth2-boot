@@ -30,8 +30,8 @@ import org.springframework.security.oauth2.client.token.grant.code.Authorization
 import org.springframework.util.CollectionUtils;
 
 /**
- * Factory used to create the {@link OAuth2RestTemplate} used for extracting user info
- * during authentication if none is available.
+ * Factory used to create the {@link OAuth2RestTemplate} used for extracting
+ * user info during authentication if none is available.
  *
  * @author Dave Syer
  * @author Stephane Nicoll

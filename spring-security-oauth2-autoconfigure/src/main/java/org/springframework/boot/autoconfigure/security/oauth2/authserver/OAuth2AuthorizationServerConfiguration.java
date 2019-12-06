@@ -52,9 +52,9 @@ import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 /**
- * Configuration for a Spring Security OAuth2 authorization server. Back off if another
- * {@link AuthorizationServerConfigurer} already exists or if authorization server is not
- * enabled.
+ * Configuration for a Spring Security OAuth2 authorization server. Back off if
+ * another {@link AuthorizationServerConfigurer} already exists or if
+ * authorization server is not enabled.
  *
  * @author Greg Turnquist
  * @author Dave Syer

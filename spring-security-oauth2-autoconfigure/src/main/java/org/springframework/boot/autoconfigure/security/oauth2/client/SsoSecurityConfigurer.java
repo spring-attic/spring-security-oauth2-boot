@@ -89,7 +89,8 @@ class SsoSecurityConfigurer {
 	}
 
 	private static class OAuth2ClientAuthenticationConfigurer
-			extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+			extends
+				SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
 		private OAuth2ClientAuthenticationProcessingFilter filter;
 

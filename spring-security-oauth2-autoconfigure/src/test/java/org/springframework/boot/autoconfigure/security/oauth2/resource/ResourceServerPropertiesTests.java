@@ -180,7 +180,7 @@ public class ResourceServerPropertiesTests {
 			@Override
 			public String[] getBeanNamesForType(Class<?> type, boolean includeNonSingletons, boolean allowEagerInit) {
 				if (type.isAssignableFrom(ResourceServerTokenServicesConfiguration.class)) {
-					return new String[] { "ResourceServerTokenServicesConfiguration" };
+					return new String[]{"ResourceServerTokenServicesConfiguration"};
 				}
 				return new String[0];
 			}

@@ -105,8 +105,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
- * Verify Spring Security OAuth2 auto-configuration secures end points properly, accepts
- * environmental overrides, and also backs off in the presence of other
+ * Verify Spring Security OAuth2 auto-configuration secures end points properly,
+ * accepts environmental overrides, and also backs off in the presence of other
  * resource/authorization components.
  *
  * @author Greg Turnquist
@@ -240,7 +240,8 @@ public class OAuth2AutoConfigurationTests {
 		assertThat(countBeans(ClientCredentialsResourceDetails.class)).isEqualTo(1);
 		// Kind of a bug (should ideally be 1), but the cause is in Spring OAuth2 (there
 		// is no need for the extra session-scoped bean). What this test proves is that
-		// even if the user screws up and does @EnableOAuth2Client for client credentials,
+		// even if the user screws up and does @EnableOAuth2Client for client
+		// credentials,
 		// it will still just about work (because of the @Primary annotation on the
 		// Boot-created instance of OAuth2ClientContext).
 		assertThat(countBeans(OAuth2ClientContext.class)).isEqualTo(2);
@@ -416,9 +417,10 @@ public class OAuth2AutoConfigurationTests {
 	}
 
 	/**
-	 * Connect to the oauth service, get a token, and then attempt some operations using
-	 * it.
-	 * @param config the client details.
+	 * Connect to the oauth service, get a token, and then attempt some operations
+	 * using it.
+	 * @param config
+	 *            the client details.
 	 */
 	private void verifyAuthentication(ClientDetails config) {
 		verifyAuthentication(config, HttpStatus.FORBIDDEN);
@@ -482,15 +484,15 @@ public class OAuth2AutoConfigurationTests {
 	}
 
 	@Configuration
-	@Import({ UseFreePortEmbeddedContainerConfiguration.class, SecurityAutoConfiguration.class,
+	@Import({UseFreePortEmbeddedContainerConfiguration.class, SecurityAutoConfiguration.class,
 			DispatcherServletAutoConfiguration.class, OAuth2AutoConfiguration.class, WebMvcAutoConfiguration.class,
-			HttpMessageConvertersAutoConfiguration.class })
+			HttpMessageConvertersAutoConfiguration.class})
 	protected static class MinimalSecureWebApplication {
 
 	}
 
 	@Configuration
-	@Import({ SecurityAutoConfiguration.class, OAuth2AutoConfiguration.class })
+	@Import({SecurityAutoConfiguration.class, OAuth2AutoConfiguration.class})
 	protected static class MinimalSecureNonWebApplication {
 
 	}
@@ -507,11 +509,8 @@ public class OAuth2AutoConfigurationTests {
 		@Autowired
 		public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 			// @formatter:off
-			auth.inMemoryAuthentication()
-					.passwordEncoder(NoOpPasswordEncoder.getInstance())
-					.withUser("foo")
-					.password("bar")
-					.roles("USER");
+			auth.inMemoryAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance()).withUser("foo")
+					.password("bar").roles("USER");
 			// @formatter:on
 		}
 
@@ -611,13 +610,7 @@ public class OAuth2AutoConfigurationTests {
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
-			http
-				.authorizeRequests()
-					.anyRequest().authenticated()
-					.and()
-				.httpBasic()
-					.and()
-				.csrf().disable();
+			http.authorizeRequests().anyRequest().authenticated().and().httpBasic().and().csrf().disable();
 			// @formatter:on
 		}
 
@@ -648,14 +641,8 @@ public class OAuth2AutoConfigurationTests {
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 			// @formatter:off
-			clients
-				.inMemory()
-					.withClient("client")
-					.secret("secret")
-					.resourceIds("resource-id")
-					.authorizedGrantTypes("password")
-					.authorities("USER")
-					.scopes("read")
+			clients.inMemory().withClient("client").secret("secret").resourceIds("resource-id")
+					.authorizedGrantTypes("password").authorities("USER").scopes("read")
 					.redirectUris("http://localhost:8080");
 			// @formatter:on
 		}

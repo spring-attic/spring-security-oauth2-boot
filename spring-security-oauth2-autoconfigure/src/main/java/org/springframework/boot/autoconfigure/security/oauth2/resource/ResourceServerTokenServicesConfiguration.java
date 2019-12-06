@@ -156,7 +156,7 @@ public class ResourceServerTokenServicesConfiguration {
 			}
 
 			@Bean
-			@ConditionalOnMissingBean({ ConnectionFactoryLocator.class, ResourceServerTokenServices.class })
+			@ConditionalOnMissingBean({ConnectionFactoryLocator.class, ResourceServerTokenServices.class})
 			public UserInfoTokenServices userInfoTokenServices() {
 				UserInfoTokenServices services = new UserInfoTokenServices(this.sso.getUserInfoUri(),
 						this.sso.getClientId());

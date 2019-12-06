@@ -19,8 +19,8 @@ package org.springframework.boot.autoconfigure.security.oauth2.resource;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 /**
- * Factory used to create the {@link OAuth2RestTemplate} used for extracting user info
- * during authentication if none is available.
+ * Factory used to create the {@link OAuth2RestTemplate} used for extracting
+ * user info during authentication if none is available.
  *
  * @author Dave Syer
  * @author Stephane Nicoll

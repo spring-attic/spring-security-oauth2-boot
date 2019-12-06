@@ -38,27 +38,22 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
 		// @formatter:off
-		clients.inMemory()
-			.withClient("ifusespasswordgranttype")
-				.authorizedGrantTypes("password")
-				.secret(passwordEncoder.encode("thenneedsauthenticationmanager"))
-				.scopes("any");
+		clients.inMemory().withClient("ifusespasswordgranttype").authorizedGrantTypes("password")
+				.secret(passwordEncoder.encode("thenneedsauthenticationmanager")).scopes("any");
 		// @formatter:on
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 		// @formatter:off
-		endpoints
-			.authenticationManager(this.authenticationManager);
+		endpoints.authenticationManager(this.authenticationManager);
 		// @formatter:on
 	}
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		// @formatter:off
-		security
-			.checkTokenAccess("isAuthenticated()");
+		security.checkTokenAccess("isAuthenticated()");
 		// @formatter:on
 	}
 

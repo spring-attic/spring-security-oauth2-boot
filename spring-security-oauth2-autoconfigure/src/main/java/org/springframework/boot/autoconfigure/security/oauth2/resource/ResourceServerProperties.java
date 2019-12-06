@@ -39,8 +39,8 @@ import org.springframework.validation.BindingResult;
  * @author Madhura Bhave
  * @since 1.3.0
  * @deprecated See the <a href=
- * "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
- * OAuth 2.0 Migration Guide</a> for Spring Security 5.
+ *             "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
+ *             OAuth 2.0 Migration Guide</a> for Spring Security 5.
  */
 @ConfigurationProperties(prefix = "security.oauth2.resource")
 @Deprecated
@@ -196,8 +196,7 @@ public class ResourceServerProperties implements BeanFactoryAware, InitializingB
 		}
 		try {
 			doValidate();
-		}
-		catch (BindException ex) {
+		} catch (BindException ex) {
 			throw new IllegalStateException(ex);
 		}
 	}
@@ -235,14 +234,14 @@ public class ResourceServerProperties implements BeanFactoryAware, InitializingB
 
 		/**
 		 * The verification key of the JWT token. Can either be a symmetric secret or
-		 * PEM-encoded RSA public key. If the value is not available, you can set the URI
-		 * instead.
+		 * PEM-encoded RSA public key. If the value is not available, you can set the
+		 * URI instead.
 		 */
 		private String keyValue;
 
 		/**
-		 * The URI of the JWT token. Can be set if the value is not available and the key
-		 * is public.
+		 * The URI of the JWT token. Can be set if the value is not available and the
+		 * key is public.
 		 */
 		private String keyUri;
 
@@ -319,8 +318,8 @@ public class ResourceServerProperties implements BeanFactoryAware, InitializingB
 	public class Jwk {
 
 		/**
-		 * The URI to get verification keys to verify the JWT token. This can be set when
-		 * the authorization server returns a set of verification keys.
+		 * The URI to get verification keys to verify the JWT token. This can be set
+		 * when the authorization server returns a set of verification keys.
 		 */
 		private String keySetUri;
 
