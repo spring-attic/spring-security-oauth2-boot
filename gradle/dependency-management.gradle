@@ -5,7 +5,7 @@ dependencyManagement {
 	dependencies {
 		dependency "org.springframework.boot:spring-boot:$springBootVersion"
 		dependency 'org.springframework.security.oauth:spring-security-oauth2:2.4.0.RELEASE'
-		dependency 'org.springframework.security:spring-security-jwt:1.0.11.RELEASE'
+		dependency 'org.springframework.security:spring-security-jwt:1.1.0.RELEASE'
 		dependency "org.springframework.social:spring-social-config:$springSocialVersion"
 		dependency "org.springframework.social:spring-social-core:$springSocialVersion"
 		dependency "org.springframework.social:spring-social-facebook:2.0.3.RELEASE"
