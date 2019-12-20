@@ -679,12 +679,11 @@ To indicate JWT, simply specify the JWK Set Uri hosted on your Authorization Ser
 ====
 [source,yaml]
 ----
-spring:
-  security:
-    oauth2:
-      resource:
-        jwk:
-          key-set-uri: https://idp.example.com/.well-known/jwks.json
+security:
+  oauth2:
+    resource:
+      jwk:
+        key-set-uri: https://idp.example.com/.well-known/jwks.json
 ----
 ====
 
@@ -699,11 +698,10 @@ To indicate opaque, simply specify the Authorization Server endpoint that knows 
 ====
 [source,yaml]
 ----
-spring:
-  security:
-    oauth2:
-      resource:
-        token-info-uri: https://idp.example.com/oauth2/introspect
+security:
+  oauth2:
+    resource:
+      token-info-uri: https://idp.example.com/oauth2/introspect
 ----
 ====
 
@@ -756,15 +754,14 @@ Configuring the resource server with the appropriate symmetric key or PKCS#8 PEM
 ====
 [source,yaml]
 ----
-spring:
-  security:
-    oauth2:
-      resource:
-        jwt:
-          key-value: |
-            -----BEGIN PUBLIC KEY-----
-            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC...
-            -----END PUBLIC KEY-----
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: |
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC...
+          -----END PUBLIC KEY-----
 ----
 ====
 
@@ -784,14 +781,13 @@ Instead, you'll need to specify credentials that represent this client, like so:
 ====
 [source,yaml]
 ----
-spring:
-  security:
-    oauth2:
-      client:
-        clientId: client-id
-        clientSecret: client-secret
-      resource:
-        tokenInfoUri: https://idp.example.com/oauth2/check_token
+security:
+  oauth2:
+    client:
+      clientId: client-id
+      clientSecret: client-secret
+    resource:
+      tokenInfoUri: https://idp.example.com/oauth2/check_token
 ----
 ====
 
@@ -809,11 +805,10 @@ If you specify a user info endpoint like so:
 ====
 [source,yaml]
 ----
-spring:
-  security:
-    oauth2:
-      resource:
-        userInfoUri: https://idp.example.com/oauth2/userinfo
+security:
+  oauth2:
+    resource:
+      userInfoUri: https://idp.example.com/oauth2/userinfo
 ----
 ====
 
