@@ -61,10 +61,7 @@ public class MockServletWebServerFactory extends AbstractServletWebServerFactory
 	}
 
 	public static class MockServletWebServer
-			extends
-				org.springframework.boot.testsupport.web.servlet.MockServletWebServer
-			implements
-				WebServer {
+			extends org.springframework.boot.testsupport.web.servlet.MockServletWebServer implements WebServer {
 
 		public MockServletWebServer(ServletContextInitializer[] initializers, int port) {
 			super(Arrays.stream(initializers).map((initializer) -> (Initializer) initializer::onStartup)

@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Series of automated integration tests to verify proper behavior of
- * auto-configured, OAuth2-secured system
+ * Series of automated integration tests to verify proper behavior of auto-configured,
+ * OAuth2-secured system
  *
  * @author Dave Syer
  * @author Rob Winch

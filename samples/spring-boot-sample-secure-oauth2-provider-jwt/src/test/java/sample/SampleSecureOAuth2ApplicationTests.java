@@ -39,8 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Tests confirming behavior of minimally-configured JWT-encoding Authorization
- * Server
+ * Tests confirming behavior of minimally-configured JWT-encoding Authorization Server
  *
  * @author Josh Cummings
  */

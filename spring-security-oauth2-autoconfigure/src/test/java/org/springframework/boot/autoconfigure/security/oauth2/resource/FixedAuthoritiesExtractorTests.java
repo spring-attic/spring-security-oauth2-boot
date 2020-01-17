@@ -51,7 +51,7 @@ public class FixedAuthoritiesExtractorTests {
 
 	@Test
 	public void authoritiesArray() {
-		this.map.put("authorities", new String[]{"ROLE_USER", "ROLE_ADMIN"});
+		this.map.put("authorities", new String[] { "ROLE_USER", "ROLE_ADMIN" });
 		assertThat(this.extractor.extractAuthorities(this.map).toString()).isEqualTo("[ROLE_USER, ROLE_ADMIN]");
 	}
 

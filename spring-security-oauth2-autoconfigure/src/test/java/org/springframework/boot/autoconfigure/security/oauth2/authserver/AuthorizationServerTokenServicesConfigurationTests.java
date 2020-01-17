@@ -142,7 +142,7 @@ public class AuthorizationServerTokenServicesConfigurationTests {
 	}
 
 	@Configuration
-	@Import({AuthorizationServerTokenServicesConfiguration.class})
+	@Import({ AuthorizationServerTokenServicesConfiguration.class })
 	@EnableConfigurationProperties(AuthorizationServerProperties.class)
 	protected static class AuthorizationServerConfiguration {
 

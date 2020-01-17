@@ -21,8 +21,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * This sample is intended to demonstrate that
  * {@link org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer}
- * only needs an
- * {@link org.springframework.security.authentication.AuthenticationManager}
+ * only needs an {@link org.springframework.security.authentication.AuthenticationManager}
  * when the {@code password} grant type is configured.
  *
  * After you launch the app, you can retrieve a bearer token like this:

@@ -28,8 +28,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 /**
  * Configuration for OAuth2 Single Sign On (SSO). If the user only has
- * {@code @EnableOAuth2Sso} but not on a {@code WebSecurityConfigurerAdapter}
- * then one is added with all paths secured.
+ * {@code @EnableOAuth2Sso} but not on a {@code WebSecurityConfigurerAdapter} then one is
+ * added with all paths secured.
  *
  * @author Dave Syer
  * @since 1.3.0
