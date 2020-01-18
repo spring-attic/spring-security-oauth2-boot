@@ -399,7 +399,7 @@ public class OAuth2AutoConfigurationTests {
 			throws Exception {
 		this.context = new AnnotationConfigServletWebServerApplicationContext();
 		TestPropertyValues
-				.of("security.oauth2.resource.jwk.key-set-uri:http://my-auth-server/token_keys")
+				.of("security.oauth2.resource.jwk.key-set-uri:https://idp.example.com/token_keys")
 				.applyTo(this.context);
 		this.context.register(ResourceServerConfiguration.class,
 				MinimalSecureWebApplication.class);

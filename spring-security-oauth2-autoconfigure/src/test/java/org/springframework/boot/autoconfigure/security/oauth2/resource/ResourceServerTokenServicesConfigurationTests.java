@@ -210,7 +210,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 	@Test
 	public void jwkConfiguration() throws Exception {
 		TestPropertyValues
-				.of("security.oauth2.resource.jwk.key-set-uri=http://my-auth-server/token_keys")
+				.of("security.oauth2.resource.jwk.key-set-uri=https://idp.example.com/token_keys")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(ResourceConfiguration.class)
 				.environment(this.environment).web(WebApplicationType.NONE).run();
@@ -264,7 +264,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 	@Test
 	public void jwkTokenStoreShouldBeConditionalOnMissingBean() throws Exception {
 		TestPropertyValues
-				.of("security.oauth2.resource.jwk.key-set-uri=http://my-auth-server/token_keys")
+				.of("security.oauth2.resource.jwk.key-set-uri=https://idp.example.com/token_keys")
 				.applyTo(this.environment);
 		this.context = new SpringApplicationBuilder(JwkTokenStoreConfiguration.class,
 				ResourceConfiguration.class).environment(this.environment)
