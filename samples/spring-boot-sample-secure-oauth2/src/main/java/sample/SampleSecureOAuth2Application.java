@@ -43,8 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Response should be similar to this:
  * <code>{"access_token":"533de99b-5a0f-4175-8afd-1a64feb952d5","token_type":"bearer","expires_in":43199,"scope":"read"}</code>
  *
- * With the token value, you can now interrogate the RESTful interface like
- * this:
+ * With the token value, you can now interrogate the RESTful interface like this:
  *
  * <pre>
  * curl -H "Authorization: bearer [access_token]" localhost:8080/flights/1

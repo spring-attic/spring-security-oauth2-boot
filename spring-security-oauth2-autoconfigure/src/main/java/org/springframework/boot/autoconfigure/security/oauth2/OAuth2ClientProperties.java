@@ -27,8 +27,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Stephane Nicoll
  * @since 1.3.0
  * @deprecated See the <a href=
- *             "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
- *             OAuth 2.0 Migration Guide</a> for Spring Security 5.
+ * "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
+ * OAuth 2.0 Migration Guide</a> for Spring Security 5.
  */
 @ConfigurationProperties(prefix = "security.oauth2.client")
 @Deprecated

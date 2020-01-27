@@ -33,17 +33,16 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * {@link EnableAutoConfiguration Auto-configuration} for Spring Security
- * OAuth2.
+ * {@link EnableAutoConfiguration Auto-configuration} for Spring Security OAuth2.
  *
  * @author Greg Turnquist
  * @author Dave Syer
  * @since 1.3.0
  */
 @Configuration
-@ConditionalOnClass({OAuth2AccessToken.class, WebMvcConfigurer.class})
-@Import({OAuth2AuthorizationServerConfiguration.class, OAuth2MethodSecurityConfiguration.class,
-		OAuth2ResourceServerConfiguration.class, OAuth2RestOperationsConfiguration.class})
+@ConditionalOnClass({ OAuth2AccessToken.class, WebMvcConfigurer.class })
+@Import({ OAuth2AuthorizationServerConfiguration.class, OAuth2MethodSecurityConfiguration.class,
+		OAuth2ResourceServerConfiguration.class, OAuth2RestOperationsConfiguration.class })
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
 @EnableConfigurationProperties(OAuth2ClientProperties.class)
 public class OAuth2AutoConfiguration {

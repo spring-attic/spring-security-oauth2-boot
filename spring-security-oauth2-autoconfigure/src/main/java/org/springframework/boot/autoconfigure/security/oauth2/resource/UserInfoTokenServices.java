@@ -106,10 +106,9 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 	}
 
 	/**
-	 * Return the principal that should be used for the token. The default
-	 * implementation delegates to the {@link PrincipalExtractor}.
-	 * @param map
-	 *            the source map
+	 * Return the principal that should be used for the token. The default implementation
+	 * delegates to the {@link PrincipalExtractor}.
+	 * @param map the source map
 	 * @return the principal or {@literal "unknown"}
 	 */
 	protected Object getPrincipal(Map<String, Object> map) {
@@ -122,7 +121,7 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 		throw new UnsupportedOperationException("Not supported: read access token");
 	}
 
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	private Map<String, Object> getMap(String path, String accessToken) {
 		if (this.logger.isDebugEnabled()) {
 			this.logger.debug("Getting user info from: " + path);
@@ -141,7 +140,8 @@ public class UserInfoTokenServices implements ResourceServerTokenServices {
 				restTemplate.getOAuth2ClientContext().setAccessToken(token);
 			}
 			return restTemplate.getForEntity(path, Map.class).getBody();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			this.logger.warn("Could not fetch user details: " + ex.getClass() + ", " + ex.getMessage());
 			return Collections.<String, Object>singletonMap("error", "Could not fetch user details");
 		}

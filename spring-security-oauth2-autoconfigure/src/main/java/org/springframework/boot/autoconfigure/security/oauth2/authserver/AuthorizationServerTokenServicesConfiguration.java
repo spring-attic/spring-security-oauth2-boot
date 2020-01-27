@@ -53,8 +53,7 @@ import org.springframework.util.StringUtils;
 public class AuthorizationServerTokenServicesConfiguration {
 
 	/**
-	 * Configuration for writing a single-key JWT token-issuing authorization
-	 * server.
+	 * Configuration for writing a single-key JWT token-issuing authorization server.
 	 *
 	 * To use, provide a private or symmetric key via
 	 *
@@ -101,8 +100,8 @@ public class AuthorizationServerTokenServicesConfiguration {
 	}
 
 	/**
-	 * Configuration for writing a single-key JWT token-issuing authorization server
-	 * based on a key store.
+	 * Configuration for writing a single-key JWT token-issuing authorization server based
+	 * on a key store.
 	 *
 	 * To use, provide a key store and key alias via
 	 *

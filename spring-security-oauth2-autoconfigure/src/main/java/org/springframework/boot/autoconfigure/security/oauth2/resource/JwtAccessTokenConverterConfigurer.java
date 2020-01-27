@@ -19,14 +19,14 @@ package org.springframework.boot.autoconfigure.security.oauth2.resource;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 /**
- * Callback interface that can be used to provide additional configuration to
- * the {@link JwtAccessTokenConverter}.
+ * Callback interface that can be used to provide additional configuration to the
+ * {@link JwtAccessTokenConverter}.
  *
  * @author Dave Syer
  * @since 1.3.0
  * @deprecated See the <a href=
- *             "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
- *             OAuth 2.0 Migration Guide</a> for Spring Security 5.
+ * "https://github.com/spring-projects/spring-security/wiki/OAuth-2.0-Migration-Guide">
+ * OAuth 2.0 Migration Guide</a> for Spring Security 5.
  */
 @FunctionalInterface
 @Deprecated
@@ -34,8 +34,7 @@ public interface JwtAccessTokenConverterConfigurer {
 
 	/**
 	 * Configure the {@link JwtAccessTokenConverter}.
-	 * @param converter
-	 *            the converter to configure
+	 * @param converter the converter to configure
 	 */
 	void configure(JwtAccessTokenConverter converter);
 

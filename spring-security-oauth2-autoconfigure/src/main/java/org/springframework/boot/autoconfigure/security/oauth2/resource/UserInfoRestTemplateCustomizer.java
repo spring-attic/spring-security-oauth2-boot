@@ -19,13 +19,12 @@ package org.springframework.boot.autoconfigure.security.oauth2.resource;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 
 /**
- * Callback for customizing the rest template used to fetch user details if
- * authentication is done via OAuth2 access tokens. The default should be fine
- * for most providers, but occasionally you might need to add additional
- * interceptors, or change the request authenticator (which is how the token
- * gets attached to outgoing requests). The rest template that is being
- * customized here is <i>only</i> used internally to carry out authentication
- * (in the SSO or Resource Server use cases).
+ * Callback for customizing the rest template used to fetch user details if authentication
+ * is done via OAuth2 access tokens. The default should be fine for most providers, but
+ * occasionally you might need to add additional interceptors, or change the request
+ * authenticator (which is how the token gets attached to outgoing requests). The rest
+ * template that is being customized here is <i>only</i> used internally to carry out
+ * authentication (in the SSO or Resource Server use cases).
  *
  * @author Dave Syer
  * @since 1.3.0
@@ -35,8 +34,7 @@ public interface UserInfoRestTemplateCustomizer {
 
 	/**
 	 * Customize the rest template before it is initialized.
-	 * @param template
-	 *            the rest template
+	 * @param template the rest template
 	 */
 	void customize(OAuth2RestTemplate template);
 

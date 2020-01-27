@@ -105,8 +105,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
- * Verify Spring Security OAuth2 auto-configuration secures end points properly,
- * accepts environmental overrides, and also backs off in the presence of other
+ * Verify Spring Security OAuth2 auto-configuration secures end points properly, accepts
+ * environmental overrides, and also backs off in the presence of other
  * resource/authorization components.
  *
  * @author Greg Turnquist
@@ -417,10 +417,9 @@ public class OAuth2AutoConfigurationTests {
 	}
 
 	/**
-	 * Connect to the oauth service, get a token, and then attempt some operations
-	 * using it.
-	 * @param config
-	 *            the client details.
+	 * Connect to the oauth service, get a token, and then attempt some operations using
+	 * it.
+	 * @param config the client details.
 	 */
 	private void verifyAuthentication(ClientDetails config) {
 		verifyAuthentication(config, HttpStatus.FORBIDDEN);
@@ -484,15 +483,15 @@ public class OAuth2AutoConfigurationTests {
 	}
 
 	@Configuration
-	@Import({UseFreePortEmbeddedContainerConfiguration.class, SecurityAutoConfiguration.class,
+	@Import({ UseFreePortEmbeddedContainerConfiguration.class, SecurityAutoConfiguration.class,
 			DispatcherServletAutoConfiguration.class, OAuth2AutoConfiguration.class, WebMvcAutoConfiguration.class,
-			HttpMessageConvertersAutoConfiguration.class})
+			HttpMessageConvertersAutoConfiguration.class })
 	protected static class MinimalSecureWebApplication {
 
 	}
 
 	@Configuration
-	@Import({SecurityAutoConfiguration.class, OAuth2AutoConfiguration.class})
+	@Import({ SecurityAutoConfiguration.class, OAuth2AutoConfiguration.class })
 	protected static class MinimalSecureNonWebApplication {
 
 	}
