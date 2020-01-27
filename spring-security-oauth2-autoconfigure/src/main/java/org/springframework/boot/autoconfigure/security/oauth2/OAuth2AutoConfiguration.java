@@ -44,12 +44,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Import({ OAuth2AuthorizationServerConfiguration.class, OAuth2MethodSecurityConfiguration.class,
 		OAuth2ResourceServerConfiguration.class, OAuth2RestOperationsConfiguration.class })
 @AutoConfigureBefore(WebMvcAutoConfiguration.class)
-@EnableConfigurationProperties(OAuth2ClientProperties.class)
+@EnableConfigurationProperties({ OAuth2ClientProperties.class,
+		org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties.class })
 public class OAuth2AutoConfiguration {
 
-	private final OAuth2ClientProperties credentials;
+	private final org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties credentials;
 
-	public OAuth2AutoConfiguration(OAuth2ClientProperties credentials) {
+	public OAuth2AutoConfiguration(
+			org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties credentials) {
 		this.credentials = credentials;
 	}
 
