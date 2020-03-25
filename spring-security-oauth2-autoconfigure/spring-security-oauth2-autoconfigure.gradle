@@ -1,7 +1,6 @@
 apply plugin: 'io.spring.convention.spring-module'
 
 dependencies {
-	compileOnly "org.springframework.boot:spring-boot-autoconfigure-processor"
 	compile 'org.springframework.boot:spring-boot'
 	compile 'org.springframework.boot:spring-boot-autoconfigure'
 	compile 'org.springframework:spring-web'
@@ -11,7 +10,9 @@ dependencies {
 	compile 'com.fasterxml.jackson.core:jackson-databind'
 	compile 'javax.xml.bind:jaxb-api'
 
-	optional "org.springframework.boot:spring-boot-configuration-processor"
+	annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor"
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
 	optional 'org.springframework.social:spring-social-config'
 	optional 'org.springframework.social:spring-social-core'
 	optional 'org.springframework.social:spring-social-web'
