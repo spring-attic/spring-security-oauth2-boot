@@ -28,9 +28,11 @@ import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -120,10 +122,53 @@ public class AuthorizationServerTokenServicesConfigurationTests {
 				.run(context -> assertThat(context).getFailure().isInstanceOf(UnsatisfiedDependencyException.class));
 	}
 
+	@Test
+	public void configureWhenPrivateKeyIsProvidedWithCustomJwtAccessTokenConverterThenDefaultBackoff()
+			throws Exception {
+		Path privateKeyPath = new ClassPathResource("key.private", this.getClass()).getFile().toPath();
+		String privateKey = Files.readAllLines(privateKeyPath).stream().collect(Collectors.joining("\n"));
+
+		this.contextRunner.withUserConfiguration(JwtAccessTokenConverterConfiguration.class)
+				.withPropertyValues("security.oauth2.authorization.jwt.key-value=" + privateKey).run(context -> {
+					JwtAccessTokenConverter converter = context.getBean(JwtAccessTokenConverter.class);
+					assertThat(converter.getAccessTokenConverter()).isInstanceOf(CustomAccessTokenConverter.class);
+				});
+	}
+
+	@Test
+	public void configureWhenKeyStoreIsProvidedWithKeyPasswordAndCustomJwtAccessTokenConverterThenDefaultBackoff() {
+		this.contextRunner.withUserConfiguration(JwtAccessTokenConverterConfiguration.class)
+				.withPropertyValues("security.oauth2.authorization.jwt.key-store=classpath:"
+						+ "org/springframework/boot/autoconfigure/security/oauth2/authserver/keyhaspassword.jks",
+						"security.oauth2.authorization.jwt.key-store-password=changeme",
+						"security.oauth2.authorization.jwt.key-alias=jwt",
+						"security.oauth2.authorization.jwt.key-password=password")
+				.run(context -> {
+					JwtAccessTokenConverter converter = context.getBean(JwtAccessTokenConverter.class);
+					assertThat(converter.getAccessTokenConverter()).isInstanceOf(CustomAccessTokenConverter.class);
+				});
+	}
+
 	@Configuration
 	@Import({ AuthorizationServerTokenServicesConfiguration.class })
 	@EnableConfigurationProperties(AuthorizationServerProperties.class)
 	protected static class AuthorizationServerConfiguration {
+
+	}
+
+	@Configuration
+	protected static class JwtAccessTokenConverterConfiguration {
+
+		@Bean
+		JwtAccessTokenConverter accessTokenConverter() {
+			JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+			converter.setAccessTokenConverter(new CustomAccessTokenConverter());
+			return converter;
+		}
+
+	}
+
+	protected static class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
 
 	}
 

@@ -79,11 +79,12 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean(TokenStore.class)
-		public TokenStore jwtTokenStore() {
-			return new JwtTokenStore(jwtTokenEnhancer());
+		public TokenStore jwtTokenStore(JwtAccessTokenConverter jwtTokenEnhancer) {
+			return new JwtTokenStore(jwtTokenEnhancer);
 		}
 
 		@Bean
+		@ConditionalOnMissingBean(JwtAccessTokenConverter.class)
 		public JwtAccessTokenConverter jwtTokenEnhancer() {
 			String keyValue = this.authorization.getJwt().getKeyValue();
 			Assert.notNull(this.authorization.getJwt().getKeyValue(), "keyValue cannot be null");
@@ -137,11 +138,12 @@ public class AuthorizationServerTokenServicesConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean(TokenStore.class)
-		public TokenStore tokenStore() {
-			return new JwtTokenStore(accessTokenConverter());
+		public TokenStore tokenStore(JwtAccessTokenConverter accessTokenConverter) {
+			return new JwtTokenStore(accessTokenConverter);
 		}
 
 		@Bean
+		@ConditionalOnMissingBean(JwtAccessTokenConverter.class)
 		public JwtAccessTokenConverter accessTokenConverter() {
 			Assert.notNull(this.authorization.getJwt().getKeyStore(), "keyStore cannot be null");
 			Assert.notNull(this.authorization.getJwt().getKeyStorePassword(), "keyStorePassword cannot be null");
