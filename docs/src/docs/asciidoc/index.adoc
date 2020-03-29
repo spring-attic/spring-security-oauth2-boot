@@ -565,7 +565,7 @@ However, we can add this with only a few lines.
 
 First, you need to add another dependency: `com.nimbusds:nimbus-jose-jwt`. This gives you the appropriate JWK primitives.
 
-Second, instead of using `@EnableAuthorizationServer`, you need to directlyu include its two `@Configuration` classes:
+Second, instead of using `@EnableAuthorizationServer`, you need to directly include its two `@Configuration` classes:
 
 * `AuthorizationServerEndpointsConfiguration`: The `@Configuration` class for configuring the OAuth 2.0 API endpoints, such as what format to use for the tokens.
 * `AuthorizationServerSecurityConfiguration`: The `@Configuration` class for the access rules around those endpoints.
