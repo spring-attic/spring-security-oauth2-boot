@@ -65,7 +65,6 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.Mockito.mock;
 
 /**
  * Tests for {@link ResourceServerTokenServicesConfiguration}.
@@ -403,7 +402,7 @@ public class ResourceServerTokenServicesConfigurationTests {
 
 		@Bean
 		public ServletWebServerFactory webServerFactory() {
-			return mock(ServletWebServerFactory.class);
+			return new MockServletWebServerFactory();
 		}
 
 	}
