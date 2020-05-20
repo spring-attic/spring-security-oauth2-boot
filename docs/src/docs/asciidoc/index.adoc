@@ -229,7 +229,7 @@ OAuth2 Boot does not support configuring a redirect URI as a property -- say, al
 
 To add a redirect URI, you need to specify the client by using either `InMemoryClientDetailsService` or `JdbcClientDetailsService`.
 
-Doing either means <<oauth2-boot-authorization-server-disabled,replacing the OAuth2 Boot-provided `AuthorizationServerConfigurer`>> with your own, as the following example shows:
+Doing either means <<oauth2-boot-authorization-server-disable,replacing the OAuth2 Boot-provided `AuthorizationServerConfigurer`>> with your own, as the following example shows:
 
 ====
 [source,java]
