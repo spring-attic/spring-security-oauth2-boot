@@ -36,7 +36,7 @@ public class ArchitectureTests {
 	public void freeOfCycles() {
 		String pkg = "org.springframework.boot.autoconfigure.security.oauth2";
 		JavaClasses classes = new ClassFileImporter().importPackages(pkg);
-		slices().matching("..(*)..").should().beFreeOfCycles().ignoreDependency(isATestClass(), alwaysTrue())
+		slices().matching("(**)").should().beFreeOfCycles().ignoreDependency(isATestClass(), alwaysTrue())
 				.check(classes);
 	}
 
