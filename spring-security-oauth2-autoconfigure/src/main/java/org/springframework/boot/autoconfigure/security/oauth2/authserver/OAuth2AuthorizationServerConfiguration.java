@@ -28,7 +28,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.client.ClientProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -150,9 +150,9 @@ public class OAuth2AuthorizationServerConfiguration {
 		@Configuration
 		protected static class ClientDetailsLogger implements InitializingBean {
 
-			private final OAuth2ClientProperties credentials;
+			private final ClientProperties credentials;
 
-			protected ClientDetailsLogger(OAuth2ClientProperties credentials) {
+			protected ClientDetailsLogger(ClientProperties credentials) {
 				this.credentials = credentials;
 			}
 
@@ -175,9 +175,9 @@ public class OAuth2AuthorizationServerConfiguration {
 		@ConditionalOnMissingBean(BaseClientDetails.class)
 		protected static class BaseClientDetailsConfiguration {
 
-			private final OAuth2ClientProperties client;
+			private final ClientProperties client;
 
-			protected BaseClientDetailsConfiguration(OAuth2ClientProperties client) {
+			protected BaseClientDetailsConfiguration(ClientProperties client) {
 				this.client = client;
 			}
 

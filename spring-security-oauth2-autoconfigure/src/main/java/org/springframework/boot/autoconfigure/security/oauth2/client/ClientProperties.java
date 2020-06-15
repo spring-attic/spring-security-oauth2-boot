@@ -32,7 +32,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "security.oauth2.client")
 @Deprecated
-public class OAuth2ClientProperties {
+public class ClientProperties {
 
 	/**
 	 * OAuth2 client id.
