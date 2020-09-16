@@ -1,30 +1,14 @@
 rootProject.name = 'spring-security-oauth2-boot'
 
-FileTree buildFiles = fileTree(rootDir) {
-	List excludes = gradle.startParameter.projectProperties.get("excludeProjects")?.split(",")
-	include '**/*.gradle'
-	exclude '**/gradle', 'settings.gradle', 'buildSrc', '/build.gradle', '.*', 'out'
-	exclude '**/grails3'
-	if(excludes) {
-		exclude excludes
-	}
+include 'spring-security-oauth2-autoconfigure'
+include 'docs'
+
+file('samples').eachDirMatch(~/spring-boot-sample-.*/) { dir ->
+    include dir.name
+    project(":$dir.name").projectDir = dir
 }
 
-String rootDirPath = rootDir.absolutePath + File.separator
-buildFiles.each { File buildFile ->
-
-	boolean isDefaultName = 'build.gradle'.equals(buildFile.name)
-	if(isDefaultName) {
-		String buildFilePath = buildFile.parentFile.absolutePath
-		String projectPath = buildFilePath.replace(rootDirPath, '').replace(File.separator, ':')
-		include projectPath
-	} else {
-		String projectName = buildFile.name.replace('.gradle', '');
-		String projectPath = ':' + projectName;
-		include projectPath
-		def project = findProject("${projectPath}")
-		project.name = projectName
-		project.projectDir = buildFile.parentFile
-		project.buildFileName = buildFile.name
-	}
+rootProject.children.each { project ->
+    project.buildFileName = "build.gradle"
 }
+
