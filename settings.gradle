@@ -3,7 +3,7 @@ rootProject.name = 'spring-security-oauth2-boot'
 FileTree buildFiles = fileTree(rootDir) {
 	List excludes = gradle.startParameter.projectProperties.get("excludeProjects")?.split(",")
 	include '**/*.gradle'
-	exclude '**/gradle', 'settings.gradle', 'buildSrc', '/build.gradle', '.*', 'out'
+	exclude '**/gradle', '**/build', '**/src', '**/out', 'settings.gradle', 'buildSrc', '/build.gradle', '.*'
 	exclude '**/grails3'
 	if(excludes) {
 		exclude excludes
