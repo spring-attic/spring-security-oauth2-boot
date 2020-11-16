@@ -14,8 +14,10 @@ try {
 			node {
 				checkout scm
 				try {
-					withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
-						sh "./gradlew clean check  --refresh-dependencies --no-daemon"
+					withCredentials([usernamePassword(credentialsId: '02bd1690-b54f-4c9f-819d-a77cb7a9822c', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
+							sh "./gradlew clean check -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD  --refresh-dependencies --no-daemon"
+						}
 					}
 				} catch(Exception e) {
 					currentBuild.result = 'FAILED: check'
@@ -49,8 +51,10 @@ try {
 				checkout scm
 				sh "git clean -dfx"
 				try {
-					withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
-						sh "./gradlew clean test -PforceMavenRepositories=snapshot -PspringSecurityOAuthVersion='2.4.+' --refresh-dependencies --no-daemon --stacktrace"
+					withCredentials([usernamePassword(credentialsId: '02bd1690-b54f-4c9f-819d-a77cb7a9822c', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
+							sh "./gradlew clean test -PforceMavenRepositories=snapshot -PspringSecurityOAuthVersion='2.4.+' -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon --stacktrace"
+						}
 					}
 				} catch(Exception e) {
 					currentBuild.result = 'FAILED: snapshots'
@@ -64,8 +68,10 @@ try {
 			node {
 				checkout scm
 				try {
-					withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
-						sh "./gradlew clean test --refresh-dependencies --no-daemon --stacktrace"
+					withCredentials([usernamePassword(credentialsId: '02bd1690-b54f-4c9f-819d-a77cb7a9822c', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+						withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+							sh "./gradlew clean test -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon --stacktrace"
+						}
 					}
 				} catch(Exception e) {
 					currentBuild.result = 'FAILED: jdk11'
