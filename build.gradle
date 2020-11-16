@@ -6,25 +6,41 @@ buildscript {
 		classpath 'io.spring.nohttp:nohttp-gradle:0.0.4.RELEASE'
 	}
 	repositories {
-		maven { url 'https://repo.spring.io/libs-snapshot' }
-		maven { url 'https://repo.spring.io/plugins-snapshot' }
 		maven { url 'https://plugins.gradle.org/m2/' }
+		maven { url 'https://repo.spring.io/plugins-release' }
+		maven { url 'https://repo.spring.io/plugins-milestone-local' }
 	}
 }
 
 repositories {
 	mavenCentral()
-	maven { url 'https://repo.spring.io/libs-snapshot' }
 }
 
 apply plugin: 'io.spring.convention.root'
 apply plugin: 'io.spring.nohttp'
 
+allprojects { project ->
+	project.repositories { repos ->
+		all { repo ->
+			if (!repo.url.toString().startsWith("https://repo.spring.io/libs")) {
+				return;
+			}
+			if (!project.hasProperty("artifactoryUsername")) {
+				return;
+			}
+			repo.credentials {
+				username = artifactoryUsername
+				password = artifactoryPassword
+			}
+		}
+	}
+}
+
 group = 'org.springframework.security.oauth.boot'
 description = 'Spring Security OAuth2 Auto Configuration'
 
 ext.snapshotBuild = version.contains("SNAPSHOT")
-ext.releaseBuild = version.contains("SNAPSHOT")
+ext.releaseBuild = !version.contains("-")
 ext.milestoneBuild = !(snapshotBuild || releaseBuild)
 
 project.tasks.check.dependsOn checkstyleNohttp
