@@ -33,13 +33,15 @@ try {
 			node {
 				checkout scm
 				withCredentials([string(credentialsId: 'spring-sonar.login', variable: 'SONAR_LOGIN')]) {
-					try {
-						withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
-							sh "./gradlew clean sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN --refresh-dependencies --no-daemon"
+					withCredentials([usernamePassword(credentialsId: '02bd1690-b54f-4c9f-819d-a77cb7a9822c', usernameVariable: 'ARTIFACTORY_USERNAME', passwordVariable: 'ARTIFACTORY_PASSWORD')]) {
+						try {
+							withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
+								sh "./gradlew clean sonarqube -PexcludeProjects='**/samples/**' -Dsonar.host.url=$SPRING_SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN -PartifactoryUsername=$ARTIFACTORY_USERNAME -PartifactoryPassword=$ARTIFACTORY_PASSWORD --refresh-dependencies --no-daemon"
+							}
+						} catch(Exception e) {
+							currentBuild.result = 'FAILED: sonar'
+							throw e
 						}
-					} catch(Exception e) {
-						currentBuild.result = 'FAILED: sonar'
-						throw e
 					}
 				}
 			}
