@@ -44,36 +44,36 @@ try {
 		}
 	},
 	snapshots: {
-        stage('Snapshot Tests') {
-            node {
-                checkout scm
-                sh "git clean -dfx"
-                try {
-                    withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
-                        sh "./gradlew clean test -PforceMavenRepositories=snapshot -PspringSecurityOAuthVersion='2.4.+' --refresh-dependencies --no-daemon --stacktrace"
-                    }
-                } catch(Exception e) {
-                    currentBuild.result = 'FAILED: snapshots'
-                    throw e
-                }
-            }
-        }
-    },
-        jdk11: {
-                stage('JDK 11') {
-                        node {
-                                checkout scm
-                                try {
-                                        withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
-                                                sh "./gradlew clean test --refresh-dependencies --no-daemon --stacktrace"
-                                        }
-                                } catch(Exception e) {
-                                        currentBuild.result = 'FAILED: jdk11'
-                                        throw e
-                                }
-                        }
-                }
-        }
+		stage('Snapshot Tests') {
+			node {
+				checkout scm
+				sh "git clean -dfx"
+				try {
+					withEnv(["JAVA_HOME=${ tool 'jdk8' }"]) {
+						sh "./gradlew clean test -PforceMavenRepositories=snapshot -PspringSecurityOAuthVersion='2.4.+' --refresh-dependencies --no-daemon --stacktrace"
+					}
+				} catch(Exception e) {
+					currentBuild.result = 'FAILED: snapshots'
+					throw e
+				}
+			}
+		}
+	},
+	jdk11: {
+		stage('JDK 11') {
+			node {
+				checkout scm
+				try {
+					withEnv(["JAVA_HOME=${ tool 'jdk11' }"]) {
+						sh "./gradlew clean test --refresh-dependencies --no-daemon --stacktrace"
+					}
+				} catch(Exception e) {
+					currentBuild.result = 'FAILED: jdk11'
+					throw e
+				}
+			}
+		}
+	}
 
 	if(currentBuild.result == 'SUCCESS') {
 		parallel artifacts: {
