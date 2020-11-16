@@ -1,6 +1,6 @@
 buildscript {
 	dependencies {
-		classpath 'io.spring.gradle:spring-build-conventions:0.0.20.RELEASE'
+		classpath 'io.spring.gradle:spring-build-conventions:0.0.35.RELEASE'
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
 	}
 	repositories {
@@ -10,23 +10,6 @@ buildscript {
 	}
 }
 apply plugin: 'io.spring.convention.root'
-
-allprojects { project ->
-	project.repositories { repos ->
-		all { repo ->
-			if (!repo.url.toString().startsWith("https://repo.spring.io/libs")) {
-				return;
-			}
-			if (!project.hasProperty("artifactoryUsername")) {
-				return;
-			}
-			repo.credentials {
-				username = artifactoryUsername
-				password = artifactoryPassword
-			}
-		}
-	}
-}
 
 group = 'org.springframework.security.oauth.boot'
 description = 'Spring Security OAuth2 Auto Configuration'
