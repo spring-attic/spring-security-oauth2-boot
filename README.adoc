@@ -1,5 +1,11 @@
 image::https://travis-ci.org/spring-projects/spring-security-oauth2-boot.svg?branch=master[Build Status]
 = Spring Security OAuth Boot 2 Autoconfig
 
+[NOTE]
+======
+This branch of Spring Security OAuth Boot 2 Autoconfig has reached its https://github.com/spring-projects/spring-boot/wiki/Supported-Versions#supported-releases[End of Life], meaning that there are no further maintenance releases or security patches planned.
+Please migrate to a supported branch as soon as possible.
+======
+
 This project provides auto configuration for Spring Boot 2 and the old Spring Security OAuth project.
 For more details refer to the https://docs.spring.io/spring-security-oauth2-boot/docs/current-SNAPSHOT/reference/htmlsingle/[documentation].
