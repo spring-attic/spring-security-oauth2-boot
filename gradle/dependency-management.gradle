@@ -14,6 +14,6 @@ dependencyManagement {
 		dependency "org.springframework.social:spring-social-core:$springSocialVersion"
 		dependency "org.springframework.social:spring-social-facebook:2.0.3.RELEASE"
 		dependency "org.springframework.social:spring-social-web:$springSocialVersion"
-		dependency "com.tngtech.archunit:archunit-junit4:0.14.1"
+		dependency "com.tngtech.archunit:archunit-junit4:0.15.0"
 	}
 }
