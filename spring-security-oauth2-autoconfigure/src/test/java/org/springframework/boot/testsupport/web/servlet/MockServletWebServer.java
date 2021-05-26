@@ -31,6 +31,9 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import javax.servlet.SessionCookieConfig;
+
+import org.springframework.mock.web.MockSessionCookieConfig;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -76,6 +79,8 @@ public abstract class MockServletWebServer {
 				MockServletWebServer.this.registeredFilters.add(registeredFilter);
 				return registeredFilter.getRegistration();
 			});
+			final SessionCookieConfig sessionCookieConfig = new MockSessionCookieConfig();
+			given(this.servletContext.getSessionCookieConfig()).willReturn(sessionCookieConfig);
 			final Map<String, String> initParameters = new HashMap<>();
 			given(this.servletContext.setInitParameter(anyString(), anyString())).will((invocation) -> {
 				initParameters.put(invocation.getArgument(0), invocation.getArgument(1));
