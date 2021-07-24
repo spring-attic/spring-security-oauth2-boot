@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,11 +27,11 @@ import org.junit.Test;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.authserver.OAuth2AuthorizationServerConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.method.OAuth2MethodSecurityConfiguration;
+import org.springframework.boot.autoconfigure.security.oauth2.method.OAuth2MethodSecurityExpressionHandlerConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
@@ -127,7 +127,7 @@ public class OAuth2AutoConfigurationTests {
 		this.context.refresh();
 		this.context.getBean(AUTHORIZATION_SERVER_CONFIG);
 		this.context.getBean(RESOURCE_SERVER_CONFIG);
-		this.context.getBean(OAuth2MethodSecurityConfiguration.class);
+		this.context.getBean(OAuth2MethodSecurityExpressionHandlerConfiguration.class);
 		ClientDetails config = this.context.getBean(BaseClientDetails.class);
 		AuthorizationEndpoint endpoint = this.context.getBean(AuthorizationEndpoint.class);
 		UserApprovalHandler handler = (UserApprovalHandler) ReflectionTestUtils.getField(endpoint,
@@ -308,7 +308,7 @@ public class OAuth2AutoConfigurationTests {
 		this.context = new AnnotationConfigServletWebServerApplicationContext();
 		this.context.register(AuthorizationAndResourceServerConfiguration.class, MinimalSecureWebApplication.class);
 		this.context.refresh();
-		this.context.getBean(OAuth2MethodSecurityConfiguration.class);
+		this.context.getBean(OAuth2MethodSecurityExpressionHandlerConfiguration.class);
 		ClientDetails config = this.context.getBean(ClientDetails.class);
 		DelegatingMethodSecurityMetadataSource source = this.context
 				.getBean(DelegatingMethodSecurityMetadataSource.class);
@@ -324,7 +324,7 @@ public class OAuth2AutoConfigurationTests {
 		this.context = new AnnotationConfigServletWebServerApplicationContext();
 		this.context.register(SecuredEnabledConfiguration.class, MinimalSecureWebApplication.class);
 		this.context.refresh();
-		this.context.getBean(OAuth2MethodSecurityConfiguration.class);
+		this.context.getBean(OAuth2MethodSecurityExpressionHandlerConfiguration.class);
 		ClientDetails config = this.context.getBean(ClientDetails.class);
 		DelegatingMethodSecurityMetadataSource source = this.context
 				.getBean(DelegatingMethodSecurityMetadataSource.class);
@@ -340,7 +340,7 @@ public class OAuth2AutoConfigurationTests {
 		this.context = new AnnotationConfigServletWebServerApplicationContext();
 		this.context.register(Jsr250EnabledConfiguration.class, MinimalSecureWebApplication.class);
 		this.context.refresh();
-		this.context.getBean(OAuth2MethodSecurityConfiguration.class);
+		this.context.getBean(OAuth2MethodSecurityExpressionHandlerConfiguration.class);
 		ClientDetails config = this.context.getBean(ClientDetails.class);
 		DelegatingMethodSecurityMetadataSource source = this.context
 				.getBean(DelegatingMethodSecurityMetadataSource.class);

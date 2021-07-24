@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2017 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,8 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 
 /**
- * Auto-configure an expression handler for method-level security (if the user already has
- * {@code @EnableGlobalMethodSecurity}).
+ * Replace any {@link DefaultMethodSecurityExpressionHandler} in the application context
+ * with an {@link OAuth2MethodSecurityExpressionHandler}.
  *
  * @author Greg Turnquist
  * @author Dave Syer
