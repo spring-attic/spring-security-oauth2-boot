@@ -36,7 +36,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Test to validate that a custom {@link RestTemplate} can be defined with OAuth2 SSO.
@@ -62,7 +62,7 @@ public class CustomRestTemplateBasicOAuth2SsoConfigurationTests {
 	@Test
 	public void customRestTemplateCanBePrimary() {
 		RestTemplate restTemplate = this.restTemplate.getIfAvailable();
-		verifyZeroInteractions(restTemplate);
+		verifyNoInteractions(restTemplate);
 		assertThat(this.applicationContext.getBeansOfType(RestTemplate.class)).hasSize(1);
 	}
 

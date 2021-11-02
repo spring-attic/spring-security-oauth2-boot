@@ -34,7 +34,7 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 /**
  * Tests for {@link ResourceServerProperties}.
@@ -68,7 +68,7 @@ public class ResourceServerPropertiesTests {
 		this.properties = new ResourceServerProperties(null, "secret");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.getJwt().setKeyValue("my-key");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -115,7 +115,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.getJwk().setKeySetUri("https://idp.example.com/token_keys");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -132,7 +132,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.setTokenInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -160,7 +160,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	@Test
@@ -171,7 +171,7 @@ public class ResourceServerPropertiesTests {
 		this.properties.setUserInfoUri("https://idp.example.com/userinfo");
 		setListableBeanFactory();
 		this.properties.validate();
-		verifyZeroInteractions(this.errors);
+		verifyNoInteractions(this.errors);
 	}
 
 	private void setListableBeanFactory() {
