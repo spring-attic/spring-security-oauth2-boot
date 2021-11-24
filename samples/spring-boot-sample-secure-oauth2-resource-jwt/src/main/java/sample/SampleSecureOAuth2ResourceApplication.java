@@ -16,8 +16,11 @@
 
 package sample;
 
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -36,6 +39,13 @@ public class SampleSecureOAuth2ResourceApplication extends ResourceServerConfigu
 		// @formatter:off
 		http.antMatcher("/flights/**").authorizeRequests().anyRequest().authenticated();
 		// @formatter:on
+	}
+
+	// https://github.com/spring-projects/spring-boot/issues/28759#issuecomment-975408187
+	@Bean
+	static BeanFactoryPostProcessor removeErrorSecurityFilter() {
+		return (beanFactory) -> ((DefaultListableBeanFactory) beanFactory)
+				.removeBeanDefinition("errorPageSecurityInterceptor");
 	}
 
 	public static void main(String[] args) {
