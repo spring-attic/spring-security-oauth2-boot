@@ -1,9 +1,9 @@
 buildscript {
 	dependencies {
-		classpath 'io.spring.gradle:spring-build-conventions:0.0.37'
+		classpath 'io.spring.gradle:spring-build-conventions:0.0.38'
 		classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
-		classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.27'
-		classpath 'io.spring.nohttp:nohttp-gradle:0.0.5.RELEASE'
+		classpath 'io.spring.javaformat:spring-javaformat-gradle-plugin:0.0.31'
+		classpath 'io.spring.nohttp:nohttp-gradle:0.0.10'
 	}
 	repositories {
 		maven { url 'https://plugins.gradle.org/m2/' }
