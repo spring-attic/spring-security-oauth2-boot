@@ -1,5 +1,5 @@
 if (!project.hasProperty('springSecurityOAuthVersion')) {
-	ext.springSecurityOAuthVersion = '2.5.0.RELEASE'
+	ext.springSecurityOAuthVersion = '2.5.2.RELEASE'
 }
 
 dependencyManagement {
