@@ -38,3 +38,10 @@ subprojects {
         }
 	apply plugin: 'io.spring.javaformat'
 }
+
+allprojects {
+    tasks.withType(Test).configureEach {
+        forkEvery = 100
+    }
+
+}
